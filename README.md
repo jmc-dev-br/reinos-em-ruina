@@ -11,7 +11,7 @@ Aventura medieval em que as decisões econômicas mudam o reino.
 
 ## The game
 
-Reinos em Ruína is not a finance quiz. Players explore the kingdom from a top-down perspective, enter side-view combat in ruined locations, meet characters, complete quests, collect fictional copper, and learn from the results of their decisions.
+Reinos em Ruína is a classic handheld-inspired top-down pixel-art adventure. Players explore interconnected regions, meet original characters, choose a creature partner, battle and capture wild creatures, complete quests, collect fictional copper, and learn from the results of their decisions.
 
 The opening chapter, **The Broken Coin / A Moeda Partida**, puts the village of Brumaforte under pressure after food shipments disappear. The player investigates the attacks on the road, finds a ledger in the ruins, brings evidence back to the guard Mara, and only then unlocks the council's three imperfect policy choices:
 
@@ -23,14 +23,14 @@ The decision changes the kingdom dashboard and the merchant's prices. The player
 
 ## Core features
 
-- Top-down map exploration and NPC interaction.
-- Side-view action/combat in the ruins.
+- Top-down exploration across Brumaforte, the Veiled Forest, the Silent Lake, and the Old Mine.
+- Turn-based creature encounters, original pixel creatures, partner selection, capture, and a party of up to six companions.
 - A sequenced first-chapter quest: investigate road attacks, find unique ledger evidence, report to Mara, and complete the council decision.
 - Quest rewards cannot be repeatedly claimed from the same ledger; important story milestones autosave locally.
 - Main menu with Play and Language options (Portuguese and English menu UI).
 - Three independent local save slots, each with Continue, Customize, and Delete actions.
 - Character creator with masculine/feminine appearance, name, four outfits, cloak color, hair color, and skin tone.
-- Character appearance is rendered in both top-down exploration and side-view combat and saved with the selected slot.
+- The protagonist and NPCs use compact, distinct top-down pixel sprites; creature portraits use custom pixel-art canvases and saved party data.
 - Legacy browser save is imported into Slot 1 once to preserve earlier progress.
 - Quest progression, XP/levels, health, potions, inventory economy, manual and milestone save/load.
 - Fictional kingdom economy: treasury, debt, public trust, food reserves, and price index.
@@ -119,7 +119,7 @@ O cliente recebeu uma grande atualização local:
 O jogo antigo não é apagado: os dados de personagem e progresso são migrados com valores padrão para os campos novos. O estado das regiões e das missões é gravado no save local. Esta ainda é uma experiência individual no navegador, não um mundo multiplayer compartilhado.
 
 
-## Reboot 1.1 — classes, combate previsível e atlas
+## Histórico: Reboot 1.1 — classes, combate previsível e atlas (substituído pelo Reboot 2.0)
 
 A atualização amplia a evolução do personagem e organiza melhor a exploração:
 
@@ -132,3 +132,18 @@ A atualização amplia a evolução do personagem e organiza melhor a exploraç�
 - **Salvamentos retrocompatíveis:** classe, dificuldade e escudo agora fazem parte do progresso salvo; jogos antigos recebem valores padrão e continuam no navegador.
 
 Os valores de dano são previsíveis, mas a experiência ainda precisa de testes visuais e sessões completas em desktop e celular. O protótipo permanece local para um jogador; contas, partidas compartilhadas e validação anti-trapaça exigem backend.
+
+
+## Reboot 2.0 — aventura 16-bit vista de cima
+
+A direção ativa agora é exploração top-down, personagens pequenos em pixel art e encontros de criaturas por turnos — não combate lateral nem progressão de classes de RPG.
+
+- **Mapas em visão superior:** Brumaforte, Bosque Velado, Lago Silencioso e a Mina Antiga são explorados em uma perspectiva consistente. A mina usa caminhos, paredes, plantas, luzes e um altar com o livro-razão; não usa mais plataformas ou saltos.
+- **Personagens de estilo portátil clássico:** sprites do protagonista e NPCs menores, placas de nomes destacadas e detalhes de aparência/ocupação para diferenciar os moradores.
+- **Parceiro inicial:** escolha Folhote, Braseco ou Gotil. Cada um tem uma paleta, silhueta e conjunto de movimentos originais.
+- **Criaturas selvagens:** Musguito, Casquim, Vesperto, Ossoeco e Guardito, além de encontros únicos com Brumilobo e Prismaré. Sprites pixelados são desenhados pelo cliente em vez de emojis na tela de batalha.
+- **Duelo por turnos:** movimentos com valores de dano fixos, barras de vida, cura, troca de parceiro, fuga e captura com Laços de Semente quando a criatura está enfraquecida. Chefes de história não podem ser capturados.
+- **Equipe e descanso:** até seis criaturas salvas por jornada. A equipe recebe experiência ao vencer batalhas e pode se recuperar no Centro de Amizade por cobres fictícios.
+- **A Moeda Partida continua:** as missões de Mara, as histórias dos NPCs, o comércio e as decisões do Conselho mantêm a educação financeira dentro da aventura. Os sistemas de clima, relógio e recompensas locais continuam no protótipo.
+
+A equipe e as capturas são guardadas no salvamento local, e os saves antigos são migrados para um parceiro inicial quando necessário. A sintaxe JavaScript foi verificada; ainda é necessário testar a experiência completa no navegador em desktop e celular. Este protótipo continua single-player e local: contas partilhadas, troca entre pessoas e estado sincronizado exigem backend.
