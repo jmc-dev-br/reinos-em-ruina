@@ -79,3 +79,15 @@ O protótipo agora inclui uma batalha experimental por cartas, aberta pelo botã
 O botão **Atividade** permite ao personagem treinar (+12 XP/hora) ou trabalhar na taverna (+5 cobres fictícios/hora) enquanto o jogador está ausente, limitado a 8 horas por reivindicação. Isso usa o relógio e o armazenamento locais do navegador; é uma conveniência experimental, não um serviço online seguro.
 
 O plano completo está em [docs/ROADMAP_MVP_ONLINE.md](docs/ROADMAP_MVP_ONLINE.md). Guildas, objetivos mundiais compartilhados, recompensas offline verificadas e PvP assíncrono precisam de um backend confiável e de um banco de dados. Não devem ser apresentados como recursos compartilhados globalmente enquanto o site for estático.
+
+## New prototype update: living world and player progression
+
+The browser prototype now includes:
+- Local-time day/night tinting, animated pond highlights, selectable rain/leaves/automatic weather, and simple pixel particles.
+- Combat feedback with floating damage/healing text, impact shake, synthesized sound effects, and an optional procedural ambient melody. Effects, weather, lighting, sounds and music can be configured in the in-game menu.
+- Daily entry rewards with a streak bonus, personal achievements, and gathering professions (mining, herbology and fishing).
+- A local materials loop: collect ore and herbs, craft a healing potion, or refine ore into fictional copper.
+
+These progression systems are stored in local browser storage and organized by save slot where applicable. They are not synchronized between browsers or users. Daily rewards and offline activity are conveniences for this prototype, not security-sensitive server-authoritative game systems.
+
+The online plan remains in [docs/ROADMAP_MVP_ONLINE.md](docs/ROADMAP_MVP_ONLINE.md). Global events every three hours, an auction house shared between users, co-op dungeons, guild structures and public achievements need authenticated server APIs and database transactions. They are roadmap items—not live multiplayer features.
