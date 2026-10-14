@@ -120,12 +120,12 @@ const SLOT_PREFIX='reinos_ruina_slot_';
 const gameParams=new URLSearchParams(window.location.search);
 const activeSlotNumber=[1,2,3].includes(Number(gameParams.get('slot')))?Number(gameParams.get('slot')):0;
 const slotStorageKey=slot=>SLOT_PREFIX+slot;
-function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'red',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'stubble'};}
+function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'none',cloak:'none',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'none'};}
 function normalizeAppearance(value){
  const d=defaultAppearance(),v=value&&typeof value==='object'?value:{};
  return {name:String(v.name||d.name).trim().slice(0,16)||d.name,
   gender:['masculino','feminino'].includes(v.gender)?v.gender:d.gender,
-  outfit:['traveler','guard','mage','noble','ranger','royal'].includes(v.outfit)?v.outfit:d.outfit,
+  outfit:['none','traveler','guard','mage','noble','ranger','royal'].includes(v.outfit)?v.outfit:d.outfit,
   cloak:['none','red','green','blue','ivory'].includes(v.cloak)?v.cloak:d.cloak,
   hair:['brown','black','blond','silver','red','blue','purple','pink'].includes(v.hair)?v.hair:d.hair,
   skin:['pale','light','tan','warm','olive','dark','deep'].includes(v.skin)?v.skin:d.skin,
@@ -436,6 +436,7 @@ function drawPlayer(x,y,rawAppearance){
   sprite=document.createElement('canvas');sprite.width=48;sprite.height=72;
   const c=sprite.getContext('2d');c.imageSmoothingEnabled=false;
   const outfits={
+   none:{coat:'#dbb28a',trim:'#dbb28a',pants:'#dbb28a'},
    traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c'},
    guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39'},
    mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744'},
@@ -445,7 +446,7 @@ function drawPlayer(x,y,rawAppearance){
   };
   const o=outfits[a.outfit]||outfits.traveler;
   const colorMap={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const coat=colorMap[a.outfitColor]||o.coat;
+  const baseOnly=a.outfit==='none',coat=baseOnly?skin:(colorMap[a.outfitColor]||o.coat);
   const capeMap={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
   const cape=capeMap[a.cloak];
   const hairMap={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
@@ -570,9 +571,9 @@ function drawPlayer(x,y,rawAppearance){
   if(a.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
   if(a.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
   if(a.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
-  if(a.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(a.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(a.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(a.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
+  if(!female&&a.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(!female&&a.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(!female&&a.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(!female&&a.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
   // Burgundy neck scarf.
-  p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');
+  if(!baseOnly){p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');}
   // Headwear and accessories are layered over the base portrait.
   if(a.accessory==='glasses'){r(19,14,4,2,'#d4b56d');r(24,14,4,2,'#d4b56d');r(23,14,1,1,'#d4b56d');}
   if(a.accessory==='eyepatch'){r(24,13,4,3,'#20191a');r(25,14,2,1,'#c3a066');}
