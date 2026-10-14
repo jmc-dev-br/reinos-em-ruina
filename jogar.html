@@ -127,6 +127,18 @@ body{position:fixed;inset:0}
 .menu-note{margin-top:12px;padding:9px 10px;background:#20291c;border-left:3px solid #9dbe6f;color:#bdc9ae;font-size:10px;line-height:1.5}
 @media(max-width:760px){.game-menu-grid{grid-template-columns:1fr;gap:10px}.menu-section{padding:10px}.menu-section h3{font-size:17px;margin-bottom:8px}.control-list{gap:3px}.control-row{grid-template-columns:72px 1fr;padding:5px 0}.control-row small,.setting-row small{font-size:9px}.menu-intro{font-size:11px;margin-bottom:9px}.modal{max-height:91vh}.modalbody{padding:12px}.modalhead{padding:12px}.modalfoot{padding:9px 12px}}
 
+
+.battle-intro{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 11px;background:#1b2720;border:1px solid #4c6746;color:#c8d9b8;font-size:11px;line-height:1.45}
+.battle-versus{display:grid;grid-template-columns:1fr 30px 1fr;gap:8px;align-items:stretch;margin:12px 0}
+.battle-side{border:1px solid #4d6048;background:#101813;padding:11px;min-width:0}.battle-side.enemy{border-color:#73513d;background:#1b1513}
+.battle-avatar{font-size:25px;line-height:1.2;margin-bottom:7px}.battle-name{font-weight:800;font-size:12px;color:#e7e8cf;overflow-wrap:anywhere}.battle-side.enemy .battle-name{color:#f0c6a0}
+.battle-meta{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:#b8c1ad;margin:7px 0 5px}.battle-hp{height:7px;background:#2c332d;border:1px solid #495444;overflow:hidden}.battle-hp-fill{height:100%;background:#8dbd70;transition:width .18s}.battle-side.enemy .battle-hp-fill{background:#d47b62}.battle-vs{display:grid;place-items:center;font:bold 11px Georgia,serif;color:#d1b77b}
+.battle-energy{display:flex;align-items:center;gap:7px;margin:8px 0 12px}.energy-pip{width:15px;height:15px;display:inline-block;border:1px solid #bca16a;background:#2c2618;transform:rotate(45deg)}.energy-pip.ready{background:#e4bd69;box-shadow:0 0 8px #e4bd6950}
+.battle-section-title{font-size:9px;letter-spacing:.16em;color:#9fbe84;font-weight:800;margin:12px 0 7px}.card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.battle-card{min-width:0;text-align:left;padding:10px;border:1px solid #60784f;background:linear-gradient(145deg,#253427,#172119);color:#e9edda;min-height:85px;border-radius:3px}.battle-card:hover:not(:disabled){border-color:#dfbd75;background:linear-gradient(145deg,#33462d,#1b281d)}.battle-card:disabled{opacity:.42;cursor:not-allowed}.battle-card strong{display:block;font-size:12px;color:#e8d5a1}.battle-card small{display:block;font-size:10px;line-height:1.4;color:#bec9b4;margin-top:6px}.card-cost{display:inline-block;margin-top:7px;font-size:9px;color:#283321;background:#b7d292;border:1px solid #e1edb9;padding:2px 5px;font-weight:800}
+.battle-log{min-height:38px;padding:9px 10px;margin-top:10px;background:#0c110e;border:1px solid #2c3a2d;color:#b8c7ae;font-size:10px;line-height:1.5}.battle-disclaimer{margin-top:8px;font-size:9px;color:#8fa18b;line-height:1.45}
+@media(max-width:560px){.battle-versus{grid-template-columns:1fr 20px 1fr;gap:5px}.battle-side{padding:7px}.battle-avatar{font-size:21px}.battle-name{font-size:10px}.card-grid{gap:6px}.battle-card{padding:7px;min-height:92px}.battle-card strong{font-size:10px}.battle-card small{font-size:9px}}
+
 </style>
 </head>
 <body>
@@ -151,7 +163,7 @@ body{position:fixed;inset:0}
       <button class="btn" id="financeBtn">◈ Caderno financeiro <span class="kbd">M</span></button>
       <button class="btn" id="shopBtn">▤ Mercador <span class="kbd">T</span></button>
       <button class="btn" id="councilBtn">♜ Conselho do reino</button>
-      <button class="btn" id="attackBtn">⚔ Atacar <span class="kbd">J</span></button>
+      <button class="btn" id="attackBtn">⚔ Atacar <span class="kbd">J</span></button><button class="btn" id="tacticalBtn" title="Combate por turnos com cartas">♜ Cartas táticas</button>
       <button class="btn" id="interactBtn">✦ Interagir <span class="kbd">E</span></button>
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
@@ -408,6 +420,92 @@ async function recordArcChapter(){
 
 function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML='';for(const b of buttons||[]){const el=document.createElement('button');el.className='btn'+(b.primary?' primary':'');el.textContent=b.label;el.onclick=b.action;$('modalFoot').appendChild(el);} $('modalback').classList.add('open');$('modalClose').focus();}
 function closeModal(){modalType=null;$('modalback').classList.remove('open');canvas.focus();}
+
+let tacticalBattle=null;
+function openTacticalBattle(){
+ if(modalType)return;
+ const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=125;
+ for(const mob of allMobs()){
+  if(!mob.alive)continue;
+  const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));
+  if(d<best){best=d;target=mob;}
+ }
+ if(!target){notify('Aproxime-se de uma criatura para iniciar o combate tático.',2.8);return;}
+ const maxHp=target.maxHp||(target.hp>0?target.hp:Math.max(26,Math.min(78,Math.round((target.xp||25)*.75+15))));
+ target.maxHp=maxHp;if(typeof target.hp!=='number'||target.hp<=0)target.hp=maxHp;
+ tacticalBattle={mob:target,scene:g.scene,enemyHp:Math.min(target.hp,maxHp),enemyMax:maxHp,energy:3,block:0,turn:1,log:'Você começa com 3 pontos de energia. Escolha cartas e pense na defesa.',finished:false};
+ renderTacticalBattle();
+}
+function renderTacticalBattle(){
+ if(!tacticalBattle||tacticalBattle.finished)return;
+ const b=tacticalBattle;
+ const enemy=escapeHtml(b.mob.name||'Criatura desconhecida');
+ const ep=Math.max(0,Math.min(100,b.enemyHp/b.enemyMax*100));
+ const pp=Math.max(0,Math.min(100,g.hp/g.maxHp*100));
+ const energy=Array.from({length:3},(_,i)=>'<span class="energy-pip '+(i<b.energy?'ready':'')+'"></span>').join('');
+ const body=
+  '<div class="battle-intro"><span>Turno '+b.turn+' · Até 3 pontos de energia</span><span>Combate tático</span></div>'+
+  '<div class="battle-versus">'+
+   '<section class="battle-side"><div class="battle-avatar">🛡️</div><div class="battle-name">'+escapeHtml(g.character.name||'Aventureiro')+'</div>'+
+    '<div class="battle-meta"><span>VIDA</span><strong>'+Math.max(0,g.hp)+' / '+g.maxHp+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+pp+'%"></div></div>'+
+    '<div class="battle-meta"><span>Bloqueio</span><strong>'+b.block+'</strong></div></section>'+
+   '<div class="battle-vs">VS</div>'+
+   '<section class="battle-side enemy"><div class="battle-avatar">👾</div><div class="battle-name">'+enemy+'</div>'+
+    '<div class="battle-meta"><span>RESISTÊNCIA</span><strong>'+Math.max(0,b.enemyHp)+' / '+b.enemyMax+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+ep+'%"></div></div>'+
+    '<div class="battle-meta"><span>Ameaça</span><strong>'+(b.mob.type==='knight'?'Alta':b.mob.type==='skeleton'?'Média':'Baixa')+'</strong></div></section></div>'+
+  '<div class="battle-section-title">ENERGIA DISPONÍVEL</div><div class="battle-energy">'+energy+'<span style="font-size:10px;color:#b8c7ae;margin-left:4px">'+b.energy+' / 3 pontos</span></div>'+
+  '<div class="battle-section-title">SUA MÃO · ESCOLHA UMA CARTA</div><div class="card-grid">'+
+   '<button class="battle-card" data-card="quick" '+(b.energy<1?'disabled':'')+'><strong>⚔ Golpe preciso</strong><small>Causa 12 de dano. Econômico e confiável.</small><span class="card-cost">1 ENERGIA</span></button>'+
+   '<button class="battle-card" data-card="heavy" '+(b.energy<2?'disabled':'')+'><strong>🗡 Estocada pesada</strong><small>Causa 24 de dano, mas custa mais energia.</small><span class="card-cost">2 ENERGIA</span></button>'+
+   '<button class="battle-card" data-card="guard" '+(b.energy<2?'disabled':'')+'><strong>🛡 Guarda de pedra</strong><small>Bloqueia até 15 pontos do próximo ataque.</small><span class="card-cost">2 ENERGIA</span></button>'+
+   '<button class="battle-card" data-card="potion" '+(b.energy<1||g.potions<1||g.hp>=g.maxHp?'disabled':'')+'><strong>✚ Poção de ervas</strong><small>Recupera 30 de vida. Você tem '+g.potions+' poção(ões).</small><span class="card-cost">1 ENERGIA</span></button>'+
+  '</div><div class="battle-log"><strong>Registro de combate:</strong> '+escapeHtml(b.log)+'</div>'+
+  '<div class="battle-disclaimer">Recursos e recompensas são fictícios. Este é um combate local; PvP e mundo compartilhado ainda exigem um servidor.</div>';
+ showModal('tactical','Combate tático · Cartas',body,[
+  {label:'Concluir turno',action:endTacticalTurn,primary:true},
+  {label:'Recuar',action:exitTacticalBattle}
+ ]);
+ $('modalBody').querySelectorAll('[data-card]').forEach(el=>el.addEventListener('click',()=>playTacticalCard(el.dataset.card)));
+}
+function playTacticalCard(id){
+ const b=tacticalBattle;if(!b||b.finished)return;
+ const cards={quick:{cost:1},heavy:{cost:2},guard:{cost:2},potion:{cost:1}};
+ const card=cards[id];if(!card||b.energy<card.cost)return;
+ if(id==='potion'&&(g.potions<1||g.hp>=g.maxHp)){notify(g.potions<1?'Você não tem poções.':'Sua vida já está cheia.',2);renderTacticalBattle();return;}
+ b.energy-=card.cost;
+ if(id==='quick'){b.enemyHp-=12;b.log='Golpe preciso: 12 de dano por 1 energia.';}
+ else if(id==='heavy'){b.enemyHp-=24;b.log='Estocada pesada: 24 de dano por 2 energias.';}
+ else if(id==='guard'){b.block+=15;b.log='Guarda de pedra: até 15 pontos de dano bloqueados no próximo ataque.';}
+ else if(id==='potion'){g.potions--;const healed=Math.min(30,g.maxHp-g.hp);g.hp+=healed;b.log='Poção: você recuperou '+healed+' pontos de vida.';}
+ b.mob.hp=Math.max(0,b.enemyHp);
+ if(b.enemyHp<=0){finishTacticalVictory();return;}
+ updateUI();renderTacticalBattle();
+}
+function endTacticalTurn(){
+ const b=tacticalBattle;if(!b||b.finished)return;
+ const raw=8+Math.floor(Math.random()*7)+(b.turn>3?2:0);
+ const damage=Math.max(0,raw-b.block);b.block=0;g.hp=Math.max(0,g.hp-damage);
+ b.log=(b.mob.name||'A criatura')+' atacou: '+damage+' de dano após bloqueio.';
+ if(g.hp<=0){finishTacticalDefeat();return;}
+ b.turn++;b.energy=3;updateUI();persistProgress();renderTacticalBattle();
+}
+function finishTacticalVictory(){
+ const b=tacticalBattle;if(!b||b.finished)return;
+ b.finished=true;b.mob.hp=0;b.mob.alive=false;
+ const xp=b.mob.xp||25;g.xp+=xp;g.coins+=3;g.kills++;addXP(0);
+ if(g.questStep===1&&g.kills>=3)g.questStep=g.ledgerFound?3:2;
+ updateUI();persistProgress();tacticalBattle=null;closeModal();
+ notify((b.mob.name||'Criatura')+' derrotado! +'+xp+' XP · +3 cobre fictício.',4);
+}
+function finishTacticalDefeat(){
+ if(!tacticalBattle)return;
+ tacticalBattle=null;g.hp=Math.max(25,Math.ceil(g.maxHp*.4));g.coins=Math.max(0,g.coins-3);
+ updateUI();persistProgress();closeModal();
+ notify('Você foi derrotado e recuou. Recuperou parte da saúde e perdeu 3 cobres fictícios.',4.5);
+}
+function exitTacticalBattle(){
+ tacticalBattle=null;closeModal();notify('Você recuou do combate. Nenhuma recompensa foi coletada.',2.5);
+}
 
 function openGameMenu(){
   keys.clear();
@@ -1032,9 +1130,9 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
+function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
-$('menuBtn').onclick=openGameMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
