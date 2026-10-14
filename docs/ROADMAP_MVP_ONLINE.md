@@ -153,7 +153,7 @@ A direção ativa abandona o combate lateral e a ênfase em classes de RPG em fa
 
 ### Exploração e personagens
 - As quatro áreas jogáveis usam visão superior: Brumaforte, Bosque Velado, Lago Silencioso e Mina Antiga. A mina foi convertida de plataformas laterais para um mapa com caminhos, paredes quebradas, plantas, lampiões, altar e livro-razão.
-- O protagonista e os NPCs usam sprites menores e nomes destacados. Os moradores mantêm aparência, função, histórias, missões e diálogos próprios.
+- O protagonista, os NPCs e a prévia do criador compartilham proporções compactas de sprite portátil; nomes destacados e silhuetas por função mantêm a leitura do mapa. O criador usa roupas como padrão, boné/capuz/tiara e acessórios simples; a aparência antiga de corpo-base migra para viajante.
 - A arte dos parceiros e criaturas é desenhada em pixel art pelo cliente, para não depender de emojis na interface de equipe e no duelo.
 
 ### Parceiros, encontros e progressão
@@ -167,7 +167,7 @@ A direção ativa abandona o combate lateral e a ênfase em classes de RPG em fa
 1. Validar movimento, colisões e retorno entre mina e vila.
 2. Confirmar escolha inicial, seleção de equipe, captura, fuga, derrota, cura, evolução e salvamento/carregamento.
 3. Testar diálogos, missões de NPCs, chefes de história e decisões econômicas em desktop e celular.
-4. Conferir que nenhum texto ou botão ainda apresenta o antigo sistema de combate lateral como comportamento ativo.
+4. Conferir que nenhum texto ou botão ainda apresenta o antigo sistema de combate lateral, classes de RPG ou combate por cartas como comportamento ativo. Verificar também que o criador e os saves antigos não renderizam o protagonista sem roupa.
 
 ## Fronteira entre protótipo e mundo online
 O clima é visual local e não representa um evento sincronizado. Recompensas, conquistas, materiais, chefes e decisões ainda são locais ao navegador. Para contas multiplataforma, rankings públicos, guildas, comércio, eventos sincronizados e coop/PvP, usar autenticação e estado autoritativo no servidor; não confiar no navegador para validar itens ou recompensas.
