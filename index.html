@@ -823,7 +823,8 @@ function beginCreator(slot,mode){
   const coat=accents[a.outfitColor]||clothes[a.outfit]||clothes.traveler;
   const trim=({traveler:'#e5c977',guard:'#c9d2b8',mage:'#efce78',noble:'#f1d58a',ranger:'#d4c56f',royal:'#f1d58a'})[a.outfit]||'#e5c977';
   const cape=capeColors[a.cloak],outline='#263e43',pants='#42515a';
-  const px=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(x*3,y*3,w*3,h*3);};
+  // As coordenadas já são ampliadas pelo contexto (scale(3,3)); multiplicar aqui de novo cortava quase todo o sprite.
+   const px=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(x,y,w,h);};
   c.fillStyle='#c4dca0';c.fillRect(0,0,48,72);
   c.fillStyle='#b3ce8b';c.fillRect(0,57,48,15);
   c.fillStyle='#8cb572';c.fillRect(0,60,48,12);
