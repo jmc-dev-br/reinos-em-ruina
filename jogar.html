@@ -254,8 +254,8 @@ html,body{background:#1a3036;color:#f4f0d0;font-family:ui-monospace,Consolas,mon
 <body>
 <div class="shell">
   <header class="top">
-    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · AVENTURA 16-BIT</p></div></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ AVENTURA CLÁSSICA · CRIATURAS ORIGINAIS</div></div>
+    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 2.0</p></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ AVENTURA 16-BIT · CRIATURAS ORIGINAIS</div></div>
   </header>
   <section class="stats" aria-label="Status do personagem">
     <div class="stat"><div class="label">Parceiro ativo</div><div class="value" id="lv">Nível 1</div><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
@@ -971,8 +971,8 @@ function settleOfflineActivity(showNotice){
  if(hours<1)return 0;
  a.lastClaimAt=Date.now();writeOfflineActivity(a);
  if(a.mode==='train'){
-  const earned=hours*12;g.xp+=earned;addXP(0);updateUI();persistProgress();
-  if(showNotice)notify('Treinamento offline: +'+earned+' XP em '+hours+' hora(s).',4);
+  const earned=hours*12,partner=activeCreature();if(partner)addCreatureXP(partner,earned);g.xp+=earned;addXP(0);updateUI();persistProgress();
+  if(showNotice)notify('Treinamento offline: '+(partner?partner.nickname+' recebeu +'+earned+' XP de parceiro.':earned+' XP de jornada.')+' ('+hours+' hora(s)).',4);
  }else{
   const earned=hours*5;g.coins+=earned;updateUI();persistProgress();
   if(showNotice)notify('Trabalho na taverna: +'+earned+' cobres fictícios em '+hours+' hora(s).',4);
@@ -986,19 +986,19 @@ function startOfflineActivity(mode){
  const value={mode,lastClaimAt:Date.now()};
  if(!writeOfflineActivity(value)){notify('O navegador não permitiu salvar a atividade neste dispositivo.',3);return;}
  closeModal();
- notify(mode==='train'?'Atividade definida: treinar força (+12 XP por hora, limite de 8 horas).':'Atividade definida: trabalhar na taverna (+5 cobres por hora, limite de 8 horas).',4);
+ notify(mode==='train'?'Atividade definida: treinar parceiro (+12 XP por hora, limite de 8 horas).':'Atividade definida: trabalhar na taverna (+5 cobres por hora, limite de 8 horas).',4);
 }
 function openActivityMenu(){
  const a=readOfflineActivity(),mode=a&&a.mode;
- const status=mode==='train'?'Treinando força':mode==='work'?'Trabalhando na taverna':'Nenhuma atividade definida';
- const copy=mode==='train'?'Ao voltar, você recebe 12 XP por hora concluída.':mode==='work'?'Ao voltar, você recebe 5 cobres fictícios por hora concluída.':'Escolha o que seu personagem fará enquanto você estiver longe.';
+ const status=mode==='train'?'Treinando parceiro':mode==='work'?'Trabalhando na taverna':'Nenhuma atividade definida';
+ const copy=mode==='train'?'Ao voltar, sua criatura parceira recebe 12 XP por hora concluída.':mode==='work'?'Ao voltar, você recebe 5 cobres fictícios por hora concluída.':'Escolha uma atividade para o tempo longe da aventura.';
  const body='<div class="menu-intro"><strong>Estado atual:</strong> '+escapeHtml(status)+'<br>'+escapeHtml(copy)+'</div>'+
  '<div class="activity-options">'+
- '<div class="activity-option"><div class="activity-icon">⚔</div><div><strong>Treinar força</strong><p>Prática diária para ganhar experiência. +12 XP por hora, até 8 horas.</p></div></div>'+
+ '<div class="activity-option"><div class="activity-icon">✦</div><div><strong>Treinar parceiro</strong><p>Prepare a criatura ativa para duelos. +12 XP por hora, até 8 horas.</p></div></div>'+
  '<div class="activity-option"><div class="activity-icon">◈</div><div><strong>Trabalhar na taverna</strong><p>Ganhar uma pequena renda em moeda fictícia. +5 cobres por hora, até 8 horas.</p></div></div>'+
  '</div><div class="menu-note">Protótipo local: os resultados são calculados neste navegador e não são sincronizados com outros jogadores. O servidor online será necessário para validar atividades sem trapaças.</div>';
  showModal('activity','Atividade durante sua ausência',body,[
-  {label:'Treinar força',action:()=>startOfflineActivity('train'),primary:mode==='train'},
+  {label:'Treinar parceiro',action:()=>startOfflineActivity('train'),primary:mode==='train'},
   {label:'Trabalhar na taverna',action:()=>startOfflineActivity('work'),primary:mode==='work'},
   {label:'Desativar',action:()=>startOfflineActivity('rest')},
   {label:'Voltar',action:()=>closeModal()}
@@ -2042,7 +2042,7 @@ function drawFieldCreature(x,y,m){
  }else{
   rect(x-7,y-8,14,13,'#314a45');rect(x-5,y-10,10,5,'#8ea888');rect(x-3,y-4,2,2,'#f0d8a0');rect(x+2,y-4,2,2,'#f0d8a0');
  }
- if(m.boss)drawBossBar(m,x,y-24,44);
+ if(m.boss)drawBossBar(m,x,y-24,64);
  if(gameSettings.showLabels&&m.name)drawNameplate(m.name,x,y-19,m.boss?'#ffd179':'#f6efc4',6.5);
 }
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
@@ -2193,8 +2193,9 @@ const REGION_META={
 };
 function isRegionUnlocked(id){
  if(id==='brumaforte')return true;
- if(id==='bosque')return g.level>=2||g.questStep>=2;
- if(id==='lago')return g.level>=4||g.questStep>=5;
+ const partner=activeCreature(),level=partner?partner.level:g.level;
+ if(id==='bosque')return level>=2||g.questStep>=2;
+ if(id==='lago')return level>=4||g.questStep>=5;
  return false;
 }
 function regionMobList(id){return id==='brumaforte'?g.slimes:(g.regionMobs&&g.regionMobs[id])||[];}
@@ -2332,7 +2333,7 @@ function enterRegion(id){
  notify(entryText[id]||'Nova região descoberta.',4);
 }
 function openWorldMap(){
- const body='<div class="worldmap-intro"><strong>Atlas das Terras Partidas</strong><p>Explore regiões com perigos, personagens e histórias próprios. Aventureiro: nível '+g.level+' · '+escapeHtml(classProfile().name)+' · dificuldade '+escapeHtml(difficultyProfile().name)+'.</p></div>'+
+ const body='<div class="worldmap-intro"><strong>Atlas das Terras Partidas</strong><p>Explore regiões com perigos, personagens e histórias próprios. Parceiro: '+escapeHtml(activeCreature()?activeCreature().nickname:'Sem parceiro')+' · nível '+(activeCreature()?activeCreature().level:g.level)+'.</p></div>'+
   '<div class="atlas-schematic"><div class="atlas-route"></div><div class="atlas-node village"><b>⌂</b><strong>BRUMAFORTE</strong><small>Vila · Capítulo I</small></div><div class="atlas-node forest"><b>♧</b><strong>BOSQUE VELADO</strong><small>Trilha · Nível 2</small></div><div class="atlas-node lake"><b>≈</b><strong>LAGO SILENCIOSO</strong><small>Maré · Nível 4</small></div></div>'+
  Object.entries(REGION_META).map(([id,z])=>{
   const unlocked=isRegionUnlocked(id),current=g.region===id;
