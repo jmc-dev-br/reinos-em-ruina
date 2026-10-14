@@ -823,7 +823,25 @@ function interact(){
   notify('Explore mais a mina. O livro-razão está no extremo direito, perto do altar.',2.4);
  }
 }
-function openShop(){const potionCost=Math.max(3,Math.round(5*g.economy.priceIndex/100));const mapCost=Math.max(2,Math.round(3*g.economy.priceIndex/100));const body='<p>“Tudo aqui custa cobre do reino. Nada nesta loja representa dinheiro real.”</p><div class="shoprow"><div><strong>Poção de ervas</strong><span>Recupera 35 pontos de vida, até o máximo.</span></div><div style="text-align:right"><div class="shopprice">'+potionCost+' cobre</div><button class="btn primary" id="buyPotion">Comprar</button></div></div><div class="shoprow"><div><strong>Mapa da estrada</strong><span>Uma dica sobre onde encontrar criaturas.</span></div><div style="text-align:right"><div class="shopprice">'+mapCost+' cobre</div><button class="btn" id="buyMap">Comprar</button></div></div><div class="modalnote">O índice de preços da vila é '+g.economy.priceIndex+'. O preço do mercador acompanha a simulação. Nenhuma quantia tem valor real.</div>';showModal('shop','Mercador de Brumaforte',body,[{label:'Fechar',action:()=>closeModal()}]);setTimeout(()=>{const bp=$('buyPotion'),bm=$('buyMap');if(bp)bp.onclick=()=>{if(g.coins<potionCost){notify('Você não tem cobre suficiente.');return;}g.coins-=potionCost;g.potions++;updateUI();persistProgress();notify('Poção adicionada ao inventário. Pressione H para usar.',2.5);};if(bm)bm.onclick=()=>{if(g.coins<mapCost){notify('Você não tem cobre suficiente.');return;}g.coins-=mapCost;updateUI();persistProgress();closeModal();openDialogue('Mapa da estrada','“Limos verdes costumam aparecer perto do caminho e das paredes quebradas. Se pretende lutar, aproxime-se antes de atacar.”','Dica comprada por '+mapCost+' cobres fictícios.');};},30);}
+function openShop(){
+ const potionCost=Math.max(3,Math.round(5*g.economy.priceIndex/100)),mapCost=Math.max(2,Math.round(3*g.economy.priceIndex/100));
+ const materials=professionsData().materials||{ore:0,herb:0,fish:0};
+ const tradeRows=[['ore','Minério','2 cobres',2],['herb','Ervas','1 cobre',1],['fish','Peixes','3 cobres',3]].map(([id,name,price,value])=>'<div class="shoprow"><div><strong>Vender '+name.toLowerCase()+'</strong><span>Você tem: '+Math.max(0,Number(materials[id])||0)+' · preço fictício por unidade</span></div><div style="text-align:right"><div class="shopprice">'+price+'</div><button class="btn" data-sell-material="'+id+'" '+((Number(materials[id])||0)<1?'disabled':'')+'>Vender 1</button></div></div>').join('');
+ const body='<p>“Toda troca precisa ter preço, quantidade e item conferidos. Estas moedas existem apenas dentro do jogo.”</p>'+
+ '<div class="shoprow"><div><strong>Poção de ervas</strong><span>Recupera 35 pontos de vida, até o máximo.</span></div><div style="text-align:right"><div class="shopprice">'+potionCost+' cobre</div><button class="btn primary" id="buyPotion">Comprar</button></div></div>'+
+ '<div class="shoprow"><div><strong>Mapa da estrada</strong><span>Uma dica sobre onde encontrar criaturas.</span></div><div style="text-align:right"><div class="shopprice">'+mapCost+' cobre</div><button class="btn" id="buyMap">Comprar</button></div></div>'+
+ '<div class="eyebrow" style="margin:15px 0 7px">BALCÃO DE TROCAS · VENDER RECURSOS</div>'+tradeRows+
+ '<div class="modalnote">Índice de preços da vila: '+g.economy.priceIndex+'. Valores são fictícios. Esta é uma troca local com o mercador, não uma troca online entre jogadores.</div>';
+ showModal('shop','Mercador · compra e troca',body,[{label:'Fechar',action:()=>closeModal()}]);
+ const bp=$('buyPotion'),bm=$('buyMap');
+ if(bp)bp.onclick=()=>{if(g.coins<potionCost){notify('Você não tem cobre suficiente.');return;}g.coins-=potionCost;g.potions++;updateUI();persistProgress();notify('Poção adicionada ao inventário. Pressione H para usar.',2.5);};
+ if(bm)bm.onclick=()=>{if(g.coins<mapCost){notify('Você não tem cobre suficiente.');return;}g.coins-=mapCost;updateUI();persistProgress();closeModal();openDialogue('Mapa da estrada','“Limos verdes costumam aparecer perto do caminho e das paredes quebradas. Se pretende lutar, aproxime-se antes de atacar.”','Dica comprada por '+mapCost+' cobres fictícios.');};
+ $('modalBody').querySelectorAll('[data-sell-material]').forEach(button=>button.onclick=()=>{
+  const id=button.dataset.sellMaterial,info={ore:{name:'minério',value:2},herb:{name:'ervas',value:1},fish:{name:'peixe',value:3}}[id],data=professionsData();
+  if(!info||!data.materials||Number(data.materials[id]||0)<1){notify('Você não tem esse recurso para vender.',2);openShop();return;}
+  data.materials[id]--;g.coins+=info.value;saveProfessions(data);updateUI();persistProgress();playSfx('coin');notify('Troca concluída: 1 '+info.name+' por '+info.value+' cobres fictícios.',2.5);openShop();
+ });
+}
 
 const SIDE_QUESTS={
  toren:{id:'toren',name:'Ferro para as ferramentas',need:{ore:3},reward:{coins:18,xp:28},intro:'A ferraria está quase parando. Preciso de três minérios para consertar as ferramentas e reforçar o portão. Pode me ajudar?',active:'Traga 3 minérios. Você pode coletá-los em Profissões ou comprá-los na ferraria.',done:'Bom trabalho. Essas ferramentas vão durar o inverno inteiro. Receba seu pagamento.'},
