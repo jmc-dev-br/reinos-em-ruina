@@ -184,7 +184,7 @@ body{position:fixed;inset:0}
     <div class="canvashead"><div class="location"><span class="dot"></span><span id="sceneTitle">BRUMAFORTE · VILA INICIAL</span></div><div class="subhead" id="sceneSub">Explore, converse e descubra o caminho para as ruínas.</div></div>
     <div class="stagewrap"><canvas id="game" class="stage" width="960" height="540" tabindex="0" aria-label="Jogo Reinos em Ruína"></canvas><div class="toast" id="toast"></div></div>
     <div class="actionrow">
-      <button class="btn active" data-scene="map" id="mapBtn">⌂ Mapa</button>
+      <button class="btn active" data-scene="map" id="mapBtn">⌂ Mapa</button><button class="btn" id="worldMapBtn" title="Viajar entre regiões">🗺 Regiões <span class="kbd">G</span></button>
       <button class="btn" data-scene="action" id="ruinsBtn">⚔ Ruínas</button>
       <button class="btn" id="financeBtn">◈ Caderno financeiro <span class="kbd">M</span></button>
       <button class="btn" id="shopBtn">▤ Mercador <span class="kbd">T</span></button>
@@ -434,7 +434,7 @@ function stopAmbientMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=
 function playFirstInteractionAudio(){if(gameSettings.soundEnabled){getAudioContext();if(gameSettings.musicEnabled)startAmbientMusic();}}
 document.addEventListener('pointerdown',playFirstInteractionAudio,{passive:true});
 
-const originalState=()=>({character:defaultAppearance(),scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:820,y:350,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:820,y:350,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false,shrineRead:false,wreckRead:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',arven:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -505,12 +505,14 @@ function interact(){
   if(g.region==='bosque'){
    if(Math.hypot(p.x-180,p.y-366)<70){talkLiora();return;}
    if(Math.hypot(p.x-315,p.y-455)<70){talkArven();return;}
+   if(Math.hypot(p.x-722,p.y-178)<78){talkForestShrine();return;}
    const boss=currentRegionBoss('bosque');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<64){openDialogue('Lobo da Névoa','A criatura rosna com a voz de alguém que você conhece. Não é uma fala — é uma armadilha.','Chegue perto e use J para atacar ou Cartas táticas para preparar a defesa.');return;}
    notify('Siga as trilhas e converse com Liora ou Arven. O altar fica no leste.',2.5);return;
   }
   if(g.region==='lago'){
    if(Math.hypot(p.x-270,p.y-419)<72){talkYara();return;}
    if(Math.hypot(p.x-457,p.y-388)<72){talkNeris();return;}
+   if(Math.hypot(p.x-620,p.y-345)<72){talkLakeWreck();return;}
    const boss=currentRegionBoss('lago');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<68){openDialogue('Leviatã de Vidro','A carapaça reflete golpes como espelhos. Entre cada investida, uma rachadura brilha por um instante.','Chegue perto e use J para atacar ou Cartas táticas; a criatura fica mais perigosa abaixo de metade da vida.');return;}
    notify('Explore a margem e procure Yara ou Neris no atracadouro.',2.5);return;
   }
@@ -594,6 +596,59 @@ function openTavern(){
  showModal('tavern','Sabela · Estalagem da Folha Dourada',body,[{label:'Fechar',action:()=>closeModal()}]);
  $('buyStew').onclick=()=>{if(g.coins<4){notify('Você precisa de 4 cobres para o caldo.',2);return;}if(g.hp>=g.maxHp){notify('Você está com a vida cheia.',2);return;}g.coins-=4;const healed=Math.min(20,g.maxHp-g.hp);g.hp+=healed;playSfx('heal');updateUI();persistProgress();closeModal();notify('Caldo quente: +'+healed+' de vida por 4 cobres.',3);};
  $('askRumor').onclick=()=>openDialogue('Sabela, dona da estalagem','Há três noites, um carroceiro chegou com o recibo molhado e a carga vazia. Disse que ouviu um tilintar de metal vindo das ruínas, mesmo sem ver ninguém. Se quer respostas, procure Mara e examine o livro-razão.','Pista registrada: compare recibos, mercadorias e pagamentos; registros duplicados podem esconder desvios.');
+}
+
+
+function talkLiora(){
+ const q=g.sideQuests.liora,boss=currentRegionBoss('bosque');
+ if(q==='locked'){
+  g.sideQuests.liora='active';g.storyFlags.forestLore=true;if(boss)boss.revealed=true;persistProgress();updateUI();
+  openDialogue('Liora, rastreadora do Bosque Velado','Não siga as vozes entre as árvores. A névoa repete as últimas palavras de quem se perdeu aqui. Minha irmã ouviu a própria voz chamá-la e nunca voltou. O Lobo da Névoa guarda o altar — e algo que ela deixou para trás.','Missão de história: derrote o Lobo da Névoa e volte a Liora.');return;
+ }
+ if(q==='active'&&boss&&!boss.alive){
+  g.sideQuests.liora='complete';g.coins+=50;addXP(130);updateUI();persistProgress();checkAchievements();playSfx('win');
+  openDialogue('Liora, rastreadora do Bosque Velado','A névoa está se desfazendo. Encontrei o pingente da minha irmã entre as pedras do altar. Não consigo trazer tudo de volta, mas hoje o bosque deixou de mentir. Obrigada por não ter seguido a voz.','História concluída: +50 cobres fictícios, +130 XP.');return;
+ }
+ openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Ele muda de comportamento quando perde metade da resistência.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e use cartas de defesa quando ele entrar em fúria.'));
+}
+function talkArven(){
+ const state=g.sideQuests.arven,data=professionsData();
+ if(state==='locked'){
+  g.sideQuests.arven='active';persistProgress();
+  openDialogue('Arven, vigia da trilha','Eu desenho mapas porque a memória falha quando o medo chega. Preciso de duas ervas para marcar uma rota segura: o cheiro delas confunde os cães da névoa. Posso mostrar uma passagem pelo lado norte quando você trouxer as folhas.','Missão secundária: entregue 2 ervas a Arven.');return;
+ }
+ if(state==='active'&&data.materials.herb>=2){
+  data.materials.herb-=2;saveProfessions(data);g.sideQuests.arven='complete';g.coins+=14;addXP(35);updateUI();persistProgress();
+  openDialogue('Arven, vigia da trilha','Agora sim. Esta passagem evita o terreno onde a névoa fica mais espessa. Não é um mapa bonito, mas é um mapa honesto — e isso vale mais.','Missão concluída: +14 cobres fictícios e +35 XP.');return;
+ }
+ openDialogue('Arven, vigia da trilha',state==='complete'?'A rota norte está marcada. Se precisar escolher entre a rota mais curta e a rota segura, lembre-se de que tempo também é um recurso.':'Ainda preciso de duas ervas para terminar o mapa. Elira conhece cada planta deste reino.','Objetivo: '+(state==='complete'?'explore o altar e observe a trilha.':'reúna 2 ervas na profissão Herbologia.'));
+}
+function talkYara(){
+ const q=g.sideQuests.yara,boss=currentRegionBoss('lago');
+ if(q==='locked'){
+  g.sideQuests.yara='active';g.storyFlags.lakeLore=true;if(boss)boss.revealed=true;persistProgress();updateUI();
+  openDialogue('Yara, cartógrafa das marés','A bússola que encontrei não aponta para o norte. Aponta para algo perdido sob o lago. Ontem, a água devolveu uma moeda que só será cunhada daqui a cem anos. O Leviatã de Vidro subiu atrás dela. Preciso que você o enfrente antes que alcance o atracadouro.','Missão de história: derrote o Leviatã de Vidro e volte a Yara.');return;
+ }
+ if(q==='active'&&boss&&!boss.alive){
+  g.sideQuests.yara='complete';g.coins+=75;addXP(190);g.potions++;updateUI();persistProgress();checkAchievements();playSfx('win');
+  openDialogue('Yara, cartógrafa das marés','A água voltou a refletir o céu, não os anos que ainda não chegaram. A bússola parou de girar — e agora aponta para uma costa que não aparece em nenhum mapa. Você abriu uma nova pergunta para o reino.','História concluída: +75 cobres fictícios, +190 XP e +1 poção.');return;
+ }
+ openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Sua carapaça de vidro devolve golpes; use uma carta defensiva e espere a abertura.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'derrote o Leviatã de Vidro.'));
+}
+function talkNeris(){
+ openDialogue('Neris, arquivista dos naufrágios',g.storyFlags.lakeLore?'Yara voltou a confiar na bússola. Entre os nomes que cataloguei há um navio que nunca saiu do porto, mas consta como naufragado três vezes.':'Guardo os nomes de todos os barcos que não voltaram. Não porque a lista seja útil, mas porque ninguém deveria desaparecer duas vezes: primeiro da água, depois da memória.','História local: registros incompletos podem apagar pessoas — ou encobrir uma fraude.');
+}
+function talkForestShrine(){
+ if(!g.storyFlags.shrineRead){
+  g.storyFlags.shrineRead=true;g.coins+=8;addXP(25);persistProgress();updateUI();
+  openDialogue('Altar das Raízes','Sob a pedra há um bilhete quase apagado: “A névoa não rouba as pessoas. Ela guarda o que ninguém mais consegue lembrar.” Abaixo, alguém escreveu três nomes; o último está riscado.','Descoberta: +8 cobres fictícios e +25 XP. Você pode voltar ao altar para ler a inscrição.');
+ }else openDialogue('Altar das Raízes','A inscrição ainda está ali. O nome riscado parece mais fundo quando a névoa cobre a pedra.','Descoberta registrada no diário do mundo.');
+}
+function talkLakeWreck(){
+ if(!g.storyFlags.wreckRead){
+  g.storyFlags.wreckRead=true;g.coins+=10;addXP(30);persistProgress();updateUI();
+  openDialogue('Naufrágio sem nome','Uma caixa de madeira traz registros de três cargas idênticas pagas na mesma noite. A última página descreve uma moeda prateada que “voltou antes de ser perdida”.','Descoberta: +10 cobres fictícios e +30 XP. A pista conecta o lago à crise dos carregamentos.');
+ }else openDialogue('Naufrágio sem nome','A caixa permanece aberta, mas o mapa dentro dela mudou. Agora marca um ponto mais ao norte, além das águas conhecidas.','Descoberta registrada no diário do mundo.');
 }
 
 function openFinance(){const l=lessons[g.financeIndex];showModal('finance','Caderno financeiro',`<div class="eyebrow">${escapeHtml(l.tag)}</div><h3>${escapeHtml(l.title)}</h3><p>${escapeHtml(l.body)}</p><div class="modalnote">✦ Dica: ${escapeHtml(l.tip)}</div><p style="font-size:11px;color:#87948b">Lição ${g.financeIndex+1} de ${lessons.length}. Conteúdo educativo geral — não é recomendação financeira.</p>`,[{label:'← Anterior',action:()=>{g.financeIndex=(g.financeIndex-1+lessons.length)%lessons.length;openFinance();}},{label:'Próxima →',action:()=>{g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();},primary:true}]);}
@@ -1043,7 +1098,7 @@ function normalizeSave(d){
  merged.regionMobs=Object.assign({},defaults.regionMobs,d.regionMobs||{});
  for(const zone of ['bosque','lago'])if(!Array.isArray(merged.regionMobs[zone]))merged.regionMobs[zone]=defaults.regionMobs[zone];
  merged.storyFlags=Object.assign({},defaults.storyFlags,d.storyFlags||{});
- merged.sideQuests=Object.assign({toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},d.sideQuests||{});
+ merged.sideQuests=Object.assign({toren:'locked',elira:'locked',brann:'locked',liora:'locked',arven:'locked',yara:'locked'},d.sideQuests||{});
  if(!d.questVersion){
   if(merged.economy.decision>0){merged.questStep=5;merged.questRewarded=true;merged.ledgerFound=true;}
   else if(merged.questStep===3&&merged.questRewarded){merged.questStep=4;merged.ledgerFound=true;}
@@ -1834,6 +1889,14 @@ rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.
 function render(){renderWithEffects();}
 
 function mapBlocked(x,y){
+ if(g.region==='bosque'){
+  const boxes=[[686,126,73,72],[355,193,103,61]];
+  return boxes.some(([bx,by,bw,bh])=>x>bx-13&&x<bx+bw+13&&y>by-5&&y<by+bh+12);
+ }
+ if(g.region==='lago'){
+  const boxes=[[120,235,137,87],[472,321,46,16]];
+  return boxes.some(([bx,by,bw,bh])=>x>bx-13&&x<bx+bw+13&&y>by-5&&y<by+bh+12);
+ }
  const boxes=[[45,148,181,128],[254,136,216,141],[678,157,159,121],[470,148,167,123],[276,400,115,91],[490,400,134,85],[646,396,171,119],[103,345,100,79],[487,399,142,87],[29,383,121,57],[824,278,61,85]];
  return boxes.some(([bx,by,bw,bh])=>x>bx-13&&x<bx+bw+13&&y>by-5&&y<by+bh+12);
 }
@@ -1882,10 +1945,10 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
+function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{const button=e.target&&e.target.closest?e.target.closest('button'):null;if(gameSettings.soundEnabled&&button&&!(e.relatedTarget&&button.contains(e.relatedTarget)))playSfx('ui');});
-$('menuBtn').onclick=openGameMenu;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCharacterProgression;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
