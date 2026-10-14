@@ -415,6 +415,42 @@ html,body{background:#adc991;color:#2d4a42;font-family:ui-monospace,SFMono-Regul
 .footer{background:#d3e1b1;border-top:2px solid #698550;color:#526b4f}
 @media(max-width:850px){.preview-card{background:#e6ecc4}.preview-stage{min-height:205px}#characterPreview{width:104px;height:156px}}
 @media(max-width:540px){#characterPreview{height:150px;width:100px}.preview-stage{min-height:185px}}
+
+/* REBOOT 3.0 — handheld adventure menu and trainer creator */
+.backdrop{
+ background:
+  radial-gradient(ellipse at 10% 58%,#588f4e 0 9%,transparent 9.5%),
+  radial-gradient(ellipse at 20% 62%,#72ad5a 0 13%,transparent 13.5%),
+  radial-gradient(ellipse at 83% 59%,#4e884b 0 17%,transparent 17.5%),
+  radial-gradient(ellipse at 72% 63%,#88bd66 0 10%,transparent 10.5%),
+  linear-gradient(180deg,#87c9e3 0 38%,#c8e6b5 38% 45%,#91c873 45% 100%);
+}
+.backdrop:after{background:linear-gradient(0deg,#315f3a24 0%,transparent 47%);opacity:1}
+.backdrop:before{content:"";position:absolute;inset:0;opacity:.28;pointer-events:none;background:
+ repeating-linear-gradient(0deg,transparent 0 15px,#eff5cf19 15px 16px),
+ repeating-linear-gradient(90deg,transparent 0 15px,#eff5cf15 15px 16px)}
+.topbar{background:linear-gradient(180deg,#2c637375,transparent);border:0}
+#homeView h1{color:#fff3cb;text-shadow:2px 2px 0 #315a41,4px 4px 0 #527d4b,0 7px 16px #274f3780}
+#homeView h1:before{color:#ffdc77;text-shadow:2px 2px 0 #5d8249}
+#homeView .title-line.gold{color:#fbe28b;text-shadow:2px 2px 0 #425d3b,4px 4px 0 #66864c}
+#homeView .primary-actions{background:#e2eebeeF;border:3px solid #547a49;outline:2px solid #b7d184;box-shadow:0 0 0 5px #315e3740,4px 6px 0 #31543c; padding:9px}
+#homeView .primary-actions:before,#homeView .primary-actions:after{color:#f8d56f;background:#d9e7b4}
+#homeView .action{background:#eef2cd;border-color:#638650;outline:1px solid #a6c477;box-shadow:2px 2px 0 #a7bf84;color:#345142}
+#homeView .action-label strong{color:#304f43}
+#homeView .action-label small{color:#617955}
+#homeView .action .arrow,#homeView .action-icon{color:#648d4f}
+#homeView .action.primary{background:#f2d77d;border-color:#63824a;outline:2px solid #b89744;color:#3d573d}
+#homeView .action.primary:hover{background:#ffeb9c}
+#homeView #homeNote{background:#e2edc3;border-color:#688950;outline:1px solid #bdd58c;box-shadow:3px 3px 0 #527c4b;color:#405d45}
+.preview-card,.creator-card,.language-card{background:#e6edc8;border:2px solid #6f8f53;box-shadow:3px 3px 0 #70965b;color:#324d41}
+.preview-stage{background:linear-gradient(180deg,#bce2eb,#dceab9);border-bottom:2px solid #89aa68}
+.preview-stage:before{background:linear-gradient(90deg,transparent,#709f55,transparent)}
+.preview-name{color:#345541;font-family:ui-monospace,monospace;font-weight:800}
+.preview-caption{color:#617952;font-family:ui-monospace,monospace}
+.creator-card .form-label{color:#47674a}.name-input,.select-input{background:#f1f3d7;border:2px solid #7b9a5b;color:#344e42}
+.choice,.outfit,.color-choice{background:#d4e4ad;border:2px solid #88a567;color:#355241}.choice.active,.outfit.active,.color-choice.active{background:#f1e1a0;border-color:#bd9848}
+.choice small,.outfit small{color:#5b744f}
+@media(max-width:540px){#homeView .primary-actions{padding:7px}.preview-stage{background:linear-gradient(180deg,#bce2eb,#dceab9)}}
 </style>
 </head>
 <body>
@@ -759,50 +795,57 @@ function beginCreator(slot,mode){
  function drawPreview(){
   const canvas=$('characterPreview');if(!canvas)return;
   if(canvas.width!==48||canvas.height!==72){canvas.width=48;canvas.height=72;}
-  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,48,72);ctx.imageSmoothingEnabled=false;
-  const c=creatorDraft;
-  const skins={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
-  const hairs={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
-  const clothes={traveler:'#344b61',guard:'#586557',mage:'#59458a',noble:'#783c3c',ranger:'#35513b',royal:'#353f70'};
-  const accents={default:'#c7a66a',crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const skin=skins[c.skin]||skins.light,hair=hairs[c.hair]||hairs.brown,baseCoat=clothes[c.outfit]||clothes.traveler,coat=c.outfitColor==='default'?baseCoat:(accents[c.outfitColor]||baseCoat),female=c.gender==='feminino';
-  const pants=({traveler:'#40372c',guard:'#373d39',mage:'#302744',noble:'#4a2d2d',ranger:'#292f29',royal:'#292d47'})[c.outfit]||'#40372c';
-  const trim=({traveler:'#c7a66a',guard:'#b5b3a0',mage:'#d1ad68',noble:'#dcbd7a',ranger:'#c79c5a',royal:'#e1c16d'})[c.outfit]||'#c7a66a';
-  const capes={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'},cape=capes[c.cloak];
-  const outline='#243b3c',x=12,y=29;
-  const r=(rx,ry,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(rx,ry,w,h);};
-  const p=(pts,color)=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();};
-  ctx.save();ctx.scale(2,2);
-  ctx.fillStyle='#243d3738';ctx.beginPath();ctx.ellipse(x,y+1,6,2,0,0,Math.PI*2);ctx.fill();
-  if(cape){p([[x-4,y-17],[x+4,y-17],[x+5,y-13],[x+4,y-8],[x,y-10],[x-5,y-9],[x-5,y-14]],outline);p([[x-3,y-16],[x+3,y-16],[x+4,y-13],[x+3,y-9],[x,y-10],[x-4,y-10],[x-4,y-14]],cape);}
-  r(x-4,y-8,3,6,outline);r(x+1,y-8,3,6,outline);r(x-3,y-7,2,4,pants);r(x+2,y-7,2,4,pants);r(x-4,y-3,3,2,'#31342f');r(x+1,y-3,4,2,'#31342f');
-  if(c.outfit==='traveler'||c.outfit==='ranger'){r(x-6,y-15,2,6,outline);r(x-5,y-14,2,4,cape||'#7d6442');}
-  if(female){r(x-4,y-16,8,9,outline);r(x-3,y-15,6,6,coat);r(x-4,y-10,8,3,coat);r(x-6,y-15,2,5,outline);r(x+4,y-15,2,5,outline);r(x-5,y-14,1,3,coat);r(x+4,y-14,1,3,coat);}
-  else{r(x-5,y-16,10,9,outline);r(x-4,y-15,8,7,coat);r(x-6,y-15,3,6,outline);r(x+3,y-15,3,6,outline);r(x-5,y-14,2,4,coat);r(x+3,y-14,2,4,coat);}
-  if(c.outfit==='guard'||c.outfit==='royal'){r(x-4,y-15,3,3,'#899b91');r(x+1,y-15,3,3,'#899b91');r(x-2,y-14,4,5,'#566a69');r(x-1,y-13,2,3,trim);}
-  else if(c.outfit==='mage'){r(x-2,y-15,4,6,'#3a2d56');r(x-1,y-14,2,4,trim);}
-  else if(c.outfit==='noble'){p([[x-3,y-15],[x,y-11],[x+3,y-15]],trim);}
-  else{r(x-3,y-14,6,1,trim);r(x-1,y-13,2,3,'#4c3627');}
-  if(female&&['mage','noble','royal'].includes(c.outfit)){p([[x-3,y-10],[x+3,y-10],[x+5,y-6],[x-5,y-6]],coat);r(x-4,y-7,8,1,trim);}
-  r(x-2,y-17,4,3,skin);r(x-5,y-25,10,10,outline);r(x-4,y-24,8,8,skin);
-  r(x-5,y-25,10,c.hairstyle==='mohawk'?3:4,hair);r(x-5,y-22,2,3,hair);r(x+3,y-22,2,3,hair);
-  if(c.hairstyle==='long'){r(x-5,y-22,2,6,hair);r(x+3,y-22,2,6,hair);}
-  if(c.hairstyle==='ponytail'){r(x+4,y-22,3,3,hair);r(x+5,y-20,2,3,hair);}
-  if(c.hairstyle==='braids'){r(x-6,y-22,2,5,hair);r(x+4,y-22,2,5,hair);r(x-6,y-18,2,2,trim);r(x+4,y-18,2,2,trim);}
-  if(c.hairstyle==='mohawk'){r(x-1,y-27,3,4,hair);r(x,y-28,2,2,hair);}
-  const eye=c.eyeColor==='blue'?'#4a83b1':c.eyeColor==='green'?'#52805b':c.eyeColor==='gray'?'#9b9b9b':'#5a3828';
-  r(x-3,y-20,2,2,'#f6edc9');r(x+2,y-20,2,2,'#f6edc9');r(x-2,y-20,1,2,eye);r(x+3,y-20,1,2,eye);
-  if(c.accessory==='glasses'){r(x-4,y-20,3,2,'#d5e3db');r(x+1,y-20,3,2,'#d5e3db');r(x-1,y-19,2,1,'#d5e3db');}
-  else if(c.accessory==='eyepatch')r(x+2,y-20,3,2,'#272b2a');
-  else if(c.accessory==='earrings'){r(x-5,y-19,1,2,trim);r(x+4,y-19,1,2,trim);}
-  else if(c.accessory==='necklace'){r(x-1,y-9,2,2,trim);}
-  if(c.headwear==='cap'){r(x-5,y-26,10,3,coat);r(x-4,y-28,7,3,coat);r(x+1,y-24,5,1,trim);}
-  else if(c.headwear==='hood'){p([[x-6,y-23],[x-5,y-27],[x-2,y-28],[x+3,y-27],[x+6,y-23],[x+3,y-22],[x+2,y-25],[x-3,y-25],[x-4,y-22]],outline);p([[x-4,y-23],[x-3,y-26],[x+2,y-26],[x+4,y-23],[x-3,y-22]],cape||coat);}
-  else if(c.headwear==='circlet'){r(x-4,y-24,8,1,trim);r(x-1,y-25,2,2,'#f2d98a');}
-  if(c.facialHair&&c.facialHair!=='none'&&!female)r(x-2,y-17,5,2,hair);
-  ctx.restore();
-  $('previewName').textContent=c.name||t('empty');$('previewCaption').textContent=t('preview');
- }
+  const c=canvas.getContext('2d');c.clearRect(0,0,48,72);c.imageSmoothingEnabled=false;
+  const a=creatorDraft||{};
+  const skinMap={pale:'#f3d2ad',light:'#dfb58c',tan:'#bd8157',warm:'#d09970',olive:'#aa7b53',dark:'#80513a',deep:'#624033'};
+  const hairMap={brown:'#5b3928',black:'#26242a',blond:'#d2ad58',silver:'#c5c2b5',red:'#a74738',blue:'#4b75a7',purple:'#8657a5',pink:'#c56b85'};
+  const clothes={traveler:'#438bb7',guard:'#568e61',mage:'#a07ac1',noble:'#cf6467',ranger:'#579759',royal:'#526fb6'};
+  const accents={default:null,crimson:'#cf6467',emerald:'#579759',sapphire:'#4e8fbd',violet:'#9c73bc',charcoal:'#69777a'};
+  const capeColors={red:'#b95258',green:'#4f8050',blue:'#47769b',ivory:'#c6bd93'};
+  const skin=skinMap[a.skin]||skinMap.light,hair=hairMap[a.hair]||hairMap.brown;
+  const coat=accents[a.outfitColor]||clothes[a.outfit]||clothes.traveler;
+  const trim=({traveler:'#e5c977',guard:'#c9d2b8',mage:'#efce78',noble:'#f1d58a',ranger:'#d4c56f',royal:'#f1d58a'})[a.outfit]||'#e5c977';
+  const cape=capeColors[a.cloak],outline='#263e43',pants='#42515a';
+  const px=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(x*3,y*3,w*3,h*3);};
+  c.fillStyle='#c4dca0';c.fillRect(0,0,48,72);
+  c.fillStyle='#b3ce8b';c.fillRect(0,57,48,15);
+  c.fillStyle='#8cb572';c.fillRect(0,60,48,12);
+  c.fillStyle='#6f9b5e';c.fillRect(0,66,48,3);
+  c.save();c.scale(3,3);
+  c.fillStyle='#35574455';c.beginPath();c.ellipse(8,22,5,1.5,0,0,Math.PI*2);c.fill();
+  if(cape&&a.cloak!=='none'){px(4,8,8,9,outline);px(5,9,6,7,cape);px(6,10,4,4,'#ffffff18');}
+  px(4,16,4,5,outline);px(5,17,2,4,pants);px(9,16,3,5,outline);px(9,17,2,4,pants);
+  px(4,21,4,1,outline);px(9,21,4,1,outline);px(5,21,2,1,'#d5b47d');px(10,21,2,1,'#d5b47d');
+  // Small coat, visible sleeves and a simple collar, like a handheld overworld sprite.
+  px(3,9,10,8,outline);px(4,10,8,6,coat);px(4,10,8,1,trim);
+  px(2,10,3,6,outline);px(3,11,2,4,skin);px(11,10,3,6,outline);px(11,11,2,4,skin);
+  px(7,11,2,4,'#3b5153');px(7,11,1,3,trim);
+  if(a.gender==='feminino'&&['mage','noble','royal'].includes(a.outfit)){px(3,15,10,3,outline);px(4,16,8,2,coat);px(4,16,8,1,trim);}
+  // Rounded pixel head, with hair and eyes that remain distinct at native sprite size.
+  px(3,2,10,8,outline);px(4,3,8,6,skin);px(5,4,6,4,skin);
+  px(4,2,8,3,hair);px(3,3,2,4,hair);px(11,3,2,4,hair);
+  if(a.hairstyle==='long'){px(3,5,2,4,hair);px(11,5,2,4,hair);}
+  if(a.hairstyle==='ponytail'){px(12,4,2,4,hair);px(13,6,2,3,hair);}
+  if(a.hairstyle==='braids'){px(3,5,2,4,hair);px(11,5,2,4,hair);px(3,8,2,2,trim);px(11,8,2,2,trim);}
+  if(a.hairstyle==='mohawk'){px(7,0,3,3,hair);px(8,0,1,2,trim);}
+  px(5,6,2,2,'#fff2d5');px(9,6,2,2,'#fff2d5');
+  const eye=({brown:'#593d2b',blue:'#3e73a4',green:'#457c54',gray:'#6b7778'})[a.eyeColor]||'#593d2b';
+  px(6,6,1,2,eye);px(10,6,1,2,eye);px(7,8,2,1,'#8e5141');
+  if(a.facialHair&&a.facialHair!=='none'&&a.gender!=='feminino')px(6,8,4,1,hair);
+  if(a.headwear==='cap'||a.headwear==='hat'){px(3,1,10,3,outline);px(4,1,8,2,coat);px(2,3,12,1,trim);}
+  else if(a.headwear==='hood'){px(2,2,12,7,outline);px(3,3,10,5,cape||coat);px(4,4,8,4,skin);px(5,6,2,2,'#fff2d5');px(9,6,2,2,'#fff2d5');}
+  else if(a.headwear==='helmet'){px(3,1,10,4,outline);px(4,1,8,3,'#849b9a');px(4,4,8,1,trim);}
+  else if(a.headwear==='wizardHat'){px(5,0,6,2,coat);px(6,0,4,3,coat);px(3,3,10,1,trim);}
+  else if(a.headwear==='crown'||a.headwear==='circlet'){px(4,2,8,1,trim);px(6,0,2,2,trim);px(9,1,2,1,'#fff0ad');}
+  if(a.accessory==='glasses'){px(4,6,4,2,'#d8f0df');px(9,6,4,2,'#d8f0df');px(8,6,1,1,'#51635b');}
+  else if(a.accessory==='eyepatch'){px(10,6,3,2,'#35454a');}
+  else if(a.accessory==='earrings'){px(3,7,1,2,trim);px(12,7,1,2,trim);}
+  else if(a.accessory==='necklace'){px(7,9,2,2,trim);}
+  c.restore();
+  canvas.style.imageRendering='pixelated';
+  $('previewName').textContent=a.name||t('empty');
+  $('previewCaption').textContent=language==='pt-BR'?'SPRITE 16-BIT · VISÃO FRONTAL':'16-BIT SPRITE · FRONT VIEW';
+}
 function confirmCreator(){
  const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
  if(!name){window.alert(t('nameRequired'));input.focus();return;}
@@ -852,12 +895,12 @@ function renderAbout(){
   {k:'A INTENÇÃO',h:'Aprender vivendo o mundo',p1:'Reinos em Ruína é uma aventura de exploração em pixel art, vista de cima, com criaturas originais e encontros por turnos. A educação financeira não aparece como uma prova separada: ela faz parte das missões, das recompensas, do comércio e das consequências das decisões do jogador.',p2:'Ao administrar cobre, comparar preços, lidar com dívidas e identificar fraudes, o jogador aprende a fazer perguntas melhores antes de tomar decisões. O objetivo é estimular curiosidade e pensamento crítico — não prometer fórmulas mágicas para enriquecer.',wide:true},
   {k:'A HISTÓRIA · CAPÍTULO I',h:'A Moeda Partida',p1:'O reino atravessa tempos difíceis. Rotas comerciais enfraquecidas, recursos escassos e registros pouco confiáveis deixam vilas inteiras vulneráveis. Em Brumaforte, carregamentos de grãos desaparecem e os preços começam a mudar sem explicação.',p2:'A guardiã Mara pede ajuda ao aventureiro. Para descobrir o que aconteceu, será preciso explorar a vila, enfrentar criaturas nas ruínas e encontrar o livro-razão da mina. As páginas revelam diferenças nas contas e indícios de que os carregamentos foram desviados.',wide:false},
   {k:'AS SUAS ESCOLHAS',h:'Toda solução tem um custo',p1:'Depois de reunir provas, o jogador ajuda Brumaforte a escolher como responder à escassez: investir na estrada comercial, tomar um empréstimo da guilda ou congelar os preços. Cada caminho altera o tesouro, a dívida, a confiança dos habitantes, a reserva de alimentos e os preços.',p2:'Não existe uma opção universalmente perfeita. O objetivo é observar os efeitos e entender por que uma decisão que alivia um problema hoje pode criar outro amanhã.',wide:false},
-  {k:'COMO SE JOGA',h:'Explorar, lutar, descobrir',p1:'Reboot 2.0: explore a vila, a floresta, o lago e a mina em visão superior, com sprites pequenos, casas em blocos e caminhos legíveis no estilo de aventuras 16-bit de portátil. Crie um personagem vestido e reconhecível, conheça moradores visualmente distintos, escolha Folhote, Braseco ou Gotil e capture criaturas para sua equipe de até seis parceiros.',p2:'Treine os parceiros por meio de batalhas, evolua seus níveis e escolha movimentos com dano fixo. Continue ajudando Mara e os moradores, investigue o desaparecimento dos carregamentos e tome decisões sobre o orçamento de Brumaforte. Os salvamentos e as criaturas capturadas permanecem locais a este navegador; recursos compartilhados exigem um servidor.',wide:true}
+  {k:'COMO SE JOGA',h:'Explorar, lutar, descobrir',p1:'Reboot 3.0: explore a vila, a floresta, o lago e a mina em visão superior, com personagens compactos em pixel art, caminhos em blocos e exploração no estilo dos portáteis clássicos. Crie um treinador com visual 16-bit, conheça moradores distintos, escolha Folhote, Braseco ou Gotil e capture criaturas para sua equipe de até seis parceiros.',p2:'Treine os parceiros por meio de batalhas, evolua seus níveis e escolha movimentos com dano fixo. Continue ajudando Mara e os moradores, investigue o desaparecimento dos carregamentos e tome decisões sobre o orçamento de Brumaforte. Os salvamentos e as criaturas capturadas permanecem locais a este navegador; recursos compartilhados exigem um servidor.',wide:true}
  ]:[
   {k:'THE PURPOSE',h:'Learn by living in the world',p1:'Realms in Ruin is a top-down pixel-art adventure with original creatures and turn-based encounters. Financial education is not a separate quiz: it belongs to quests, rewards, trade, and the consequences of the player’s decisions.',p2:'By managing fictional copper, comparing prices, dealing with debt, and spotting fraud, players learn to ask better questions before making decisions. The goal is to encourage curiosity and critical thinking—not promise a shortcut to wealth.',wide:true},
   {k:'STORY · CHAPTER I',h:'The Broken Coin',p1:'The kingdom is going through hard times. Weak trade routes, scarce resources, and unreliable records leave entire villages vulnerable. In Brumaforte, grain shipments disappear and prices begin changing without a clear explanation.',p2:'Mara, the village warden, asks the adventurer for help. To uncover the truth, the player explores the village, fights creatures in the ruins, and finds the mine’s ledger. Its pages reveal accounting discrepancies and signs that shipments were diverted.',wide:false},
   {k:'YOUR CHOICES',h:'Every solution has a cost',p1:'After gathering evidence, the player helps Brumaforte decide how to answer the shortage: invest in the trade road, borrow from the guild, or freeze prices. Each path changes treasury, debt, public trust, food supplies, and prices.',p2:'There is no universally perfect option. The point is to observe the effects and understand why a decision that eases one problem today may create another tomorrow.',wide:false},
-  {k:'HOW TO PLAY',h:'Explore, fight, discover',p1:'Reboot 2.0: explore the village, forest, lake, and mine from a top-down view, with compact sprites, blocky houses, and readable paths inspired by classic 16-bit handheld adventures. Create a clothed character, meet distinct villagers, choose Folhote, Braseco, or Gotil, and catch creatures for a team of up to six companions.',p2:'Train your partners in battles, raise their levels, and choose moves with fixed damage. Help Mara and the villagers, investigate the missing shipments, and make budget decisions for Brumaforte. Saves and captured creatures stay local to this browser; shared features require an online server.',wide:true}
+  {k:'HOW TO PLAY',h:'Explore, fight, discover',p1:'Reboot 3.0: explore the village, forest, lake, and mine from a top-down view, with compact 16-bit pixel characters, blocky paths, and classic handheld-style exploration. Create a trainer sprite, meet distinct villagers, choose Folhote, Braseco, or Gotil, and catch creatures for a team of up to six companions.',p2:'Train your partners in battles, raise their levels, and choose moves with fixed damage. Help Mara and the villagers, investigate the missing shipments, and make budget decisions for Brumaforte. Saves and captured creatures stay local to this browser; shared features require an online server.',wide:true}
  ];
  $('aboutContent').innerHTML=cards.map(x=>'<article class="story-card'+(x.wide?' wide':'')+'"><div class="story-kicker">'+esc(x.k)+'</div><h3>'+esc(x.h)+'</h3><p>'+esc(x.p1)+'</p><p>'+esc(x.p2)+'</p></article>').join('')+
   '<article class="story-card wide"><div class="story-facts">'+(pt?[
