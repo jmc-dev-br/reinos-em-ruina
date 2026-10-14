@@ -71,3 +71,11 @@ The game is a static HTML/CSS/JavaScript prototype suitable for GitHub Pages. Th
 ## Disclaimer
 
 This is an educational prototype, not financial advice. Copper, treasury, debt and prices are fictional game values. The Arc contract stores a public game-state commitment and selected metrics; do not put confidential or identifying information in on-chain data. Smart contracts may contain bugs and on-chain transactions are irreversible.
+
+## Atualização do protótipo: combate tático e atividades de ausência
+
+O protótipo agora inclui uma batalha experimental por cartas, aberta pelo botão **Cartas táticas** quando o jogador se aproxima de uma criatura. Cada turno tem 3 pontos de energia; as cartas permitem ataque rápido, ataque pesado, bloqueio ou uso de poção. Vencer entrega as recompensas existentes de XP e cobre fictício. Esta mecânica é local e para um jogador, não PvP.
+
+O botão **Atividade** permite ao personagem treinar (+12 XP/hora) ou trabalhar na taverna (+5 cobres fictícios/hora) enquanto o jogador está ausente, limitado a 8 horas por reivindicação. Isso usa o relógio e o armazenamento locais do navegador; é uma conveniência experimental, não um serviço online seguro.
+
+O plano completo está em [docs/ROADMAP_MVP_ONLINE.md](docs/ROADMAP_MVP_ONLINE.md). Guildas, objetivos mundiais compartilhados, recompensas offline verificadas e PvP assíncrono precisam de um backend confiável e de um banco de dados. Não devem ser apresentados como recursos compartilhados globalmente enquanto o site for estático.
