@@ -477,9 +477,11 @@ function openTacticalBattle(){
   if(d<best){best=d;target=mob;}
  }
  if(!target){notify('Aproxime-se de uma criatura para iniciar o combate tático.',2.8);return;}
+ const hadEnemyHp=typeof target.hp==='number',originalEnemyHp=target.hp;
+ const hadEnemyMaxHp=typeof target.maxHp==='number',originalEnemyMaxHp=target.maxHp;
  const maxHp=target.maxHp||(target.hp>0?target.hp:Math.max(26,Math.min(78,Math.round((target.xp||25)*.75+15))));
  target.maxHp=maxHp;if(typeof target.hp!=='number'||target.hp<=0)target.hp=maxHp;
- tacticalBattle={mob:target,scene:g.scene,enemyHp:Math.min(target.hp,maxHp),enemyMax:maxHp,energy:3,block:0,turn:1,log:'Você começa com 3 pontos de energia. Escolha cartas e pense na defesa.',finished:false};
+ tacticalBattle={mob:target,scene:g.scene,enemyHp:Math.min(target.hp,maxHp),enemyMax:maxHp,originalEnemyHp,hadEnemyHp,originalEnemyMaxHp,hadEnemyMaxHp,energy:3,block:0,turn:1,log:'Você começa com 3 pontos de energia. Escolha cartas e pense na defesa.',finished:false};
  renderTacticalBattle();
 }
 function renderTacticalBattle(){
@@ -550,7 +552,9 @@ function finishTacticalDefeat(){
  notify('Você foi derrotado e recuou. Recuperou parte da saúde e perdeu 3 cobres fictícios.',4.5);
 }
 function exitTacticalBattle(){
- tacticalBattle=null;closeModal();notify('Você recuou do combate. Nenhuma recompensa foi coletada.',2.5);
+ const b=tacticalBattle;
+ if(b){if(b.hadEnemyHp)b.mob.hp=b.originalEnemyHp;else delete b.mob.hp;if(b.hadEnemyMaxHp)b.mob.maxHp=b.originalEnemyMaxHp;else delete b.mob.maxHp;}
+ tacticalBattle=null;closeModal();notify('Você recuou. O inimigo recuperou a resistência que tinha antes desta batalha; recursos usados continuam gastos.',3.2);
 }
 
 function openGameMenu(){
@@ -564,7 +568,7 @@ function openGameMenu(){
           <div class="control-row"><kbd>W A S D</kbd><span><strong>Mover</strong><small>Anda pelo mapa; nas ruínas, A/D movem para os lados.</small></span></div>
           <div class="control-row"><kbd>← ↑ → ↓</kbd><span><strong>Movimento alternativo</strong><small>Setas para explorar. ↑ também salta nas ruínas.</small></span></div>
           <div class="control-row"><kbd>E / Enter</kbd><span><strong>Interagir</strong><small>Conversa com Mara, abre o mercador perto dele e atravessa o portão.</small></span></div>
-          <div class="control-row"><kbd>J</kbd><span><strong>Atacar</strong><small>Golpeia uma criatura próxima. Aproxime-se antes de atacar.</small></span></div>
+          <div class="control-row"><kbd>J</kbd><span><strong>Atacar</strong><small>Golpeia uma criatura próxima. Aproxime-se antes de atacar.</small></span></div>\n          <div class="control-row"><kbd>Cartas</kbd><span><strong>Combate tático</strong><small>Use o botão Cartas táticas perto de uma criatura. Você recebe 3 energias por turno.</small></span></div>\n          <div class="control-row"><kbd>Atividade</kbd><span><strong>Treino / trabalho</strong><small>Defina uma atividade para o tempo longe do jogo; recompensas locais têm limite de 8 horas.</small></span></div>
           <div class="control-row"><kbd>H</kbd><span><strong>Usar poção</strong><small>Recupera até 35 pontos de vida, se tiver uma na bolsa.</small></span></div>
           <div class="control-row"><kbd>M / N</kbd><span><strong>Caderno financeiro</strong><small>M abre a lição; N avança para a próxima lição.</small></span></div>
           <div class="control-row"><kbd>T</kbd><span><strong>Mercador</strong><small>Abre a loja quando você está perto do comerciante na vila.</small></span></div>
