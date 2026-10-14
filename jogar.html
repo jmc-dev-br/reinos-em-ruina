@@ -70,8 +70,31 @@
 const W=960,H=540, canvas=document.getElementById('game'), ctx=canvas.getContext('2d');
 ctx.imageSmoothingEnabled=false;
 const $=id=>document.getElementById(id);
+const LEGACY_SAVE_KEY='cronicas_valoria_save';
+const SLOT_PREFIX='reinos_ruina_slot_';
+const gameParams=new URLSearchParams(window.location.search);
+const activeSlotNumber=[1,2,3].includes(Number(gameParams.get('slot')))?Number(gameParams.get('slot')):0;
+const slotStorageKey=slot=>SLOT_PREFIX+slot;
+function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light'};}
+function normalizeAppearance(value){
+ const d=defaultAppearance(),v=value&&typeof value==='object'?value:{};
+ return {name:String(v.name||d.name).trim().slice(0,16)||d.name,
+  gender:['masculino','feminino'].includes(v.gender)?v.gender:d.gender,
+  outfit:['traveler','guard','mage','noble'].includes(v.outfit)?v.outfit:d.outfit,
+  cloak:['none','red','green','blue','ivory'].includes(v.cloak)?v.cloak:d.cloak,
+  hair:['brown','black','blond','silver'].includes(v.hair)?v.hair:d.hair,
+  skin:['light','tan','dark'].includes(v.skin)?v.skin:d.skin};
+}
+function readActiveSlot(){
+ if(!activeSlotNumber)return null;
+ try{const value=localStorage.getItem(slotStorageKey(activeSlotNumber));if(!value)return null;const record=JSON.parse(value);return record&&record.version===1?record:null;}catch(e){return null;}
+}
+function writeActiveSlot(record){
+ if(!activeSlotNumber)return false;
+ try{localStorage.setItem(slotStorageKey(activeSlotNumber),JSON.stringify(record));return true;}catch(e){return false;}
+}
 const keys=new Set();
-const originalState=()=>({scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -252,12 +275,31 @@ function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textC
 function closeModal(){modalType=null;$('modalback').classList.remove('open');canvas.focus();}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function usePotion(){if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}g.potions--;g.hp=Math.min(g.maxHp,g.hp+35);persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();}
-function saveData(){return {scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
-function persistProgress(){try{window.localStorage.setItem('cronicas_valoria_save',JSON.stringify(saveData()));return true;}catch(err){return false;}}
-function saveGame(){const data=saveData();try{window.localStorage.setItem('cronicas_valoria_save',JSON.stringify(data));notify('Progresso salvo neste navegador.',2.5);}catch(err){try{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cronicas_valoria_save.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);notify('O navegador bloqueou o salvamento automático; baixei um arquivo JSON com seu progresso.',4.8);}catch(downloadErr){notify('Não foi possível salvar neste navegador. Continue jogando ou tente outro navegador.',4.8);}}}
+function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function persistProgress(){
+ try{
+  const data=saveData();
+  if(activeSlotNumber){
+   const current=readActiveSlot()||{version:1,slot:activeSlotNumber,character:normalizeAppearance(g.character),game:null,createdAt:Date.now()};
+   current.character=normalizeAppearance(g.character);current.game=data;current.updatedAt=Date.now();
+   return writeActiveSlot(current);
+  }
+  localStorage.setItem(LEGACY_SAVE_KEY,JSON.stringify(data));return true;
+ }catch(err){return false;}
+}
+function saveGame(){
+ const data=saveData();
+ if(persistProgress()){notify(activeSlotNumber?'Progresso salvo no Espaço '+activeSlotNumber+'.':'Progresso salvo neste navegador.',2.5);return;}
+ try{
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='reinos_ruina_save.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  notify('O navegador bloqueou o salvamento automático; baixei um arquivo com seu progresso.',4.8);
+ }catch(err){notify('Não foi possível salvar. Tente outro navegador ou exporte o progresso.',4.8);}
+}
 function normalizeSave(d){
  const defaults=originalState();
  const merged=Object.assign(defaults,d);
+ merged.character=normalizeAppearance(d.character||defaults.character);
  merged.economy=Object.assign({},defaults.economy,d.economy||{});
  if(!d.questVersion){
   if(merged.economy.decision>0){merged.questStep=5;merged.questRewarded=true;merged.ledgerFound=true;}
@@ -268,9 +310,27 @@ function normalizeSave(d){
  if(typeof merged.ledgerFound!=='boolean')merged.ledgerFound=false;
  return merged;
 }
+
 function loadSaveFile(raw){try{const d=JSON.parse(raw);if(!d||!d.mapPlayer||!d.actionPlayer||!Array.isArray(d.slimes)||!Array.isArray(d.ruinMobs))throw new Error('Arquivo não reconhecido.');g=normalizeSave(d);closeModal();setScene(g.scene==='action'?'action':'map');updateUI();notify('Progresso carregado do arquivo.',3);}catch(err){notify('Não consegui carregar esse arquivo de progresso. Use um JSON salvo pelo jogo.',4.5);}}
-function loadGame(){try{const raw=localStorage.getItem('cronicas_valoria_save');if(!raw)return false;const d=JSON.parse(raw);g=normalizeSave(d);return true;}catch(e){return false;}}
-function resetGame(){if(!confirm('Reiniciar a aventura? O progresso salvo neste navegador também será apagado.'))return;try{window.localStorage.removeItem('cronicas_valoria_save');}catch(err){}g=originalState();closeModal();setScene('map');notify('Nova aventura iniciada. Fale com Mara perto da praça.',3);updateUI();}
+function loadGame(){
+ try{
+  if(activeSlotNumber){
+   const record=readActiveSlot();
+   if(record&&record.game){g=normalizeSave(record.game);g.character=normalizeAppearance(record.character||g.character);return true;}
+   if(record&&record.character){g=originalState();g.character=normalizeAppearance(record.character);return false;}
+  }
+  const raw=localStorage.getItem(LEGACY_SAVE_KEY);if(!raw)return false;
+  g=normalizeSave(JSON.parse(raw));
+  if(activeSlotNumber){const now=Date.now();writeActiveSlot({version:1,slot:activeSlotNumber,character:g.character,game:saveData(),createdAt:now,updatedAt:now,importedLegacy:true});}
+  return true;
+ }catch(e){return false;}
+}
+function resetGame(){
+ if(!confirm('Reiniciar a aventura? O progresso salvo neste espaço também será apagado.'))return;
+ const savedAppearance=normalizeAppearance(g.character);
+ if(!activeSlotNumber){try{window.localStorage.removeItem(LEGACY_SAVE_KEY);}catch(err){}}
+ g=originalState();g.character=savedAppearance;closeModal();setScene('map');persistProgress();notify('Nova aventura iniciada. Fale com Mara perto da praça.',3);updateUI();
+}
 function updateUI(){
  $('lv').textContent='Nível '+g.level;
  $('xp').textContent=g.xp+' / '+xpToNext()+' XP';
@@ -312,6 +372,24 @@ function poly(points,c){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(points[0][0],
 function text(s,x,y,size=12,color='#f1eddf',align='left'){ctx.fillStyle=color;ctx.font=`${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;ctx.textAlign=align;ctx.fillText(s,x,y);ctx.textAlign='left';}
 function drawTree(x,y,scale=1){rect(x-4*scale,y+4*scale,8*scale,13*scale,'#60462e');rect(x-11*scale,y-7*scale,22*scale,15*scale,'#254a2e');rect(x-8*scale,y-14*scale,16*scale,12*scale,'#35643a');rect(x-4*scale,y-18*scale,8*scale,8*scale,'#4b7942');rect(x-9*scale,y-6*scale,4*scale,4*scale,'#65924a');}
 function drawHuman(x,y,isMara=false){rect(x-7,y-2,14,13,isMara?'#6b3f9b':'#344b61');rect(x-8,y+9,6,8,'#40372c');rect(x+2,y+9,6,8,'#40372c');circle(x,y-8,7,'#dbb28a');rect(x-7,y-15,14,5,isMara?'#b5a05c':'#5c4730');rect(x-5,y-8,2,2,'#2a2624');rect(x+3,y-8,2,2,'#2a2624');if(isMara){rect(x+9,y-12,3,28,'#8f7443');circle(x+10,y-14,4,'#d4ba75');}}
+function drawPlayer(x,y,rawAppearance){
+ const a=normalizeAppearance(rawAppearance||g.character);
+ const outfits={traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c'},guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39'},mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744'},noble:{coat:'#783c3c',trim:'#dcbd7a',pants:'#4a2d2d'}};
+ const cloakColors={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
+ const hairColors={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5'};
+ const skinColors={light:'#dbb28a',tan:'#b8794f',dark:'#754833'};
+ const o=outfits[a.outfit]||outfits.traveler,cloak=cloakColors[a.cloak],hair=hairColors[a.hair]||hairColors.brown,skin=skinColors[a.skin]||skinColors.light;
+ if(cloak){rect(x-8,y-13,16,24,cloak);rect(x-10,y-7,4,16,cloak);}
+ rect(x-7,y+8,6,9,o.pants);rect(x+2,y+8,6,9,o.pants);rect(x-8,y+15,7,3,'#211c19');rect(x+2,y+15,7,3,'#211c19');
+ rect(x-7,y-2,14,13,o.coat);rect(x-8,y-2,3,12,o.trim);rect(x+5,y-2,3,12,o.trim);rect(x-7,y+7,14,3,o.trim);rect(x-2,y+5,4,5,'#292724');
+ circle(x,y-8,7,skin);rect(x-7,y-11,14,3,skin);
+ if(a.gender==='feminino'){rect(x-8,y-14,4,14,hair);rect(x+4,y-14,4,14,hair);rect(x-6,y-16,12,4,hair);rect(x-7,y-10,3,6,skin);rect(x+4,y-10,3,6,skin);}
+ else{rect(x-7,y-16,14,4,hair);rect(x-8,y-13,4,6,hair);rect(x+4,y-13,4,6,hair);}
+ rect(x-4,y-9,2,2,'#292522');rect(x+2,y-9,2,2,'#292522');
+ if(a.outfit==='guard'){rect(x-10,y-4,3,8,o.trim);rect(x+7,y-4,3,8,o.trim);}
+ if(a.outfit==='mage'){rect(x-8,y-18,16,3,o.trim);}
+ if(a.outfit==='noble'){rect(x-2,y-18,4,3,o.trim);}
+}
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
 function drawMap(){rect(0,0,W,H,'#78983d');for(let x=0;x<W;x+=24)for(let y=0;y<H;y+=24){let k=((x/24+y/24)%2===0);rect(x,y,24,24,k?'#7fa143':'#76963a');if((x*7+y*3)%11===0)rect(x+5,y+6,2,2,'#99b957');}
 // shaded forest edge
@@ -333,7 +411,7 @@ for(const [x,y] of [[237,412],[258,427],[545,414],[560,405],[714,350],[746,367],
 for(const m of g.slimes)if(m.alive){drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*2,m.name.includes('Besouro')?'#8d9161':'#5c9e6e',m.name.includes('Besouro')?1.05:1);}
 drawHuman(230,333,true);drawHuman(350,333,false);circle(230,306,5,'#f1d171');text('MARA',230,291,10,'#fff1c8','center');text('MERCADOR',350,291,9,'#fff1c8','center');
 // player marker
-const p=g.mapPlayer;drawHuman(p.x,p.y,false);rect(p.x-10,p.y-25,20,3,'#2f322b');rect(p.x-9,p.y-24,18,2,'#d9bd78');
+const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character);text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),p.x,p.y-31,8,'#fff0c4','center');rect(p.x-10,p.y-25,20,3,'#2f322b');rect(p.x-9,p.y-24,18,2,'#d9bd78');
 text('BRUMAFORTE',18,111,15,'#f4e6b7');text('Vila dos carregamentos perdidos',18,129,10,'#e0d2a0');text('E: conversar / entrar · J: atacar · M: aprender',18,521,11,'#fff0c4');
 }
 function drawKnight(x,y,camera){const sx=x-camera;rect(sx-9,y-32,18,23,'#414b4d');rect(sx-8,y-37,16,8,'#9ca3a0');rect(sx-6,y-33,12,6,'#20292b');rect(sx-10,y-7,7,15,'#343a3c');rect(sx+3,y-7,7,15,'#343a3c');rect(sx-11,y-25,5,15,'#9d9b88');rect(sx+6,y-26,5,8,'#b8b6a5');rect(sx-3,y-30,3,2,'#e7a66b');}
@@ -352,7 +430,7 @@ const plats=[{x:460,y:350,w:150},{x:760,y:295,w:125},{x:1115,y:365,w:160},{x:145
 const portalX=80-camera;rect(portalX-20,335,40,112,'#10191b');rect(portalX-14,342,28,105,'#5c4935');rect(portalX-8,350,16,97,'#253c37');circle(portalX,361,4,'#b3c99c');
 const relicX=1780-camera;if(relicX>-60&&relicX<W+60){rect(relicX-26,420,52,22,'#66533b');rect(relicX-20,392,40,31,'#8b744f');rect(relicX-15,385,30,7,'#c5a96c');rect(relicX-2,389,4,23,'#292823');}
 for(const m of g.ruinMobs)if(m.alive){const x=m.x-camera,y=m.y+Math.sin(performance.now()/250+m.x)*1.2;if(x<-60||x>W+60)continue;if(m.type==='slime')drawSlime(x,y,'#679173',1.05);else if(m.type==='skeleton'){rect(x-10,y-31,20,27,'#b3aa8e');rect(x-9,y-41,18,12,'#c6c0aa');rect(x-5,y-37,3,3,'#282b2a');rect(x+3,y-37,3,3,'#282b2a');rect(x-10,y-4,6,13,'#9b9177');rect(x+4,y-4,6,13,'#9b9177');rect(x-15,y-20,5,17,'#9b9177');rect(x+10,y-22,5,19,'#9b9177');}else if(m.type==='bat'){circle(x,y-17,8,'#8b7683');poly([[x-5,y-19],[x-25,y-31],[x-19,y-9],[x-6,y-12]],'#58465d');poly([[x+5,y-19],[x+25,y-31],[x+19,y-9],[x+6,y-12]],'#58465d');rect(x-3,y-19,2,2,'#efb26b');rect(x+2,y-19,2,2,'#efb26b');}else drawKnight(x,y,camera);}
-const p=g.actionPlayer;const px=p.x-camera;const py=p.y;drawHuman(px,py,false);rect(px-10,py-31,20,4,'#202a31');rect(px-8,py-30,16,2,'#d3b66f');if(g.attackCD>.12){line(px+11*p.face,py-22,px+48*p.face,py-34,'#e6e0c9',4);line(px+12*p.face,py-23,px+46*p.face,py-35,'#f9f2db',1);}
+const p=g.actionPlayer;const px=p.x-camera;const py=p.y;drawPlayer(px,py,g.character);text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),px,py-42,8,'#f2d49a','center');rect(px-10,py-31,20,4,'#202a31');rect(px-8,py-30,16,2,'#d3b66f');if(g.attackCD>.12){line(px+11*p.face,py-22,px+48*p.face,py-34,'#e6e0c9',4);line(px+12*p.face,py-23,px+46*p.face,py-35,'#f9f2db',1);}
 text('RUÍNAS DA MOEDA PARTIDA',18,109,14,'#e2d2ae');text('A · D andar   ESPAÇO pular   J atacar',18,521,11,'#e7d5b8');
 // minimap and health-boss hint
 rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.max(3,(g.actionPlayer.x/1900)*126),5,'#dda762');text('MAPA DAS RUÍNAS',801,98,9,'#c2c5b9');circle(801+(g.actionPlayer.x/1900)*126,105,3,'#fff0be');
@@ -366,7 +444,16 @@ function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)
 function handleAction(key){if(modalType){if(key==='Escape'){closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){notify('Nenhum menu aberto.',1.3);}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 $('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
-const params=new URLSearchParams(window.location.search);if(params.get('new')==='1'){try{localStorage.removeItem('cronicas_valoria_save');}catch(e){}g=originalState();setScene('map');notify('Nova jornada iniciada. Fale com Mara perto da praça.',4);}else if(loadGame()){notify('Progresso salvo carregado neste navegador.',3);setScene(g.scene);}else{notify('Bem-vindo ao reino. Fale com Mara perto da praça: aproxime-se e pressione E.',5);}
+if(gameParams.get('new')==='1'){
+ const record=readActiveSlot();
+ g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
+ setScene('map');persistProgress();notify('Nova jornada iniciada. Fale com Mara perto da praça.',4);
+}else if(loadGame()){
+ notify(activeSlotNumber?'Jornada carregada do Espaço '+activeSlotNumber+'.':'Progresso salvo carregado neste navegador.',3);setScene(g.scene);
+}else{
+ const record=readActiveSlot();g.character=normalizeAppearance(record&&record.character||g.character);
+ notify('Bem-vindo ao reino. Fale com Mara perto da praça: aproxime-se e pressione E.',5);
+}
 updateUI();render();requestAnimationFrame(loop);
 })();
 </script>
