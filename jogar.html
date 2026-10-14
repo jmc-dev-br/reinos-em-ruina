@@ -142,6 +142,16 @@ body{position:fixed;inset:0}
 
 .activity-options{display:grid;gap:9px;margin:12px 0}.activity-option{display:flex;gap:11px;align-items:flex-start;background:#172119;border:1px solid #405a3d;padding:11px}.activity-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;background:#293c2b;color:#e3c276;font-size:19px;border:1px solid #62774f}.activity-option strong{font-size:12px;color:#e4eacb}.activity-option p{margin:5px 0 0;color:#acbca1;font-size:11px;line-height:1.5}
 
+
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}
+.feature-card{border:1px solid #40583b;background:#172119;padding:11px;min-width:0}.feature-card strong{display:block;color:#e5e8cb;font-size:12px}.feature-card p{font-size:10px;line-height:1.5;color:#aebea3;margin:5px 0 0}
+.feature-hero{display:flex;gap:12px;align-items:center;background:linear-gradient(115deg,#263824,#18201a);border:1px solid #6a8050;padding:13px;margin:12px 0}.feature-icon{font-size:28px;width:42px;flex:0 0 42px;text-align:center}.feature-hero strong{display:block;color:#ead4a0;font-size:14px}.feature-hero small{display:block;color:#adbea0;font-size:10px;line-height:1.5;margin-top:4px}
+.feature-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.feature-actions .btn{flex:1 1 130px}
+.resource-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:11px 0}.resource-pill{background:#101711;border:1px solid #3d5038;padding:7px 6px;text-align:center}.resource-pill strong{display:block;color:#d7debd;font-size:12px}.resource-pill small{display:block;color:#94a88a;font-size:9px;margin-top:3px}
+.profession-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #344633}.profession-row strong{font-size:12px;color:#e4e8ca}.profession-row small{display:block;font-size:10px;line-height:1.45;color:#aab99f;margin-top:3px}
+.achievement-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #303e30}.achievement-medal{font-size:20px;width:29px;flex:0 0 29px;filter:grayscale(1);opacity:.45}.achievement-row.unlocked .achievement-medal{filter:none;opacity:1}.achievement-row strong{display:block;color:#e3e7cd;font-size:11px}.achievement-row small{display:block;color:#99ac91;font-size:10px;line-height:1.4;margin-top:3px}.achievement-row .status{margin-left:auto;font-size:9px;color:#b6c8a6;white-space:nowrap}
+@media(max-width:560px){.feature-grid{grid-template-columns:1fr}.feature-hero{padding:10px}.profession-row{grid-template-columns:1fr auto}.feature-actions .btn{flex-basis:100%}}
+
 </style>
 </head>
 <body>
@@ -171,7 +181,7 @@ body{position:fixed;inset:0}
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
       <button class="btn" id="loadBtn">↑ Carregar save</button><input id="loadFile" type="file" accept="application/json,.json" hidden />
-      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
+      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="dailyBtn" title="Recompensa de entrada diária">🎁 Diário</button><button class="btn" id="professionsBtn" title="Coletar e fabricar recursos">⚒ Profissões</button><button class="btn" id="achievementsBtn" title="Ver conquistas do aventureiro">🏅 Conquistas</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
     </div>
     <div class="mobilehelp" aria-label="Controles de toque">
       <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑ / pular</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
@@ -778,6 +788,93 @@ function openGameMenu(){
   $('settingSound').addEventListener('change',e=>{gameSettings.soundEnabled=e.target.checked;saveGameSettings();if(e.target.checked)getAudioContext();else stopAmbientMusic();});
   $('settingMusic').addEventListener('change',e=>{gameSettings.musicEnabled=e.target.checked;saveGameSettings();if(e.target.checked)startAmbientMusic();else stopAmbientMusic();});
 }
+
+function slotLocalKey(prefix){return prefix+'_'+String(activeSlotNumber||0);}
+function localDayKey(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');}
+function dayOrdinal(key){const parts=String(key||'').split('-').map(Number);if(parts.length!==3||parts.some(n=>!Number.isFinite(n)))return 0;return Math.floor(Date.UTC(parts[0],parts[1]-1,parts[2])/86400000);}
+function readLocalRecord(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch(err){return fallback;}}
+function writeLocalRecord(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(err){return false;}}
+function dailyRecord(){return readLocalRecord(slotLocalKey('reinos_ruina_daily'),{day:'',streak:0,claims:0});}
+function openDailyReward(){
+ const record=dailyRecord(),today=localDayKey(),available=record.day!==today;
+ const nextStreak=dayOrdinal(record.day)===dayOrdinal(today)-1?Math.min(7,(record.streak||0)+1):1;
+ const copper=8+Math.max(0,nextStreak-1)*3,bonus=nextStreak%7===0;
+ const body='<div class="feature-hero"><div class="feature-icon">🎁</div><div><strong>'+(available?'Presente de Brumaforte':'Presente já resgatado')+'</strong><small>'+(available?'Entre hoje para receber cobre fictício e manter sua sequência.':'Você já recebeu a recompensa de hoje. Volte amanhã para continuar a sequência.')+'</small></div></div>'+
+ '<div class="feature-grid"><div class="feature-card"><strong>◈ '+copper+' cobres</strong><p>Recompensa desta entrada. O valor aumenta com a sequência, até o sétimo dia.</p></div><div class="feature-card"><strong>🔥 Dia '+nextStreak+' da sequência</strong><p>'+(bonus?'Bônus extra: uma poção de ervas.':'No 7º dia seguido, você também recebe uma poção.')+'</p></div></div>'+
+ '<div class="menu-note">A sequência e o prêmio ficam salvos neste navegador e neste espaço de salvamento. Não há prêmio sincronizado entre jogadores.</div>';
+ showModal('daily','Recompensa diária',body,[{label:available?'Resgatar recompensa':'Já resgatada hoje',action:()=>claimDailyReward(),primary:available},{label:'Fechar',action:()=>closeModal()}]);
+ const claim=$('modalFoot').querySelector('button');if(claim&&!available)claim.disabled=true;
+}
+function claimDailyReward(){
+ const record=dailyRecord(),today=localDayKey();
+ if(record.day===today){closeModal();notify('Sua recompensa diária já foi resgatada.',2.5);return;}
+ const streak=dayOrdinal(record.day)===dayOrdinal(today)-1?Math.min(7,(record.streak||0)+1):1;
+ const copper=8+Math.max(0,streak-1)*3;g.coins+=copper;if(streak%7===0)g.potions++;
+ writeLocalRecord(slotLocalKey('reinos_ruina_daily'),{day:today,streak,claims:(record.claims||0)+1});
+ spawnCombatText('+'+copper+' COBRE',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-32:g.actionPlayer.y-48,'#9fe28f');
+ playSfx('coin');closeModal();updateUI();persistProgress();
+ notify('Recompensa diária: +'+copper+' cobres fictícios'+(streak%7===0?' e +1 poção':'')+'. Sequência de '+streak+' dia(s).',4);
+}
+function defaultProfessions(){return {mining:{level:1,xp:0,total:0,nextAt:0},herbalism:{level:1,xp:0,total:0,nextAt:0},fishing:{level:1,xp:0,total:0,nextAt:0},materials:{ore:0,herb:0,fish:0},crafted:0};}
+function professionsData(){
+ const d=defaultProfessions(),raw=readLocalRecord(slotLocalKey('reinos_ruina_professions'),{});
+ return {...d,...raw,mining:{...d.mining,...(raw.mining||{})},herbalism:{...d.herbalism,...(raw.herbalism||{})},fishing:{...d.fishing,...(raw.fishing||{})},materials:{...d.materials,...(raw.materials||{})}};
+}
+function saveProfessions(data){return writeLocalRecord(slotLocalKey('reinos_ruina_professions'),data);}
+let professionNotice='';
+function openProfessionsMenu(){
+ const data=professionsData(),m=data.materials,now=Date.now();
+ const row=(id,name,desc,icon)=>{const p=data[id],wait=Math.max(0,Math.ceil((p.nextAt-now)/1000));return '<div class="profession-row"><div><strong>'+icon+' '+name+' · Nível '+p.level+'</strong><small>'+desc+' Total coletado: '+p.total+'. XP: '+p.xp+'/'+(p.level*24)+(wait>0?' · Disponível em '+wait+'s':' · Pronto para coletar')+'</small></div><button class="btn" data-gather="'+id+'" '+(wait>0?'disabled':'')+'>'+(wait>0?wait+'s':'Coletar')+'</button></div>';};
+ const body='<div class="menu-intro">Reúna materiais, suba o nível das profissões e fabrique itens. Cada coleta tem uma pausa curta para evitar cliques acidentais repetidos.</div>'+
+ '<div class="resource-strip"><div class="resource-pill"><strong>'+m.ore+'</strong><small>Minério</small></div><div class="resource-pill"><strong>'+m.herb+'</strong><small>Ervas</small></div><div class="resource-pill"><strong>'+m.fish+'</strong><small>Peixes</small></div></div>'+
+ row('mining','Mineração','Encontre minério nas rochas perto das ruínas.','⛏')+row('herbalism','Herbologia','Colha ervas e plantas nas margens dos caminhos.','❧')+row('fishing','Pesca','Pesque no lago de Brumaforte.','♧')+
+ '<div class="feature-card" style="margin-top:12px"><strong>⚗ Poção de ervas</strong><p>Receita: 3 ervas + 1 minério. Fabrica uma poção que recupera vida.</p><div class="feature-actions"><button class="btn primary" id="craftPotion" '+(m.herb<3||m.ore<1?'disabled':'')+'>Fabricar poção</button><button class="btn" id="sellOre" '+(m.ore<3?'disabled':'')+'>Refinar 3 minérios → 6 cobres</button></div></div>'+
+ (professionNotice?'<div class="menu-note">'+escapeHtml(professionNotice)+'</div>':'')+
+ '<div class="battle-disclaimer">Profissões e materiais são locais ao navegador e ao espaço de salvamento. Mercado compartilhado e fabricação entre jogadores exigem servidor.</div>';
+ showModal('profession','Profissões e ofícios',body,[{label:'Fechar',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-gather]').forEach(button=>button.addEventListener('click',()=>gatherProfession(button.dataset.gather)));
+ $('craftPotion').onclick=craftProfessionPotion;$('sellOre').onclick=refineOre;
+}
+function gatherProfession(kind){
+ const data=professionsData(),prof=data[kind];if(!prof)return;
+ const now=Date.now();if(now<prof.nextAt){professionNotice='Aguarde '+Math.ceil((prof.nextAt-now)/1000)+' segundos para coletar novamente.';openProfessionsMenu();return;}
+ const materials={mining:'ore',herbalism:'herb',fishing:'fish'},names={mining:'minério',herbalism:'ervas',fishing:'peixes'};
+ const amount=Math.random()<.28?2:1;data.materials[materials[kind]]+=amount;prof.total+=amount;prof.xp+=8;prof.nextAt=now+6500;
+ let levels=0;while(prof.xp>=prof.level*24){prof.xp-=prof.level*24;prof.level++;levels++;}
+ saveProfessions(data);professionNotice='Você coletou '+amount+' '+names[kind]+'. '+(levels?'Profissão subiu para o nível '+prof.level+'!':'+'+8+' XP de profissão.');
+ playSfx('magic');checkAchievements();openProfessionsMenu();
+}
+function craftProfessionPotion(){
+ const data=professionsData();if(data.materials.herb<3||data.materials.ore<1){professionNotice='Faltam materiais: são necessárias 3 ervas e 1 minério.';openProfessionsMenu();return;}
+ data.materials.herb-=3;data.materials.ore--;data.crafted++;g.potions++;
+ saveProfessions(data);updateUI();persistProgress();professionNotice='Poção fabricada com sucesso. +1 poção no inventário.';playSfx('win');checkAchievements();openProfessionsMenu();
+}
+function refineOre(){
+ const data=professionsData();if(data.materials.ore<3){professionNotice='Você precisa de 3 minérios para refinar.';openProfessionsMenu();return;}
+ data.materials.ore-=3;g.coins+=6;saveProfessions(data);updateUI();persistProgress();professionNotice='Minério refinado. +6 cobres fictícios.';playSfx('coin');openProfessionsMenu();
+}
+const ACHIEVEMENTS=[
+ {id:'first_kill',icon:'⚔',name:'Primeiro sangue',desc:'Derrote sua primeira criatura.',test:()=>g.kills>=1},
+ {id:'ten_kills',icon:'☠',name:'Guardião da estrada',desc:'Derrote 10 criaturas.',test:()=>g.kills>=10},
+ {id:'level_three',icon:'✦',name:'Aventureiro experiente',desc:'Alcance o nível 3.',test:()=>g.level>=3},
+ {id:'hundred_coins',icon:'◈',name:'Pequeno tesouro',desc:'Guarde 100 cobres fictícios ao mesmo tempo.',test:()=>g.coins>=100},
+ {id:'chapter_one',icon:'📜',name:'A Moeda Partida',desc:'Conclua a decisão do Conselho no primeiro capítulo.',test:()=>g.questStep>=5},
+ {id:'first_craft',icon:'⚗',name:'Mãos de alquimista',desc:'Fabrique sua primeira poção com materiais coletados.',test:()=>professionsData().crafted>=1},
+ {id:'daily_seven',icon:'🔥',name:'Constância',desc:'Resgate recompensas diárias por sete dias seguidos.',test:()=>dailyRecord().streak>=7}
+];
+function readAchievements(){return readLocalRecord(slotLocalKey('reinos_ruina_achievements'),{});}
+function checkAchievements(){
+ if(typeof g==='undefined'||!g)return;
+ const found=readAchievements();let changed=false;
+ for(const a of ACHIEVEMENTS){if(a.test()&&!found[a.id]){found[a.id]=Date.now();changed=true;notify('Conquista desbloqueada: '+a.name+'!',3);playSfx('win');}}
+ if(changed)writeLocalRecord(slotLocalKey('reinos_ruina_achievements'),found);
+}
+function openAchievements(){
+ checkAchievements();const found=readAchievements(),unlocked=ACHIEVEMENTS.filter(a=>found[a.id]).length;
+ const rows=ACHIEVEMENTS.map(a=>'<div class="achievement-row '+(found[a.id]?'unlocked':'')+'"><div class="achievement-medal">'+a.icon+'</div><div style="flex:1"><strong>'+escapeHtml(a.name)+'</strong><small>'+escapeHtml(a.desc)+'</small></div><span class="status">'+(found[a.id]?'CONQUISTADA':'BLOQUEADA')+'</span></div>').join('');
+ showModal('achievements','Conquistas · '+unlocked+'/'+ACHIEVEMENTS.length,'<div class="menu-intro">Insígnias pessoais deste espaço de salvamento. Elas ficam no navegador atual; perfis públicos sincronizados serão uma etapa online.</div>'+rows,[{label:'Fechar',action:()=>closeModal(),primary:true}]);
+}
+
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function usePotion(){
  if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}
@@ -841,6 +938,7 @@ function resetGame(){
  g=originalState();g.character=savedAppearance;closeModal();setScene('map');persistProgress();notify('Nova aventura iniciada. Fale com Mara perto da praça.',3);updateUI();
 }
 function updateUI(){
+ checkAchievements();
  $('lv').textContent='Nível '+g.level;
  $('xp').textContent=g.xp+' / '+xpToNext()+' XP';
  $('xpfill').style.width=Math.min(100,g.xp/xpToNext()*100)+'%';
@@ -1366,7 +1464,7 @@ function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)
 function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{if(gameSettings.soundEnabled&&e.target&&e.target.closest&&e.target.closest('button'))playSfx('ui');});
-$('menuBtn').onclick=openGameMenu;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
