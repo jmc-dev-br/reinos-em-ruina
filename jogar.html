@@ -1687,7 +1687,7 @@ function drawHandheldCharacter(x,y,rawAppearance,motion={},targetCtx){
  const poly=(pts,color)=>{c.beginPath();c.moveTo(Math.round(pts[0][0]),Math.round(pts[0][1]));for(let i=1;i<pts.length;i++)c.lineTo(Math.round(pts[i][0]),Math.round(pts[i][1]));c.closePath();c.fillStyle=color;c.fill();};
  const line=(x1,y1,x2,y2,color,width=1)=>{c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(Math.round(x1),Math.round(y1));c.lineTo(Math.round(x2),Math.round(y2));c.stroke();};
  const circle=(cx,cy,r,color)=>{c.fillStyle=color;c.beginPath();c.arc(Math.round(cx),Math.round(cy),r,0,Math.PI*2);c.fill();};
- const a=normalizeAppearance(rawAppearance||g.character),dir=motion.dir||'down',moving=!!motion.moving;
+ const a=normalizeAppearance(rawAppearance||g.character),dir=motion.dir||'down',moving=!!motion.moving,female=a.gender==='feminino';
  x=Math.round(x);y=Math.round(y);
  const skins={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
  const hairs={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
@@ -1709,14 +1709,21 @@ function drawHandheldCharacter(x,y,rawAppearance,motion={},targetCtx){
  rect(x-3+stride,y-7,2,4,pants);rect(x+2-stride,y-7,2,4,pants);
  rect(x-4+stride,y-3,3,2,'#31342f');rect(x+1-stride,y-3,4,2,'#31342f');
  if(a.outfit==='ranger'||a.outfit==='traveler'){rect(x-6,y-15,2,6,outline);rect(x-5,y-14,2,4,cape||'#7d6442');}
- rect(x-5,y-16,10,9,outline);rect(x-4,y-15,8,7,coat);
- rect(x-6,y-15+armSwing,3,6,outline);rect(x+3,y-15-armSwing,3,6,outline);
- rect(x-5,y-14+armSwing,2,4,coat);rect(x+3,y-14-armSwing,2,4,coat);
+ if(female){
+  rect(x-4,y-16,8,9,outline);rect(x-3,y-15,6,6,coat);rect(x-4,y-10,8,3,coat);
+  rect(x-6,y-15+armSwing,2,5,outline);rect(x+4,y-15-armSwing,2,5,outline);
+  rect(x-5,y-14+armSwing,1,3,coat);rect(x+4,y-14-armSwing,1,3,coat);
+ }else{
+  rect(x-5,y-16,10,9,outline);rect(x-4,y-15,8,7,coat);
+  rect(x-6,y-15+armSwing,3,6,outline);rect(x+3,y-15-armSwing,3,6,outline);
+  rect(x-5,y-14+armSwing,2,4,coat);rect(x+3,y-14-armSwing,2,4,coat);
+ }
  if(a.outfit==='guard'||a.outfit==='royal'){
   rect(x-4,y-15,3,3,'#899b91');rect(x+1,y-15,3,3,'#899b91');rect(x-2,y-14,4,5,'#566a69');rect(x-1,y-13,2,3,trim);
  }else if(a.outfit==='mage'){rect(x-2,y-15,4,6,'#3a2d56');rect(x-1,y-14,2,4,trim);}
  else if(a.outfit==='noble'){poly([[x-3,y-15],[x,y-11],[x+3,y-15]],trim);rect(x-1,y-10,2,3,'#332f31');}
  else{rect(x-3,y-14,6,1,trim);rect(x-1,y-13,2,3,'#4c3627');}
+ if(female&&['mage','noble','royal'].includes(a.outfit)){poly([[x-3,y-10],[x+3,y-10],[x+5,y-6],[x-5,y-6]],coat);rect(x-4,y-7,8,1,trim);}
  rect(x-2,y-9,4,2,'#45372b');rect(x-1,y-9,2,2,trim);
  rect(x-2,y-17,4,3,skin);rect(x-5,y-25,10,10,outline);rect(x-4,y-24,8,8,skin);
  if(dir==='up'){
@@ -2592,7 +2599,7 @@ function update(dt){
  if(dx||dy){if(Math.abs(dx)>Math.abs(dy))playerMotion.dir=dx>0?'right':'left';else playerMotion.dir=dy>0?'down':'up';}
  playerMotion.moving=Math.hypot(playerMotion.vx,playerMotion.vy)>10;
  if(playerMotion.moving)playerMotion.phase+=dt*7.5;
- updateEnemyCombat(dt); updateEnemyCombat(dt);
+ updateEnemyCombat(dt);
  if(!playerMotion.moving)playerMotion.phase=0;
  render();
 }
