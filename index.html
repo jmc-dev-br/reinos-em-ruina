@@ -381,6 +381,40 @@ body:has(#homeView.active) .menu-hotspots{display:none!important}
  .creator-tab span{font-size:15px}
 }
 
+
+/* REBOOT 2.0 — handheld character creator and classic game palette */
+:root{--bg:#b9d49a;--panel:#e8edc9;--panel2:#d2e0ad;--line:#627c4d;--gold:#b48a3c;--paper:#f4efd0;--muted:#52695a;--green:#729f58;--danger:#b75c4c}
+html,body{background:#adc991;color:#2d4a42;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.backdrop{background:linear-gradient(180deg,#bad9a3 0%,#c9e0ad 48%,#8fba75 100%)}
+.backdrop:after{background:linear-gradient(90deg,#d4e7bce8 0%,#d4e7bcbf 48%,#bad5a399 100%),linear-gradient(0deg,#b1ce8dff 0%,transparent 52%,#d0e4b955 100%)}
+.backdrop svg{opacity:.23;filter:saturate(.7)}
+.topbar{background:#d6e4b6;border-bottom:3px solid #63844f;color:#2d4a42;backdrop-filter:none}
+.brandname{color:#2e4b40}.brandsub,.network{color:#55704a}.crest{clip-path:none;border:2px solid #4b7045;background:#9dbf79;color:#27483d}
+.stage{min-height:calc(100vh - 125px)}
+.page-title,h1,h2,h3{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#29483e}
+.page-subtitle,.lede,.description,.form-help{color:#4d6750}
+.action,.back-btn,.subtle-btn,.slot-button,.choice,.outfit,.color-choice,.creator-tab,.language-card{border:2px solid #6d8954;border-radius:0;background:#e4ebc4;color:#314d43;box-shadow:2px 2px 0 #879e69;transition:none}
+.action:hover,.back-btn:hover,.subtle-btn:hover,.slot-button:hover,.choice:hover,.outfit:hover,.color-choice:hover,.creator-tab:hover,.language-card:hover{background:#f1edc4;border-color:#a18445;color:#29483d}
+.action.primary,.slot-button.primary{background:#8fb66e;border-color:#557a4c;color:#263f36;box-shadow:2px 2px 0 #78965d}
+.action-icon,.choice-emoji{color:#5f8a4e}
+.slot,.preview-card,.creator-card,.language-card{background:#e6ecc4;border:2px solid #698653;border-radius:0;box-shadow:3px 3px 0 #718e55;color:#304941}
+.slot:before{background:#9e873e}.slot-mark{clip-path:none;background:#c7dca4;border:2px solid #72935c;color:#365745}
+.slot.empty .slot-mark{background:#d4dfb4;color:#617a55}
+.slot-name,.preview-name{color:#29483e}.slot-desc,.language-note,.preview-caption{color:#5a7052}
+.pill{border:1px solid #8aa26b;color:#405c43;background:#d1e0ae}.pill.gold{color:#8b6d31;border-color:#ad9156}
+.creator-layout{gap:16px}.creator-card{padding:16px}.preview-card{padding:14px}
+.preview-stage{background:repeating-linear-gradient(0deg,#d5e4b3,#d5e4b3 8px,#c8dba3 8px,#c8dba3 16px);border-bottom:2px solid #6d8855;min-height:270px}
+.preview-stage:before{bottom:24px;background:#87a968;height:2px}
+#characterPreview{width:144px;height:216px;max-width:100%;image-rendering:pixelated;object-fit:contain}
+.creator-tools{background:#d3e1ad!important;border:2px solid #8aa36a!important;color:#345144!important;box-shadow:2px 2px 0 #91a971}
+.creator-tools-copy strong{color:#29483e!important}.creator-tools-copy small{color:#526b51!important}
+.creator-tab.active,.choice.active,.outfit.active,.color-choice.active,.language-card.active{background:#f0df98;border-color:#a18445;color:#4e5738;box-shadow:inset 0 0 0 1px #d8bd6a,2px 2px 0 #9dac75}
+.name-input,.select-input{background:#f4f0d1;border:2px solid #869f65;color:#29483e;font:12px ui-monospace,monospace;border-radius:0}
+.form-label{color:#4b6748;font:800 9px ui-monospace,monospace;letter-spacing:.06em}.form-help{color:#617752}.creator-actions{border-color:#a0b47f}
+.outfit-swatch{border:2px solid #596f49;clip-path:none}.color-dot{border-radius:0;border:2px solid #708b55}
+.footer{background:#d3e1b1;border-top:2px solid #698550;color:#526b4f}
+@media(max-width:850px){.preview-card{background:#e6ecc4}.preview-stage{min-height:205px}#characterPreview{width:104px;height:156px}}
+@media(max-width:540px){#characterPreview{height:150px;width:100px}.preview-stage{min-height:185px}}
 </style>
 </head>
 <body>
@@ -509,10 +543,10 @@ const TEXT={
   editTitle:'Personalize seu personagem',editSubtitle:'Mude a aparência sem apagar o progresso desta jornada.',name:'Nome do personagem',namePlaceholder:'Digite um nome',nameHelp:'Máximo de 16 caracteres.',gender:'Tipo de corpo',male:'Masculino',female:'Feminino',maleDesc:'Corte curto e silhueta clássica.',femaleDesc:'Cabelo longo e silhueta clássica.',clothes:'Roupas',cloak:'Manto',hair:'Cor do cabelo',skin:'Tom de pele',none:'Sem manto',red:'Vinho',green:'Floresta',blue:'Azul',ivory:'Marfim',brown:'Castanho',black:'Preto',blond:'Loiro',silver:'Prateado',light:'Claro',tan:'Bronzeado',dark:'Escuro',
   baseBody:'Corpo-base',baseBodyDesc:'Base para personalizar o traje',traveler:'Viajante',travelerDesc:'Couro e tecido resistentes',guard:'Guarda',guardDesc:'Couro reforçado e aço',mage:'Místico',mageDesc:'Manto arcano',noble:'Nobre',nobleDesc:'Roupa fina e detalhes dourados',ranger:'Batedor',rangerDesc:'Couro, folhas e viagem',royal:'Real',royalDesc:'Manto nobre e detalhes de ouro',
   faceShape:'Formato do rosto',ovalFace:'Oval',angularFace:'Angular',roundFace:'Arredondado',eyeColor:'Cor dos olhos',eyeBrown:'Castanhos',eyeBlue:'Azuis',eyeGreen:'Verdes',eyeGray:'Cinzentos',facialHair:'Barba e bigode',noFacialHair:'Sem barba',stubble:'Barba por fazer',shortBeard:'Barba curta',mustache:'Bigode',goatee:'Cavanhaque',
-  tabProfile:'Identidade',tabFace:'Rosto',tabHair:'Cabelo',tabOutfit:'Traje',tabGear:'Equipamento',randomize:'Aleatorizar aparência',randomizeHelp:'Gera uma combinação nova sem alterar o nome.',
+  tabProfile:'Identidade',tabFace:'Rosto',tabHair:'Cabelo',tabOutfit:'Roupa',tabGear:'Detalhes',randomize:'Aleatorizar aparência',randomizeHelp:'Gera uma combinação nova sem alterar o nome.',
   preview:'Prévia do personagem',newSave:'Criar jornada',saveAppearance:'Salvar aparência',cancel:'Cancelar',nameRequired:'Escolha um nome para seu personagem.',slotTaken:'Este espaço já tem uma jornada. Exclua-a antes de criar outra.',
   languageEyebrow:'PREFERÊNCIAS',languageTitle:'Idioma',languageSubtitle:'Escolha o idioma dos menus e da criação de personagem.',portuguese:'Português (Brasil)',english:'English',selected:'Selecionado',choose:'Usar este idioma',languageNote:'A história e os diálogos da versão jogável ainda estão em português; a tradução completa do jogo será feita numa etapa posterior.',
-  hairStyle:'Estilo de cabelo',shortHair:'Curto',mediumHair:'Médio',longHair:'Longo',ponytail:'Rabo de cavalo',braids:'Tranças',mohawk:'Moicano',headwear:'Cabeça',noneHeadwear:'Nenhum',hood:'Capuz',crown:'Coroa',wizardHat:'Chapéu de mago',helmet:'Elmo',circlet:'Tiara',accessory:'Acessório',noneAccessory:'Nenhum',glasses:'Óculos',eyepatch:'Tapa-olho',earrings:'Brincos',necklace:'Colar',weapon:'Arma',sword:'Espada',staff:'Cajado',bow:'Arco',noneWeapon:'Desarmado',outfitColor:'Cor da roupa',defaultColor:'Original',crimson:'Carmesim',emerald:'Esmeralda',sapphire:'Safira',violet:'Violeta',charcoal:'Carvão',redHair:'Ruivo',blueHair:'Azul',purpleHair:'Roxo',pinkHair:'Rosa',warm:'Médio quente',deep:'Escuro',olive:'Oliva',pale:'Claro',footerLeft:'v0.1.0',footerRight:'REINOS EM RUÍNA · SALVAMENTOS LOCAIS',timeNow:'Atualizado agora',genderLabel:{masculino:'Masculino',feminino:'Feminino'},
+  hairStyle:'Estilo de cabelo',shortHair:'Curto',mediumHair:'Médio',longHair:'Longo',ponytail:'Rabo de cavalo',braids:'Tranças',mohawk:'Moicano',headwear:'Cabeça',noneHeadwear:'Nenhum',cap:'Boné',hood:'Capuz',circlet:'Tiara',accessory:'Acessório',noneAccessory:'Nenhum',glasses:'Óculos',eyepatch:'Tapa-olho',earrings:'Brincos',necklace:'Colar',weapon:'Arma',sword:'Espada',staff:'Cajado',bow:'Arco',noneWeapon:'Desarmado',outfitColor:'Cor da roupa',defaultColor:'Original',crimson:'Carmesim',emerald:'Esmeralda',sapphire:'Safira',violet:'Violeta',charcoal:'Carvão',redHair:'Ruivo',blueHair:'Azul',purpleHair:'Roxo',pinkHair:'Rosa',warm:'Médio quente',deep:'Escuro',olive:'Oliva',pale:'Claro',footerLeft:'v0.1.0',footerRight:'REINOS EM RUÍNA · SALVAMENTOS LOCAIS',timeNow:'Atualizado agora',genderLabel:{masculino:'Masculino',feminino:'Feminino'},
   confirmNew:'Começar uma nova jornada neste espaço?',renameNote:'Seu progresso será preservado.',lastPlayed:'Última vez',emptySlot:'Disponível'
  },
  'en-US':{
@@ -527,15 +561,14 @@ const TEXT={
   editTitle:'Customize your character',editSubtitle:'Change appearance without erasing this journey’s progress.',name:'Character name',namePlaceholder:'Enter a name',nameHelp:'Maximum 16 characters.',gender:'Body type',male:'Masculine',female:'Feminine',maleDesc:'Short hair and classic silhouette.',femaleDesc:'Long hair and classic silhouette.',clothes:'Clothing',cloak:'Cloak',hair:'Hair color',skin:'Skin tone',none:'No cloak',red:'Burgundy',green:'Forest',blue:'Blue',ivory:'Ivory',brown:'Brown',black:'Black',blond:'Blond',silver:'Silver',light:'Light',tan:'Tan',dark:'Dark',
   traveler:'Traveler',travelerDesc:'Hardwearing cloth and leather',guard:'Guard',guardDesc:'Reinforced leather and steel',mage:'Mystic',mageDesc:'Arcane robes',noble:'Noble',nobleDesc:'Fine clothes and gold trim',ranger:'Ranger',rangerDesc:'Leather, leaves, and travel',royal:'Royal',royalDesc:'Noble cloak and gold trim',
   faceShape:'Face shape',ovalFace:'Oval',angularFace:'Angular',roundFace:'Round',eyeColor:'Eye color',eyeBrown:'Brown',eyeBlue:'Blue',eyeGreen:'Green',eyeGray:'Gray',facialHair:'Facial hair',noFacialHair:'Clean-shaven',stubble:'Stubble',shortBeard:'Short beard',mustache:'Mustache',goatee:'Goatee',
-  tabProfile:'Identity',tabFace:'Face',tabHair:'Hair',tabOutfit:'Outfit',tabGear:'Equipment',randomize:'Randomize appearance',randomizeHelp:'Create a new look without changing the name.',
+  tabProfile:'Identity',tabFace:'Face',tabHair:'Hair',tabOutfit:'Clothes',tabGear:'Details',randomize:'Randomize appearance',randomizeHelp:'Create a new look without changing the name.',
   preview:'Character preview',newSave:'Create journey',saveAppearance:'Save appearance',cancel:'Cancel',nameRequired:'Please choose a character name.',slotTaken:'This slot already has a journey. Delete it before creating another.',
   languageEyebrow:'PREFERENCES',languageTitle:'Language',languageSubtitle:'Choose the language for menus and character creation.',portuguese:'Português (Brasil)',english:'English',selected:'Selected',choose:'Use this language',languageNote:'The playable chapter and dialogue are currently in Portuguese; full game localization will come in a later update.',
-  hairStyle:'Hairstyle',shortHair:'Short',mediumHair:'Medium',longHair:'Long',ponytail:'Ponytail',braids:'Braids',mohawk:'Mohawk',headwear:'Headwear',noneHeadwear:'None',hood:'Hood',crown:'Crown',wizardHat:'Wizard hat',helmet:'Helmet',circlet:'Circlet',accessory:'Accessory',noneAccessory:'None',glasses:'Glasses',eyepatch:'Eyepatch',earrings:'Earrings',necklace:'Necklace',weapon:'Weapon',sword:'Sword',staff:'Staff',bow:'Bow',noneWeapon:'Unarmed',outfitColor:'Clothing color',defaultColor:'Original',crimson:'Crimson',emerald:'Emerald',sapphire:'Sapphire',violet:'Violet',charcoal:'Charcoal',redHair:'Red',blueHair:'Blue',purpleHair:'Purple',pinkHair:'Pink',warm:'Warm medium',deep:'Deep',olive:'Olive',pale:'Light',footerLeft:'v0.1.0',footerRight:'REALMS IN RUIN · LOCAL SAVES',timeNow:'Just updated',genderLabel:{masculino:'Masculine',feminino:'Feminine'},
+  hairStyle:'Hairstyle',shortHair:'Short',mediumHair:'Medium',longHair:'Long',ponytail:'Ponytail',braids:'Braids',mohawk:'Mohawk',headwear:'Headwear',noneHeadwear:'None',cap:'Cap',hood:'Hood',circlet:'Circlet',accessory:'Accessory',noneAccessory:'None',glasses:'Glasses',eyepatch:'Eyepatch',earrings:'Earrings',necklace:'Necklace',weapon:'Weapon',sword:'Sword',staff:'Staff',bow:'Bow',noneWeapon:'Unarmed',outfitColor:'Clothing color',defaultColor:'Original',crimson:'Crimson',emerald:'Emerald',sapphire:'Sapphire',violet:'Violet',charcoal:'Charcoal',redHair:'Red',blueHair:'Blue',purpleHair:'Purple',pinkHair:'Pink',warm:'Warm medium',deep:'Deep',olive:'Olive',pale:'Light',footerLeft:'v0.1.0',footerRight:'REALMS IN RUIN · LOCAL SAVES',timeNow:'Just updated',genderLabel:{masculino:'Masculine',feminino:'Feminine'},
   confirmNew:'Start a new journey in this slot?',renameNote:'Your progress will be preserved.',lastPlayed:'Last played',emptySlot:'Available'
  }
 };
 const OUTFITS={
- none:{coat:'#dbb28a',trim:'#dbb28a',pants:'#dbb28a',label:'baseBody',desc:'baseBodyDesc'},
  traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c',label:'traveler',desc:'travelerDesc'},
  guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39',label:'guard',desc:'guardDesc'},
  mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744',label:'mage',desc:'mageDesc'},
@@ -553,7 +586,7 @@ const HAIR={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red
  const OUTFIT_COLORS=['default','crimson','emerald','sapphire','violet','charcoal'];
 const SKIN={light:'#dbb28a',tan:'#b8794f',dark:'#754833'};
 
-function defaultCharacter(){return {name:'Aventureiro',gender:'masculino',outfit:'none',cloak:'none',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'none'};}
+function defaultCharacter(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light',hairstyle:'short',headwear:'none',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'none'};}
 function slotKey(slot){return SLOT_PREFIX+slot;}
 function readSlot(slot){try{const raw=localStorage.getItem(slotKey(slot));if(!raw)return null;const record=JSON.parse(raw);return record&&record.version===1?record:null;}catch(e){return null;}}
 function writeSlot(slot,record){try{localStorage.setItem(slotKey(slot),JSON.stringify(record));return true;}catch(e){return false;}}
@@ -634,6 +667,7 @@ function beginCreator(slot,mode){
  creatorSlot=slot;creatorMode=mode;creatorCategory='identity';
  const record=readSlot(slot);
  creatorDraft=mode==='edit'&&record&&record.character?Object.assign(defaultCharacter(),record.character):defaultCharacter();
+  if(creatorDraft.outfit==='none'||!OUTFITS[creatorDraft.outfit])creatorDraft.outfit='traveler';
  const storedGender=String(creatorDraft.gender||'masculino').trim().toLowerCase();
  creatorDraft.gender=['feminino','female','woman','mulher','f'].includes(storedGender)?'feminino':'masculino';
  if(creatorDraft.gender==='feminino'){creatorDraft.facialHair='none';if(creatorDraft.faceShape==='angular')creatorDraft.faceShape='oval';}
@@ -649,7 +683,7 @@ function beginCreator(slot,mode){
   const hairItems=[['brown','brown'],['black','black'],['blond','blond'],['silver','silver'],['red','redHair'],['blue','blueHair'],['purple','purpleHair'],['pink','pinkHair']];
   const skinItems=[['pale','pale'],['light','light'],['tan','tan'],['warm','warm'],['olive','olive'],['dark','dark'],['deep','deep']];
   const hairStyleItems=[['short','shortHair'],['medium','mediumHair'],['long','longHair'],['ponytail','ponytail'],['braids','braids'],['mohawk','mohawk']];
-  const headwearItems=[['none','noneHeadwear'],['hood','hood'],['crown','crown'],['wizardHat','wizardHat'],['helmet','helmet'],['circlet','circlet']];
+  const headwearItems=[['none','noneHeadwear'],['cap','cap'],['hood','hood'],['circlet','circlet']];
   const accessoryItems=[['none','noneAccessory'],['glasses','glasses'],['eyepatch','eyepatch'],['earrings','earrings'],['necklace','necklace']];
   const weaponItems=[['sword','sword'],['staff','staff'],['bow','bow'],['none','noneWeapon']];
   const faceShapeItems=[['oval','ovalFace'],['angular','angularFace'],['round','roundFace']];
@@ -668,7 +702,6 @@ function beginCreator(slot,mode){
    '</div></div>'+
    '<div class="form-section two-selects">'+select('hairStyle','hairStyle','hairstyle',hairStyleItems)+select('hairColor','hair','hair',hairItems)+'</div>'+
    '<div class="form-section two-selects">'+select('headwear','headwear','headwear',headwearItems)+select('accessory','accessory','accessory',accessoryItems)+'</div>'+
-   '<div class="form-section">'+select('weapon','weapon','weapon',weaponItems)+'</div>'+
    '<div class="form-section two-selects">'+select('faceShape','faceShape','faceShape',faceShapeItems)+select('skinTone','skin','skin',skinItems)+'</div>'+
    '<div class="form-section two-selects">'+select('eyeColor','eyeColor','eyeColor',eyeColorItems)+select('facialHair','facialHair','facialHair',facialHairItems)+'</div>'+
    '<div class="form-section"><span class="form-label">'+esc(t('outfitColor'))+'</span><div class="color-grid">'+
@@ -681,7 +714,7 @@ function beginCreator(slot,mode){
    [['identity','tabProfile','♙'],['face','tabFace','◉'],['hair','tabHair','✦'],['outfit','tabOutfit','♜'],['gear','tabGear','⚔']].map(([id,key,icon])=>'<button type="button" role="tab" aria-selected="'+(creatorCategory===id?'true':'false')+'" class="creator-tab '+(creatorCategory===id?'active':'')+'" data-creator-tab="'+id+'"><span>'+icon+'</span>'+esc(t(key))+'</button>').join('')+
    '</div>');
   const creatorSections=Array.from(controls.querySelectorAll(':scope > .form-section'));
-  const sectionCategories=['identity','identity','outfit','outfit','hair','gear','gear','face','face','outfit'];
+  const sectionCategories=['identity','identity','outfit','outfit','hair','gear','face','face','outfit'];
   creatorSections.forEach((section,index)=>{section.dataset.creatorCategory=sectionCategories[index]||'outfit';});
   const applyCreatorTab=()=>{
     controls.querySelectorAll('[data-creator-tab]').forEach(btn=>{
@@ -695,7 +728,7 @@ function beginCreator(slot,mode){
   $('randomizeCharacter').addEventListener('click',()=>{
     const pick=items=>items[Math.floor(Math.random()*items.length)];
     creatorDraft.gender=pick(['masculino','feminino']);
-    creatorDraft.outfit=pick(Object.keys(OUTFITS));
+    creatorDraft.outfit=pick(['traveler','guard','mage','noble','ranger','royal']);
     creatorDraft.cloak=pick(['none','red','green','blue','ivory']);
     creatorDraft.hair=pick(Object.keys(HAIR));
     creatorDraft.skin=pick(['pale','light','tan','warm','olive','dark','deep']);
@@ -716,7 +749,7 @@ function beginCreator(slot,mode){
   controls.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfit=b.dataset.outfit;renderCreator();}));
   controls.querySelectorAll('[data-cloak]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.cloak=b.dataset.cloak;renderCreator();}));
   controls.querySelectorAll('[data-outfit-color]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfitColor=b.dataset.outfitColor;renderCreator();}));
-  [['hairStyle','hairstyle'],['hairColor','hair'],['headwear','headwear'],['accessory','accessory'],['weapon','weapon'],['skinTone','skin'],['faceShape','faceShape'],['eyeColor','eyeColor'],['facialHair','facialHair']].forEach(([id,key])=>$(id).addEventListener('change',e=>{creatorDraft[key]=e.target.value;drawPreview();}));
+  [['hairStyle','hairstyle'],['hairColor','hair'],['headwear','headwear'],['accessory','accessory'],['skinTone','skin'],['faceShape','faceShape'],['eyeColor','eyeColor'],['facialHair','facialHair']].forEach(([id,key])=>$(id).addEventListener('change',e=>{creatorDraft[key]=e.target.value;drawPreview();}));
   $('cancelCreator').addEventListener('click',()=>{renderSlots();showView('slots');});
   $('confirmCreator').addEventListener('click',confirmCreator);
   drawPreview();
@@ -725,238 +758,48 @@ function beginCreator(slot,mode){
   const canvas=$('characterPreview');if(!canvas)return;
   if(canvas.width!==48||canvas.height!==72){canvas.width=48;canvas.height=72;}
   const ctx=canvas.getContext('2d');ctx.clearRect(0,0,48,72);ctx.imageSmoothingEnabled=false;
-  const c=creatorDraft,o=OUTFITS[c.outfit]||OUTFITS.traveler;
-  const outfitColors={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const skin=Object.assign({},SKIN,SKIN_EXTRA)[c.skin]||SKIN.light;
-  const baseOnly=c.outfit==='none',coat=baseOnly?skin:(outfitColors[c.outfitColor]||o.coat),cape=baseOnly?null:CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
-  const female=['feminino','female','woman','mulher','f'].includes(String(c.gender||'').toLowerCase());
-  if(female)c.facialHair='none';
-  const outline='#17191d',shade='#262328',trim=o.trim;
-  const r=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
+  const c=creatorDraft;
+  const skins={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
+  const hairs={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
+  const clothes={traveler:'#344b61',guard:'#586557',mage:'#59458a',noble:'#783c3c',ranger:'#35513b',royal:'#353f70'};
+  const accents={default:'#c7a66a',crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+  const skin=skins[c.skin]||skins.light,hair=hairs[c.hair]||hairs.brown,coat=accents[c.outfitColor]||clothes[c.outfit]||clothes.traveler;
+  const pants=({traveler:'#40372c',guard:'#373d39',mage:'#302744',noble:'#4a2d2d',ranger:'#292f29',royal:'#292d47'})[c.outfit]||'#40372c';
+  const trim=({traveler:'#c7a66a',guard:'#b5b3a0',mage:'#d1ad68',noble:'#dcbd7a',ranger:'#c79c5a',royal:'#e1c16d'})[c.outfit]||'#c7a66a';
+  const capes={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'},cape=capes[c.cloak];
+  const outline='#243b3c',x=12,y=29;
+  const r=(rx,ry,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(rx,ry,w,h);};
   const p=(pts,color)=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();};
-  const l=(x1,y1,x2,y2,color,w=1)=>{ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();};
-  const circle=(x,y,rad,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill();};
-  // Ground shadow; clean, chunky pixel silhouette.
-  r(8,68,31,1,'#b59a6320');r(12,66,24,2,'#0304058c');
-  // Long cloak is drawn first, so every selectable cloak sits behind the armor.
-  if(cape){
-    p([[16,19],[12,21],[11,31],[9,41],[11,49],[8,56],[13,54],[16,59],[20,56],[23,61],[27,56],[29,48],[30,31],[29,22],[25,19]],outline);
-    p([[16,20],[12,23],[12,32],[10,42],[12,49],[10,54],[14,52],[17,57],[20,54],[23,58],[26,53],[28,46],[28,31],[27,22],[24,20]],cape);
-    r(13,27,2,15,'#ffffff12');r(15,43,2,9,'#00000022');
-  }
-  // Legs: feminine thighs taper toward the knees; masculine legs are heavier and straighter.
-  if(female){
-    p([[16,42],[22,42],[21,56],[19,61],[13,61],[14,57]],outline);
-    p([[25,42],[31,42],[33,56],[36,60],[35,62],[26,62],[25,57]],outline);
-    p([[17,44],[22,44],[20,56],[18,59],[14,59],[15,55]],baseOnly?skin:(c.pants||'#38332e'));
-    p([[26,44],[30,44],[32,56],[34,59],[27,59],[26,55]],baseOnly?skin:(c.pants||'#38332e'));
-    r(16,47,2,7,'#ffffff12');r(28,47,2,7,'#0000001c');
-  }else{
-    p([[14,42],[22,42],[22,56],[19,61],[12,61],[13,57]],outline);
-    p([[25,42],[33,42],[34,56],[37,60],[36,62],[26,62],[25,56]],outline);
-    p([[15,44],[21,44],[20,56],[18,59],[13,59],[14,55]],baseOnly?skin:(c.pants||'#38332e'));
-    p([[26,44],[32,44],[33,56],[35,59],[27,59],[26,55]],baseOnly?skin:(c.pants||'#38332e'));
-    r(16,47,2,7,'#ffffff12');r(29,47,2,7,'#0000001c');
-  }
-  r(16,47,4,1,'#ffffff12');r(27,47,4,1,'#ffffff12');
-  if(baseOnly){p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[14,59],[19,59],[19,62],[20,64],[12,64],[12,62]],skin);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);p([[27,59],[33,59],[35,62],[36,63],[27,64],[26,62]],skin);}else{p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');}
-  // Torso anatomy: narrowed waist and rounded hips for the feminine form,
-  // broad rib cage, stronger shoulders and a straighter waist for the masculine form.
-  if(female){
-    p([[17,21],[23,20],[28,22],[30,27],[29,32],[27,36],[27,40],[30,45],[29,48],[17,48],[14,45],[17,40],[18,36],[16,32],[14,27]],outline);
-    p([[18,22],[23,21],[27,23],[28,27],[27,31],[25,35],[25,39],[28,44],[27,46],[18,46],[16,44],[18,39],[19,35],[17,31],[16,27]],coat);
-    r(18,25,2,9,'#ffffff12');r(25,27,2,8,'#00000020');r(19,37,7,2,'#00000010');
-    p([[18,26],[20,25],[22,27],[22,30],[20,31],[18,29]],'#ffffff0a');
-    p([[24,27],[26,25],[28,27],[28,30],[26,31],[24,29]],'#00000012');
-  }else{
-    p([[15,21],[23,20],[30,22],[33,27],[32,33],[30,40],[31,45],[28,48],[17,48],[14,44],[14,34],[12,27]],outline);
-    p([[16,22],[23,21],[29,23],[31,27],[30,33],[28,40],[29,44],[27,46],[18,46],[16,43],[16,34],[14,27]],coat);
-    r(17,25,2,13,'#ffffff12');r(28,27,2,11,'#00000020');r(18,38,2,5,'#ffffff08');
-  }
-  // Arms are separate shapes with visible shoulders, elbows, forearms and gloves.
-  if(!baseOnly){
-  if(female){
-    p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
-    p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],coat);
-    p([[12,31],[15,30],[16,34],[14,37],[12,35]],'#686c6c');l(12,31,14,34,'#c0b7a7',1);
-    p([[29,23],[32,24],[35,29],[36,34],[34,38],[31,38],[29,34],[29,28]],outline);
-    p([[30,25],[32,26],[34,30],[34,34],[32,36],[30,33],[30,28]],coat);
-    p([[30,30],[33,29],[35,33],[33,37],[31,35]],'#747774');l(31,30,33,33,'#d0c3a9',1);
-    r(11,37,4,2,'#352d29');r(31,37,4,2,'#352d29');
-  }else{
-    p([[14,22],[11,24],[9,29],[9,35],[11,39],[15,39],[17,35],[17,28]],outline);
-    p([[14,24],[12,26],[11,30],[11,35],[13,37],[15,35],[16,29]],coat);
-    p([[11,31],[15,30],[16,34],[14,37],[11,36]],'#686c6c');l(12,31,14,34,'#c0b7a7',1);l(12,35,14,36,'#292c31',1);
-    p([[30,22],[33,24],[36,29],[37,35],[35,39],[31,39],[29,35],[29,28]],outline);
-    p([[31,24],[33,26],[35,30],[35,35],[33,37],[31,35],[30,29]],coat);
-    p([[31,30],[34,29],[36,34],[34,38],[31,36]],'#747774');l(32,30,34,33,'#d0c3a9',1);l(32,35,34,36,'#292c31',1);
-    r(10,37,4,3,'#352d29');r(32,37,4,3,'#352d29');
-  }
-  } else if(female){
-   p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
-   p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],skin);
-   p([[29,23],[32,24],[35,29],[36,34],[34,38],[31,38],[29,34],[29,28]],outline);
-   p([[30,25],[32,26],[34,30],[34,34],[32,36],[30,33],[30,28]],skin);
-   r(11,37,4,2,skin);r(31,37,4,2,skin);
-  }else{
-   p([[14,22],[11,24],[9,29],[9,35],[11,39],[15,39],[17,35],[17,28]],outline);
-   p([[14,24],[12,26],[11,30],[11,35],[13,37],[15,35],[16,29]],skin);
-   p([[30,22],[33,24],[36,29],[37,35],[35,39],[31,39],[29,35],[29,28]],outline);
-   p([[31,24],[33,26],[35,30],[35,35],[33,37],[31,35],[30,29]],skin);
-   r(10,37,4,3,skin);r(32,37,4,3,skin);
-  }
-  // Shoulder and chest pieces vary with outfit but keep a consistent fantasy silhouette.
-  if(c.outfit==='guard'||c.outfit==='royal'||c.outfit==='noble'){
-    p([[14,23],[18,22],[20,26],[17,29],[13,27]],outline);
-    p([[15,24],[18,23],[19,26],[16,27]],'#89877d');
-    p([[28,22],[32,24],[33,27],[30,29],[27,26]],outline);
-    p([[29,23],[31,25],[31,27],[29,26]],'#a39a88');
-  }
-  if(c.outfit==='mage'){
-    if(female){
-      p([[17,25],[29,25],[30,32],[26,37],[25,41],[28,46],[33,51],[28,53],[23,52],[18,53],[13,51],[18,46],[21,41],[20,37],[16,32]],outline);
-      p([[18,26],[28,26],[28,32],[25,37],[23,41],[26,46],[30,50],[27,51],[23,50],[18,51],[15,50],[19,46],[22,41],[19,37],[17,32]],'#392b53');
-      r(21,28,3,8,trim);r(20,36,6,2,'#b9a4d0');r(19,39,8,2,'#262039');r(21,39,4,2,trim);
-    }else{
-      p([[15,25],[31,25],[30,47],[24,51],[18,47]],'#392b53');
-      r(22,27,3,17,trim);r(21,31,5,1,'#b9a4d0');
-    }
-  } else if(!baseOnly) {
-    if(female){
-      p([[17,23],[22,22],[28,23],[30,27],[27,31],[25,34],[26,39],[29,44],[27,47],[17,47],[15,44],[18,39],[19,34],[16,30]],outline);
-      p([[18,24],[22,23],[27,24],[28,27],[26,30],[24,33],[24,38],[27,43],[26,45],[18,45],[17,43],[19,38],[20,33],[18,30]],(c.outfit==='guard'||c.outfit==='royal')?'#4a5054':coat);
-      p([[19,27],[21,26],[23,27],[23,30],[21,31],[19,29]],'#ffffff12');p([[24,27],[26,26],[28,27],[28,30],[26,31],[24,29]],'#00000014');
-      l(21,26,23,30,'#c2b8a7',1);r(23,31,2,2,'#d1ad68');
-    }else{
-      p([[15,23],[21,22],[29,23],[31,27],[29,32],[28,38],[30,44],[27,47],[17,47],[15,43],[16,34],[13,27]],outline);
-      p([[16,24],[21,23],[28,24],[29,27],[27,32],[26,38],[28,43],[26,45],[18,45],[17,42],[17,34],[15,27]],(c.outfit==='guard'||c.outfit==='royal')?'#4a5054':coat);
-    }
-    if(c.outfit==='traveler'||c.outfit==='ranger'){
-      p([[18,25],[22,24],[24,28],[21,32],[17,31]],'#5a4938');
-      r(19,26,2,3,'#8a6944');r(21,31,4,5,'#322c27');
-    } else {
-      p([[18,25],[23,24],[27,26],[27,33],[24,36],[19,34]],'#31373c');
-      p([[20,26],[23,25],[25,27],[24,33],[21,34],[19,30]],'#62666a');
-      l(20,27,23,33,'#c2b8a7',1);
-      r(24,28,2,2,trim);r(20,35,6,1,trim);
-    }
-    // diagonal leather strap + metal clasp
-    l(17,25,27,37,'#30231d',3);l(17,25,27,37,trim,1);
-    r(22,30,3,3,'#d1ad68');r(23,31,1,1,'#483522');
-    // belt and buckle; tapered waist on feminine armor silhouettes
-    if(female){r(18,39,10,3,'#3b2a20');r(19,39,8,1,'#936b3d');r(22,39,3,3,'#d2b16e');r(23,40,1,1,'#4a3721');}
-    else{r(17,39,12,3,'#3b2a20');r(18,39,10,1,'#936b3d');r(22,39,3,3,'#d2b16e');r(23,40,1,1,'#4a3721');}
-    // skirt tabs / leather tassets, slightly flared on feminine armor
-    if(female){p([[16,41],[21,42],[20,49],[15,48]],'#343039');p([[25,42],[29,41],[30,48],[26,49]],'#292a30');}
-    else{p([[16,41],[21,42],[20,49],[16,47]],'#343039');p([[25,42],[29,41],[29,47],[26,49]],'#292a30');}
-    r(17,43,3,1,trim);r(26,43,2,1,trim);
-  }
-  // Forearms are deliberately painted in front of the torso: both arms stay readable.
-  if(!baseOnly){
-  if(female){
-    p([[15,24],[12,26],[10,30],[10,35],[12,38],[15,38],[17,34],[16,29]],outline);
-    p([[15,26],[13,27],[12,31],[12,34],[14,36],[15,33],[15,29]],coat);
-    p([[12,31],[15,30],[16,34],[14,37],[12,35]],'#686c6c');l(12,31,14,34,'#c0b7a7',1);
-    p([[29,24],[32,25],[35,30],[36,35],[34,38],[31,38],[29,34],[29,29]],outline);
-    p([[30,26],[32,27],[34,31],[34,34],[32,36],[30,33],[30,29]],coat);
-    p([[30,31],[33,30],[35,34],[33,37],[31,35]],'#747774');l(31,31,33,34,'#d0c3a9',1);
-    r(11,37,4,2,'#352d29');r(31,37,4,2,'#352d29');
-  }else{
-    p([[14,24],[11,25],[9,30],[9,35],[11,39],[15,39],[17,35],[16,29]],outline);
-    p([[14,26],[12,27],[11,31],[11,35],[13,37],[15,35],[15,30]],coat);
-    p([[12,31],[15,30],[16,34],[14,37],[11,36]],'#686c6c');l(12,31,14,34,'#c0b7a7',1);l(12,35,14,36,'#292c31',1);
-    p([[30,24],[33,25],[36,30],[37,35],[35,39],[31,39],[29,35],[29,29]],outline);
-    p([[31,26],[33,27],[35,31],[35,35],[33,37],[31,35],[30,31]],coat);
-    p([[31,31],[34,30],[36,35],[34,38],[31,36]],'#747774');l(32,31,34,34,'#d0c3a9',1);l(32,35,34,36,'#292c31',1);
-    r(10,37,4,3,'#352d29');r(32,37,4,3,'#352d29');
-  }
-
-  } else if(female){
-   p([[15,23],[12,24],[10,29],[10,35],[12,39],[15,39],[17,34],[17,28]],outline);
-   p([[15,25],[13,26],[12,30],[12,35],[14,37],[15,33],[16,28]],skin);
-   p([[29,23],[32,24],[35,29],[36,35],[34,39],[31,39],[29,34],[29,28]],outline);
-   p([[30,25],[32,26],[34,30],[34,35],[32,37],[30,33],[30,28]],skin);
-   l(12,31,14,34,'#ffffff20',1);l(32,31,34,34,'#00000015',1);
-   r(11,37,4,2,skin);r(31,37,4,2,skin);
-  }else{
-   p([[14,22],[11,24],[9,29],[9,35],[11,39],[15,39],[17,35],[17,28]],outline);
-   p([[14,24],[12,26],[11,30],[11,35],[13,37],[15,35],[16,29]],skin);
-   p([[30,22],[33,24],[36,29],[37,35],[35,39],[31,39],[29,35],[29,28]],outline);
-   p([[31,24],[33,26],[35,30],[35,35],[33,37],[31,35],[30,29]],skin);
-   l(12,31,14,34,'#ffffff20',1);l(32,31,34,34,'#00000015',1);
-   r(10,37,4,3,skin);r(32,37,4,3,skin);
-  }
-
-  // Neck, face, ears and pixel-cut hairstyle.
-  r(20,18,7,6,skin);r(21,19,5,4,'#d7a17c');
-  p([[17,9],[19,6],[26,6],[30,10],[30,18],[27,23],[20,22],[16,18]],outline);
-  if(c.faceShape==='round')p([[18,10],[20,8],[26,8],[28,11],[29,16],[27,20],[24,21],[20,21],[17,18],[17,13]],skin);else if(c.faceShape==='oval')p([[19,9],[25,9],[28,12],[27,18],[24,22],[21,21],[18,18],[17,12]],skin);else p([[18,10],[20,8],[26,8],[28,11],[28,17],[25,21],[22,22],[19,19],[17,15]],skin);
-  r(17,14,2,4,skin);r(28,14,2,4,skin);
-  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[c.eyeColor]||'#5a3828';if(female){r(19,12,4,1,'#684237');r(24,12,4,1,'#684237');}r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
-  r(21,15,1,1,'#f2d7b6');r(26,15,1,1,'#f2d7b6');
-  r(23,15,2,3,'#9a6246');if(female){r(22,18,4,1,'#a65f5a');r(23,18,2,1,'#d58a80');}else{r(22,18,4,1,'#683d31');}
-  if(!female&&c.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(!female&&c.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(!female&&c.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(!female&&c.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
-  // hair is shaped from chunky locks; each option remains customizable.
-  p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
-  p([[17,12],[18,9],[20,7],[25,7],[28,9],[29,12],[27,11],[25,9],[23,11],[21,10],[19,12],[18,15],[17,15]],hair);
-  if(c.hairstyle==='medium'||c.hairstyle==='long'||c.hairstyle==='braids'){
-    r(16,12,2,7,hair);r(28,11,2,7,hair);
-  }
-  if(c.hairstyle==='long'){r(16,17,2,9,hair);r(28,17,2,9,hair);r(17,24,2,2,hair);r(27,24,2,2,hair);}
-  if(c.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
-  if(c.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
-  if(c.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
-  if(female&&['medium','long','braids'].includes(c.hairstyle)){p([[16,15],[18,16],[18,21],[17,25],[15,24],[16,20]],outline);p([[17,16],[18,17],[17,21],[16,23],[16,19]],hair);p([[28,15],[30,15],[31,20],[31,24],[29,25],[28,21]],outline);p([[29,16],[30,17],[30,22],[29,23],[29,19]],hair);}
-  // Scarf wraps the neck; selected cloak colour does not affect its burgundy accent.
-  if(!baseOnly){p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');}
-  // Equipment details, armor wear and shoulder straps.
-  if(c.outfit==='guard'){
-    r(17,26,2,6,'#777d79');r(28,27,2,5,'#8d928a');r(18,29,2,1,'#c9c0aa');r(27,30,2,1,'#c9c0aa');
-  }
-  if(c.outfit==='royal'||c.outfit==='noble'){r(23,24,2,3,trim);r(22,26,4,1,'#f1d895');}
-  if(c.accessory==='glasses'){r(19,14,4,2,'#d4b56d');r(24,14,4,2,'#d4b56d');r(23,14,1,1,'#d4b56d');r(20,15,2,1,'#252329');r(25,15,2,1,'#252329');}
-  if(c.accessory==='eyepatch'){r(24,13,4,3,'#20191a');r(25,14,2,1,'#c3a066');}
-  if(c.accessory==='earrings'){r(17,18,1,2,'#d3ad61');r(28,18,1,2,'#d3ad61');}
-  if(c.accessory==='necklace'){r(20,23,7,1,trim);r(23,24,2,2,'#d8ba70');}
-  // Optional headwear layers on top of the hair.
-  if(c.headwear==='hood'){p([[15,13],[16,8],[19,5],[26,5],[30,9],[31,15],[28,17],[27,10],[23,8],[19,10],[18,17]],cape||'#34343c');}
-  if(c.headwear==='helmet'){p([[16,12],[17,7],[20,5],[26,5],[29,8],[30,13],[27,14],[27,11],[19,11],[19,14]],'#888d90');r(18,10,11,2,'#c0b8a9');r(20,12,7,1,'#303238');}
-  if(c.headwear==='crown'){r(18,7,11,2,'#d9b85d');p([[18,7],[19,4],[21,7],[23,3],[25,7],[28,4],[29,7]],'#d9b85d');r(23,5,2,1,'#9a3d3d');}
-  if(c.headwear==='circlet'){r(18,8,11,1,'#d9b85d');r(23,7,2,2,'#79a2b7');}
-  if(c.headwear==='wizardHat'){p([[15,8],[18,7],[20,2],[24,1],[27,7],[31,8]],'#413453');r(17,7,13,2,'#3c304c');r(22,7,3,1,trim);}
-  // FINAL BASE-BODY ARM PASS: broad, connected skin arms drawn over the torso.
-  // This hides any leftover bracer pixels from older sprite layers.
-  if(baseOnly){
-    if(female){
-      p([[15,22],[12,23],[9,26],[7,30],[7,34],[10,38],[14,39],[17,35],[17,29]],outline);
-      p([[14,24],[12,25],[10,28],[9,31],[9,34],[11,36],[14,37],[15,33],[15,29]],skin);
-      p([[10,28],[11,27],[12,29],[11,33],[10,34]],'#ffffff18');
-      p([[29,22],[32,23],[36,26],[39,30],[40,34],[37,38],[33,39],[30,35],[30,29]],outline);
-      p([[30,24],[32,25],[35,28],[37,31],[37,34],[35,36],[33,37],[32,33],[31,29]],skin);
-      p([[34,27],[35,29],[36,32],[35,34],[34,33]],'#00000012');
-    }else{
-      p([[15,21],[12,22],[9,26],[7,31],[7,35],[10,39],[14,40],[17,36],[17,29]],outline);
-      p([[14,23],[12,24],[10,28],[9,32],[10,36],[12,37],[14,38],[15,34],[15,29]],skin);
-      p([[10,28],[11,27],[12,30],[11,34],[10,35]],'#ffffff18');
-      p([[29,21],[32,22],[36,26],[39,30],[40,35],[37,39],[33,40],[30,36],[30,29]],outline);
-      p([[30,23],[32,24],[35,28],[37,32],[37,35],[35,37],[33,38],[32,34],[31,29]],skin);
-      p([[34,27],[35,29],[36,33],[35,35],[34,34]],'#00000012');
-    }
-  }
-  // Draw the base arms after face, hair, and all outfit detail so nothing can cover them.
-  // Weapon is part of the editable appearance.
-  if(c.weapon==='sword'){
-    l(34,34,42,56,'#14161a',4);l(35,34,42,55,'#b9c4c6',2);l(36,35,41,51,'#f4ead0',1);
-    r(32,33,7,2,'#d4b16a');r(35,35,2,5,'#69462c');r(34,39,4,2,'#c69d59');
-  }else if(c.weapon==='staff'){
-    l(36,22,38,61,'#271e19',4);l(36,22,38,61,'#a37b49',2);r(34,20,5,3,'#8eb2bf');r(35,21,3,1,'#e3e0cb');
-  }else if(c.weapon==='bow'){
-    l(37,27,39,57,'#6a4329',2);l(36,27,38,57,'#d3c3a0',1);r(35,29,3,2,'#6a4329');r(38,53,3,2,'#6a4329');
-  }
-  // Small metal glints and pixel contours finish the sprite.
-  if(!baseOnly){r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');}
+  ctx.save();ctx.scale(2,2);
+  ctx.fillStyle='#243d3738';ctx.beginPath();ctx.ellipse(x,y+1,6,2,0,0,Math.PI*2);ctx.fill();
+  if(cape){p([[x-4,y-17],[x+4,y-17],[x+5,y-13],[x+4,y-8],[x,y-10],[x-5,y-9],[x-5,y-14]],outline);p([[x-3,y-16],[x+3,y-16],[x+4,y-13],[x+3,y-9],[x,y-10],[x-4,y-10],[x-4,y-14]],cape);}
+  r(x-4,y-8,3,6,outline);r(x+1,y-8,3,6,outline);r(x-3,y-7,2,4,pants);r(x+2,y-7,2,4,pants);r(x-4,y-3,3,2,'#31342f');r(x+1,y-3,4,2,'#31342f');
+  if(c.outfit==='traveler'||c.outfit==='ranger'){r(x-6,y-15,2,6,outline);r(x-5,y-14,2,4,cape||'#7d6442');}
+  r(x-5,y-16,10,9,outline);r(x-4,y-15,8,7,coat);r(x-6,y-15,3,6,outline);r(x+3,y-15,3,6,outline);r(x-5,y-14,2,4,coat);r(x+3,y-14,2,4,coat);
+  if(c.outfit==='guard'||c.outfit==='royal'){r(x-4,y-15,3,3,'#899b91');r(x+1,y-15,3,3,'#899b91');r(x-2,y-14,4,5,'#566a69');r(x-1,y-13,2,3,trim);}
+  else if(c.outfit==='mage'){r(x-2,y-15,4,6,'#3a2d56');r(x-1,y-14,2,4,trim);}
+  else if(c.outfit==='noble'){p([[x-3,y-15],[x,y-11],[x+3,y-15]],trim);}
+  else{r(x-3,y-14,6,1,trim);r(x-1,y-13,2,3,'#4c3627');}
+  r(x-2,y-17,4,3,skin);r(x-5,y-25,10,10,outline);r(x-4,y-24,8,8,skin);
+  const female=c.gender==='feminino';
+  r(x-5,y-25,10,c.hairstyle==='mohawk'?3:4,hair);r(x-5,y-22,2,3,hair);r(x+3,y-22,2,3,hair);
+  if(c.hairstyle==='long'){r(x-5,y-22,2,6,hair);r(x+3,y-22,2,6,hair);}
+  if(c.hairstyle==='ponytail'){r(x+4,y-22,3,3,hair);r(x+5,y-20,2,3,hair);}
+  if(c.hairstyle==='braids'){r(x-6,y-22,2,5,hair);r(x+4,y-22,2,5,hair);r(x-6,y-18,2,2,trim);r(x+4,y-18,2,2,trim);}
+  if(c.hairstyle==='mohawk'){r(x-1,y-27,3,4,hair);r(x,y-28,2,2,hair);}
+  const eye=c.eyeColor==='blue'?'#4a83b1':c.eyeColor==='green'?'#52805b':c.eyeColor==='gray'?'#9b9b9b':'#5a3828';
+  r(x-3,y-20,2,2,'#f6edc9');r(x+2,y-20,2,2,'#f6edc9');r(x-2,y-20,1,2,eye);r(x+3,y-20,1,2,eye);
+  if(c.accessory==='glasses'){r(x-4,y-20,3,2,'#d5e3db');r(x+1,y-20,3,2,'#d5e3db');r(x-1,y-19,2,1,'#d5e3db');}
+  else if(c.accessory==='eyepatch')r(x+2,y-20,3,2,'#272b2a');
+  else if(c.accessory==='earrings'){r(x-5,y-19,1,2,trim);r(x+4,y-19,1,2,trim);}
+  else if(c.accessory==='necklace'){r(x-1,y-9,2,2,trim);}
+  if(c.headwear==='cap'){r(x-5,y-26,10,3,coat);r(x-4,y-28,7,3,coat);r(x+1,y-24,5,1,trim);}
+  else if(c.headwear==='hood'){p([[x-6,y-23],[x-5,y-27],[x-2,y-28],[x+3,y-27],[x+6,y-23],[x+3,y-22],[x+2,y-25],[x-3,y-25],[x-4,y-22]],outline);p([[x-4,y-23],[x-3,y-26],[x+2,y-26],[x+4,y-23],[x-3,y-22]],cape||coat);}
+  else if(c.headwear==='circlet'){r(x-4,y-24,8,1,trim);r(x-1,y-25,2,2,'#f2d98a');}
+  if(c.facialHair&&c.facialHair!=='none'&&!female)r(x-2,y-17,5,2,hair);
+  ctx.restore();
   $('previewName').textContent=c.name||t('empty');$('previewCaption').textContent=t('preview');
-}
+ }
 function confirmCreator(){
  const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
  if(!name){window.alert(t('nameRequired'));input.focus();return;}
