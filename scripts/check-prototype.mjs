@@ -19,9 +19,40 @@ for (const file of htmlFiles) {
   console.log(`PASS JavaScript syntax: ${file}`);
 }
 
+const menu = fs.readFileSync("index.html", "utf8");
+const requiredMenuFeatures = [
+  'id="playButton"',
+  'id="languageButton"',
+  'id="slotsView"',
+  'id="creatorView"',
+  'id="languageView"',
+  "const SLOT_COUNT=3",
+  "function renderSlots()",
+  "function deleteSlot(slot)",
+  "function confirmCreator()",
+  "function drawPreview()",
+  'data-gender="masculino"',
+  'data-gender="feminino"',
+  "data-outfit=",
+  "data-cloak=",
+  "reinos_ruina_slot_",
+  "reinos_ruina_legacy_checked",
+];
+for (const feature of requiredMenuFeatures) {
+  assert.ok(menu.includes(feature), `missing menu feature: ${feature}`);
+}
+console.log("PASS menu, three save slots, language picker, and character creator");
+
 const game = fs.readFileSync("jogar.html", "utf8");
 const contract = fs.readFileSync("contracts/ReinosChronicle.sol", "utf8");
 const requiredGameFeatures = [
+  "const SLOT_PREFIX='reinos_ruina_slot_'",
+  "const activeSlotNumber=",
+  "function readActiveSlot()",
+  "function writeActiveSlot(record)",
+  "function drawPlayer(x,y,rawAppearance)",
+  "character:normalizeAppearance(g.character)",
+  "localStorage.setItem(slotStorageKey(activeSlotNumber),JSON.stringify(current))",
   "function openCouncil()",
   "function talkMara()",
   "function normalizeSave(d)",
