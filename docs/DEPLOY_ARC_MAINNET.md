@@ -26,6 +26,12 @@ Arc uses native USDC to pay gas. A wallet may display the native balance differe
 2. Create a new Solidity file and paste the contents of `contracts/ReinosChronicle.sol`.
 3. Select Solidity compiler 0.8.24, compile, and inspect every compiler warning or error. Do not deploy if compilation fails.
 4. Before any mainnet deployment, exercise the contract on Arc Testnet and verify the expected event and duplicate-chapter rejection.
+
+   Compare the on-chain result with the browser's economic panel for each policy:
+   - Policy 1 (repair road): treasury 85, debt 0, trust 67, price index 88, food reserves 7 days.
+   - Policy 2 (guild loan): treasury 170, debt 60, trust 58, price index 93, food reserves 6 days.
+   - Policy 3 (freeze prices): treasury 120, debt 0, trust 40, price index 80, food reserves 2 days.
+   Each wallet can record chapter 1 only once.
 5. In Remix's deployment panel, use the wallet-injected provider. Confirm that the wallet is on **Arc Mainnet (5042)**, that the selected contract is `ReinosChronicle`, and that the wallet shows a fee you understand.
 6. Deploy only after the source and transaction have been reviewed. Save the contract address and deployment transaction hash; check them in the official Arc Explorer.
 7. In `jogar.html`, replace the empty value in `const CHRONICLE_CONTRACT_ADDRESS='';` with the deployed contract address, then commit the change to GitHub.
