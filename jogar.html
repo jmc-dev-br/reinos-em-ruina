@@ -2351,10 +2351,11 @@ function drawPlayer(x,y,rawAppearance,motion,targetCtx){
  const poseKey=cacheKey+'|'+dir+'|'+(moving?'walk'+step:'idle');let pose=drawPlayer.poseCache.get(poseKey);
  if(!pose){pose=buildAnimatedPlayerFrame(sprite,a,dir,step,moving);drawPlayer.poseCache.set(poseKey,pose);if(drawPlayer.poseCache.size>220)drawPlayer.poseCache.delete(drawPlayer.poseCache.keys().next().value);}
  const height=42,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
- const target=targetCtx||ctx,dx=Math.round(x-width/2),dy=Math.round(y-height+bob);target.save();target.imageSmoothingEnabled=true;
- if(dir==='left'){target.translate(dx+width,dy);target.scale(-1,1);target.drawImage(pose,0,0,width,height);}
- else target.drawImage(pose,dx,dy,width,height);
- target.restore();
+ const target=targetCtx||ctx,dx=Math.round(x-width/2),dy=Math.round(y-height+bob);target.save();
+ try{target.imageSmoothingEnabled=true;
+  if(dir==='left'){target.translate(dx+width,dy);target.scale(-1,1);target.drawImage(pose,0,0,width,height);}
+  else target.drawImage(pose,dx,dy,width,height);
+ }finally{target.restore();}
 }
 function drawFieldCreature(x,y,m){
  const t=m.type||'slime',time=visualFX.worldSeconds||0,bob=Math.sin(time*2.4+(m.x||0)*.025)*1.2;
@@ -2475,7 +2476,7 @@ function drawBrumaforteMap(){
   drawNPCName('BRANN · PESCADOR',248,452,g.sideQuests.brann);drawNPCName('SABELA · ESTALAJADEIRA',565,315,'none');
   text('CABANA DE BRANN',337,397,6,'#fff0c8','center');text('JARDIM DE ELIRA',557,397,7,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;
 }
 function drawForestMap(){
  const art=worldArt.bosque;
@@ -2489,7 +2490,7 @@ function drawForestMap(){
   text('ALTAR DAS RAÍZES',726,117,8,'#fff0c8','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;
 }
 function drawLakeMap(){
  const art=worldArt.lago;
@@ -2503,7 +2504,7 @@ function drawLakeMap(){
   text('ATRACADOURO',622,318,8,'#fff0c8','center');
   const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;
 }
 function drawMapCompass(){
  const x=914,y=232;ctx.save();ctx.globalAlpha=.96;
