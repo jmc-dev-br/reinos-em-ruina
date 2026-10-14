@@ -179,13 +179,18 @@ body{position:fixed;inset:0}
 .hero-stat-copy strong,.hero-skill-copy strong{display:block;color:#e8e8ce;font-size:11px}.hero-stat-copy small,.hero-skill-copy small{display:block;color:#a8b9a0;font-size:9px;line-height:1.4;margin-top:3px}.hero-skill-copy em{display:block;margin-top:4px;color:#b8ce8e;font-size:8px;font-style:normal}
 @media(max-width:560px){.hero-banner{padding:9px;gap:8px}.hero-portrait,.hero-portrait-fallback{width:42px;height:66px;flex-basis:42px}.hero-banner-copy h3{font-size:15px}.hero-points small{font-size:7px}.hero-stat-row,.hero-skill-row{grid-template-columns:28px 1fr auto;gap:6px}.hero-stat-icon,.hero-skill-gem{width:27px;height:27px}}
 
+
+.daily-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0}
+.daily-day{min-width:0;text-align:center;padding:7px 3px;background:#141c15;border:1px solid #364932}.daily-day span{display:block;font-size:8px;color:#a8b79c}.daily-day strong{display:block;font-size:10px;color:#d8cf9f;margin:7px 0;overflow-wrap:anywhere}.daily-day small{display:block;font-size:7px;color:#84967c;line-height:1.25}.daily-day.claimed{border-color:#668450;background:#213020}.daily-day.claimed small{color:#b6d18c}.daily-day.today{border-color:#d4b86e;background:#30291b}.daily-day.today small{color:#ecd79a}
+@media(max-width:560px){.daily-calendar{gap:3px}.daily-day{padding:6px 1px}.daily-day strong{font-size:8px}.daily-day span,.daily-day small{font-size:6px}}
+
 </style>
 </head>
 <body>
 <div class="shell">
   <header class="top">
-    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · Protótipo 0.4</p></div></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ JOGO OFFLINE · MOEDAS FICTÍCIAS · SEM CRIPTO REAL</div></div>
+    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 1.0</p></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ REBOOT · MUNDO VIVO · MOEDAS FICTÍCIAS</div></div>
   </header>
   <section class="stats" aria-label="Status do personagem">
     <div class="stat"><div class="label">Personagem</div><div class="value" id="lv">Nível 1</div><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
@@ -383,13 +388,13 @@ function drawEnvironmentOverlay(){
   ctx.globalAlpha=1;
  }
  ctx.textAlign='left';ctx.textBaseline='alphabetic';
- if(gameSettings.dynamicLighting){
+ {
   const label=night?'NOITE':twilight?'CREPÚSCULO':'DIA';
   const weather={rain:'CHUVA',leaves:'VENTO',fog:'NÉVOA',clear:'TEMPO LIMPO'}[g.weatherState?.kind||visualFX.weather]||'TEMPO LIMPO';
-  rect(W-147,140,138,24,'rgba(12,17,14,.72)');
-  text(label+' · '+String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0'),W-140,150,8,'#e9e0bd');
-  text(weather,W-140,160,7,'#b8cda5');
-  text(gameSettings.weatherMode==='auto'?'MUDA EM '+Math.max(0,Math.ceil(g.weatherState?.remaining||0))+'s':'CLIMA FIXO',W-140,170,6,'#9eb28f');
+  rect(W-147,140,138,34,'rgba(12,17,14,.76)');
+  text('RELÓGIO '+String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0'),W-140,150,8,'#e9e0bd');
+  text(label+' · '+weather,W-140,160,7,'#b8cda5');
+  text(gameSettings.weatherMode==='auto'?'CLIMA MUDA EM '+Math.max(0,Math.ceil(g.weatherState?.remaining||0))+'s':'CLIMA FIXO',W-140,170,6,'#9eb28f');
  }
 }
 function renderWithEffects(){
@@ -565,22 +570,23 @@ const SIDE_QUESTS={
 function questMaterialsReady(quest,data){return Object.entries(quest.need).every(([key,amount])=>(data.materials[key]||0)>=amount);}
 function showSideQuestProgress(quest){
  const state=g.sideQuests[quest.id],data=professionsData();
+ const speaker={toren:'Toren, ferreiro de Brumaforte',elira:'Elira, cuidadora do jardim',brann:'Brann, pescador do lago'}[quest.id]||quest.name;
  const req=Object.entries(quest.need).map(([key,need])=>({ore:'minério',herb:'ervas',fish:'peixes'}[key]||key)+': '+(data.materials[key]||0)+' / '+need).join(' · ');
  if(state==='locked'){
   g.sideQuests[quest.id]='active';persistProgress();updateUI();
   openDialogue(quest.id==='toren'?'Toren, ferreiro de Brumaforte':quest.id==='elira'?'Elira, cuidadora do jardim':'Brann, pescador do lago',quest.intro,'Missão secundária iniciada: '+quest.name+'.');return;
  }
  if(state==='complete'){
-  openDialogue(quest.name,'Você já concluiu esta tarefa.','Missão concluída. Continue explorando a vila e conversando com os moradores.');return;
+  openDialogue(speaker,'Você já concluiu esta tarefa.','Missão concluída. Continue explorando a vila e conversando com os moradores.');return;
  }
  if(!questMaterialsReady(quest,data)){
-  openDialogue(quest.name,quest.active,'Objetivo: '+req+'. Abra Profissões para reunir os materiais necessários.');return;
+  openDialogue(speaker,quest.active,'Objetivo: '+req+'. Abra Profissões para reunir os materiais necessários.');return;
  }
  for(const [key,amount] of Object.entries(quest.need))data.materials[key]-=amount;
  saveProfessions(data);g.sideQuests[quest.id]='complete';g.coins+=quest.reward.coins;g.xp+=quest.reward.xp;
  if(quest.reward.potions)g.potions+=quest.reward.potions;
  addXP(0);updateUI();persistProgress();checkAchievements();playSfx('win');
- openDialogue(quest.name,quest.done,'Missão concluída: +'+quest.reward.coins+' cobres fictícios, +'+quest.reward.xp+' XP'+(quest.reward.potions?' e +'+quest.reward.potions+' poção':'')+'.');
+ openDialogue(speaker,quest.done,'Missão concluída: +'+quest.reward.coins+' cobres fictícios, +'+quest.reward.xp+' XP'+(quest.reward.potions?' e +'+quest.reward.potions+' poção':'')+'.');
 }
 function talkToren(){showSideQuestProgress(SIDE_QUESTS.toren);}
 function talkElira(){showSideQuestProgress(SIDE_QUESTS.elira);}
@@ -846,15 +852,15 @@ function renderTacticalBattle(){
  const pp=Math.max(0,Math.min(100,g.hp/g.maxHp*100));
  const energy=Array.from({length:3},(_,i)=>'<span class="energy-pip '+(i<b.energy?'ready':'')+'"></span>').join('');
  const body=
-  '<div class="battle-intro"><span>Turno '+b.turn+' · Até 3 pontos de energia</span><span>Combate tático</span></div>'+
+  '<div class="battle-intro"><span>Turno '+b.turn+' · Até 3 pontos de energia</span><span>'+(b.mob.boss?'CHEFE · FASE '+(b.enemyHp<=b.enemyMax*.45?'2 · FÚRIA':'1'):'Combate tático')+'</span></div>'+
   '<div class="battle-versus">'+
    '<section class="battle-side"><div class="battle-avatar">🛡️</div><div class="battle-name">'+escapeHtml(g.character.name||'Aventureiro')+'</div>'+
     '<div class="battle-meta"><span>VIDA</span><strong>'+Math.max(0,g.hp)+' / '+g.maxHp+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+pp+'%"></div></div>'+
     '<div class="battle-meta"><span>Bloqueio</span><strong>'+b.block+'</strong></div></section>'+
    '<div class="battle-vs">VS</div>'+
-   '<section class="battle-side enemy"><div class="battle-avatar">👾</div><div class="battle-name">'+enemy+'</div>'+
+   '<section class="battle-side enemy"><div class="battle-avatar">'+(b.mob.type==='mistwolf'?'🐺':b.mob.type==='leviathan'?'🐉':b.mob.boss?'☠':'👾')+'</div><div class="battle-name">'+enemy+'</div>'+
     '<div class="battle-meta"><span>RESISTÊNCIA</span><strong>'+Math.max(0,b.enemyHp)+' / '+b.enemyMax+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+ep+'%"></div></div>'+
-    '<div class="battle-meta"><span>Ameaça</span><strong>'+(b.mob.type==='knight'?'Alta':b.mob.type==='skeleton'?'Média':'Baixa')+'</strong></div></section></div>'+
+    '<div class="battle-meta"><span>Ameaça</span><strong>'+(b.mob.boss?'CHEFE':b.mob.type==='knight'?'Alta':b.mob.type==='skeleton'?'Média':'Baixa')+'</strong></div></section></div>'+
   '<div class="battle-section-title">ENERGIA DISPONÍVEL</div><div class="battle-energy">'+energy+'<span style="font-size:10px;color:#b8c7ae;margin-left:4px">'+b.energy+' / 3 pontos</span></div>'+
   '<div class="battle-section-title">SUA MÃO · ESCOLHA UMA CARTA</div><div class="card-grid">'+
    '<button class="battle-card" data-card="quick" '+(b.energy<1?'disabled':'')+'><strong>⚔ Golpe preciso</strong><small>Causa 12 de dano. Econômico e confiável.</small><span class="card-cost">1 ENERGIA</span></button>'+
@@ -929,6 +935,8 @@ function openGameMenu(){
           <div class="control-row"><kbd>M / N</kbd><span><strong>Caderno financeiro</strong><small>M abre a lição; N avança para a próxima lição.</small></span></div>
           <div class="control-row"><kbd>T</kbd><span><strong>Mercador</strong><small>Abre a loja quando você está perto do comerciante na vila.</small></span></div>
           <div class="control-row"><kbd>Tab</kbd><span><strong>Mapa / Ruínas</strong><small>Alterna entre a exploração vista de cima e o combate lateral.</small></span></div>
+          <div class="control-row"><kbd>G</kbd><span><strong>Mapa do mundo</strong><small>Viaje entre Brumaforte, Bosque Velado e Lago Silencioso conforme evoluir.</small></span></div>
+          <div class="control-row"><kbd>C</kbd><span><strong>Personagem / evolução</strong><small>Distribua pontos de atributo e de talento ganhos ao subir de nível.</small></span></div>
           <div class="control-row"><kbd>Esc</kbd><span><strong>Menu / pausa</strong><small>Abre este painel; Esc novamente volta à aventura.</small></span></div>
         </div>
         <div class="menu-note">No celular, use os botões de toque que aparecem perto da parte inferior da tela.</div>
@@ -1040,12 +1048,20 @@ function openCharacterProgression(){
 
 function openDailyReward(){
  const record=dailyRecord(),today=localDayKey(),available=record.day!==today;
- const nextStreak=dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
- const dailyDrop=nextStreak%7===0?'poção + cobres':nextStreak%5===0?'minério de ferro + cobres':nextStreak%3===0?'ervas + cobres':'cobres';
- const copper=8+Math.min(6,Math.max(0,nextStreak-1))*3,bonus=nextStreak%7===0;
+ const nextStreak=record.day===today?Math.max(1,record.streak||1):dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
+ const cycleDay=((nextStreak-1)%7)+1;
+ const dailyDrop=cycleDay===7?'poção + cobres':cycleDay===5?'minério de ferro + cobres':cycleDay===3?'ervas + cobres':'cobres';
+ const copper=8+Math.min(6,Math.max(0,nextStreak-1))*3,bonus=cycleDay===7;
+ const completedInCycle=available?cycleDay-1:cycleDay;
+ const calendar=[1,2,3,4,5,6,7].map(day=>{
+  const reward=day===3?'🌿 Ervas':day===5?'⛏ Minério':day===7?'🧪 Poção':'◈ Cobre';
+  const status=day<=completedInCycle?'claimed':day===cycleDay&&available?'today':'future';
+  return '<div class="daily-day '+status+'"><span>Dia '+day+'</span><strong>'+reward+'</strong><small>'+(status==='claimed'?'✓ Resgatado':status==='today'?'Disponível hoje':'Próximo')+'</small></div>';
+ }).join('');
  const body='<div class="feature-hero"><div class="feature-icon">🎁</div><div><strong>'+(available?'Presente de Brumaforte':'Presente já resgatado')+'</strong><small>'+(available?'Entre hoje para receber cobre fictício e manter sua sequência.':'Você já recebeu a recompensa de hoje. Volte amanhã para continuar a sequência.')+'</small></div></div>'+
- '<div class="feature-grid"><div class="feature-card"><strong>◈ '+copper+' cobres</strong><p>Recompensa desta entrada. O valor aumenta com a sequência, até o sétimo dia.</p></div><div class="feature-card"><strong>🔥 Dia '+nextStreak+' da sequência</strong><p>Próximo prêmio: '+dailyDrop+'. '+(bonus?'Hoje inclui uma poção adicional.':'A cada 7º dia, ganhe uma poção adicional.')+'</p></div></div>'+
- '<div class="menu-note">A sequência e o prêmio ficam salvos neste navegador e neste espaço de salvamento. Não há prêmio sincronizado entre jogadores.</div>';
+ '<div class="feature-grid"><div class="feature-card"><strong>◈ '+copper+' cobres</strong><p>Recompensa desta entrada. O valor aumenta com a sequência, até 26 cobres.</p></div><div class="feature-card"><strong>🔥 Dia '+nextStreak+' da sequência</strong><p>Próximo prêmio: '+dailyDrop+'. '+(bonus?'Hoje inclui uma poção adicional.':'Ervas no dia 3, minério no dia 5 e poção no dia 7.')+'</p></div></div>'+
+ '<div class="daily-calendar">'+calendar+'</div>'+
+ '<div class="menu-note">A sequência e os prêmios ficam salvos neste navegador e neste espaço de salvamento. Não há prêmio sincronizado entre jogadores.</div>';
  showModal('daily','Recompensa diária',body,[{label:available?'Resgatar recompensa':'Já resgatada hoje',action:()=>claimDailyReward(),primary:available},{label:'Fechar',action:()=>closeModal()}]);
  const claim=$('modalFoot').querySelector('button');if(claim&&!available)claim.disabled=true;
 }
@@ -1054,13 +1070,14 @@ function claimDailyReward(){
  if(record.day===today){closeModal();notify('Sua recompensa diária já foi resgatada.',2.5);return;}
  const streak=dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
  const copper=8+Math.min(6,Math.max(0,streak-1))*3;g.coins+=copper;
+ const cycleDay=((streak-1)%7)+1;
  writeLocalRecord(slotLocalKey('reinos_ruina_daily'),{day:today,streak,claims:(record.claims||0)+1});
  const dailyData=professionsData();
- if(streak%7===0)g.potions++;else if(streak%5===0)dailyData.materials.ore++;else if(streak%3===0)dailyData.materials.herb++;
- if(streak%7!==0&&(streak%5===0||streak%3===0))saveProfessions(dailyData);
+ if(cycleDay===7)g.potions++;else if(cycleDay===5)dailyData.materials.ore++;else if(cycleDay===3)dailyData.materials.herb++;
+ if(cycleDay===5||cycleDay===3)saveProfessions(dailyData);
  spawnCombatText('+'+copper+' COBRE',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-32:g.actionPlayer.y-48,'#9fe28f');
  playSfx('coin');closeModal();updateUI();persistProgress();
- notify('Recompensa diária: +'+copper+' cobres fictícios'+(streak%7===0?' e +1 poção':streak%5===0?' e +1 minério':streak%3===0?' e +1 erva':'')+'. Sequência de '+streak+' dia(s).',4);
+ notify('Recompensa diária: +'+copper+' cobres fictícios'+(cycleDay===7?' e +1 poção':cycleDay===5?' e +1 minério':cycleDay===3?' e +1 erva':'')+'. Sequência de '+streak+' dia(s).',4);
 }
 function defaultProfessions(){return {mining:{level:1,xp:0,total:0,nextAt:0},herbalism:{level:1,xp:0,total:0,nextAt:0},fishing:{level:1,xp:0,total:0,nextAt:0},materials:{ore:0,herb:0,fish:0},crafted:0};}
 function professionsData(){
@@ -1733,8 +1750,8 @@ function drawBrumaforteMap(){
 
   // Creatures, NPCs and player remain on their original interaction coordinates.
   for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);}
-  drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
-  drawNPCActor('toren',747,315,'hammer');
+  drawNPCActor('mara',230,333,'none');drawNPCActor('ivo',350,333,'tray');
+  NPC_APPEARANCES.toren.weapon='none';drawNPCActor('toren',747,315,'hammer');
   drawNPCActor('elira',455,456,'basket');
   drawNPCActor('brann',248,452,'rod');
   drawNPCActor('sabela',565,315,'tray');
@@ -1839,7 +1856,7 @@ function drawForestMap(){
  for(let i=0;i<25;i++){const x=24+rand01(i+7)*900,y=130+rand01(i+79)*365;rect(x,y,3,2,i%3===0?'#9cae65':'#789c58');}
  for(let i=0;i<5;i++){const fx=128+i*164+Math.sin(visualFX.worldSeconds+i)*7,fy=176+Math.sin(visualFX.worldSeconds*1.4+i*2)*22;circle(fx,fy,2,'#e7dc86');}
  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*3+m.x)*2,'#779c66',1.15);}
- drawNPCActor('liora',180,366,'staff');drawNPCActor('arven',315,455,'bow');
+ drawNPCActor('liora',180,366,'none');drawNPCActor('arven',315,455,'none');
  if(gameSettings.showLabels){
   text('BOSQUE VELADO',18,164,12,'#f0e8bd');
   drawNPCName('LIORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN',315,393,g.sideQuests.arven);
@@ -1873,7 +1890,7 @@ function drawLakeMap(){
  for(const [x,y] of [[526,300],[540,286],[560,275],[578,259],[595,241]]){circle(x,y,3,'#a1a586');circle(x-1,y-1,1,'#d1cc9c');}
  rect(483,330,48,8,'#6e5135');rect(486,326,3,4,'#c4ad79');rect(521,326,3,4,'#c4ad79');
  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*2.8+m.x)*1.8,'#7b9d75',1.15);}
- drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'bow');
+ drawNPCActor('yara',270,419,'none');drawNPCActor('neris',457,388,'none');
  if(gameSettings.showLabels){
   text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA',270,357,g.sideQuests.yara);text('NERIS',457,326,8,'#f7f1c9','center');
   text('ATRACADOURO',622,318,8,'#f8e8b7','center');text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
@@ -1952,7 +1969,7 @@ const plats=[{x:460,y:350,w:150},{x:760,y:295,w:125},{x:1115,y:365,w:160},{x:145
 // far doorway to village and final relic
 const portalX=80-camera;rect(portalX-20,335,40,112,'#10191b');rect(portalX-14,342,28,105,'#5c4935');rect(portalX-8,350,16,97,'#253c37');circle(portalX,361,4,'#b3c99c');
 const relicX=1780-camera;if(relicX>-60&&relicX<W+60){rect(relicX-26,420,52,22,'#66533b');rect(relicX-20,392,40,31,'#8b744f');rect(relicX-15,385,30,7,'#c5a96c');rect(relicX-2,389,4,23,'#292823');}
-for(const m of g.ruinMobs)if(m.alive){const x=m.x-camera,y=m.y+Math.sin(performance.now()/250+m.x)*1.2;if(x<-60||x>W+60)continue;if(m.type==='slime')drawSlime(x,y,'#679173',1.05);else if(m.type==='skeleton'){rect(x-10,y-31,20,27,'#b3aa8e');rect(x-9,y-41,18,12,'#c6c0aa');rect(x-5,y-37,3,3,'#282b2a');rect(x+3,y-37,3,3,'#282b2a');rect(x-10,y-4,6,13,'#9b9177');rect(x+4,y-4,6,13,'#9b9177');rect(x-15,y-20,5,17,'#9b9177');rect(x+10,y-22,5,19,'#9b9177');}else if(m.type==='bat'){circle(x,y-17,8,'#8b7683');poly([[x-5,y-19],[x-25,y-31],[x-19,y-9],[x-6,y-12]],'#58465d');poly([[x+5,y-19],[x+25,y-31],[x+19,y-9],[x+6,y-12]],'#58465d');rect(x-3,y-19,2,2,'#efb26b');rect(x+2,y-19,2,2,'#efb26b');}else drawKnight(x,y,camera);}
+for(const m of g.ruinMobs)if(m.alive){const x=m.x-camera,y=m.y+Math.sin(performance.now()/250+m.x)*1.2;if(x<-60||x>W+60)continue;if(m.type==='slime')drawSlime(x,y,'#679173',1.05);else if(m.type==='skeleton'){rect(x-10,y-31,20,27,'#b3aa8e');rect(x-9,y-41,18,12,'#c6c0aa');rect(x-5,y-37,3,3,'#282b2a');rect(x+3,y-37,3,3,'#282b2a');rect(x-10,y-4,6,13,'#9b9177');rect(x+4,y-4,6,13,'#9b9177');rect(x-15,y-20,5,17,'#9b9177');rect(x+10,y-22,5,19,'#9b9177');}else if(m.type==='bat'){circle(x,y-17,8,'#8b7683');poly([[x-5,y-19],[x-25,y-31],[x-19,y-9],[x-6,y-12]],'#58465d');poly([[x+5,y-19],[x+25,y-31],[x+19,y-9],[x+6,y-12]],'#58465d');rect(x-3,y-19,2,2,'#efb26b');rect(x+2,y-19,2,2,'#efb26b');}else drawKnight(x,y,camera);if(m.boss)drawBossBar(m,x,y-50,120);}
 const p=g.actionPlayer;const px=p.x-camera;const py=p.y;drawPlayer(px,py,g.character,{...playerMotion,dir:p.face<0?'left':'right',moving:playerMotion.moving||!p.onGround});text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),px,py-65,8,'#f2d49a','center');rect(px-12,py-60,24,4,'#202a31');rect(px-10,py-59,20,2,'#d3b66f');if(g.attackCD>.12){line(px+11*p.face,py-22,px+48*p.face,py-34,'#e6e0c9',4);line(px+12*p.face,py-23,px+46*p.face,py-35,'#f9f2db',1);}
 text('RUÍNAS DA MOEDA PARTIDA',18,109,14,'#e2d2ae');text('A · D andar   ESPAÇO pular   J atacar',18,521,11,'#e7d5b8');
 // minimap and health-boss hint
