@@ -29,7 +29,7 @@ The decision changes the kingdom dashboard and the merchant's prices. The player
 - Quest rewards cannot be repeatedly claimed from the same ledger; important story milestones autosave locally.
 - Main menu with Play and Language options (Portuguese and English menu UI).
 - Three independent local save slots, each with Continue, Customize, and Delete actions.
-- Character creator with masculine/feminine appearance, name, four outfits, cloak color, hair color, and skin tone.
+- Character creator with masculine/feminine appearance, name, six clothing styles, cloak, cap/hood/circlet, hair, skin tone, and a compact handheld-style pixel preview; blank-body and weapon styling are no longer part of the creator.
 - The protagonist and NPCs use compact, distinct top-down pixel sprites; creature portraits use custom pixel-art canvases and saved party data.
 - Legacy browser save is imported into Slot 1 once to preserve earlier progress.
 - Quest progression, XP/levels, health, potions, inventory economy, manual and milestone save/load.
