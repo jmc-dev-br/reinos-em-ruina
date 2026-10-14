@@ -106,3 +106,34 @@ O mapa local agora inclui Toren (ferreiro), Elira (cuidadora do jardim), Brann (
 Os estados das missões secundárias são incluídos em salvamentos novos e migram de forma segura em jornadas antigas. A ferraria oferece minério, ervas e peixe para que as missões possam ser concluídas sem depender apenas da sorte da coleta. Casas, caminhos, placas e colisões básicas foram adicionados ao mapa.
 
 Esses sistemas são locais ao navegador e ao save do jogador. Uma futura guilda com edifícios, mercado entre jogadores, eventos globais e reputação pública precisará de validação no servidor; estes novos NPCs não representam jogadores online.
+
+
+## Reboot 1.0 — implementação no cliente
+
+### Regiões, mapa e chefes
+- A região padrão é Brumaforte. **Bosque Velado** pode abrir a partir do nível 2 ou com a investigação avançada; **Lago Silencioso** abre a partir do nível 4 ou após concluir o capítulo I.
+- O mapa do mundo mostra a descrição e o requisito de cada área.
+- Lobo da Névoa e Leviatã de Vidro têm sprites próprios, barras de vida e uma segunda fase de fúria abaixo de 45% de resistência. O Guardião Oco recebe uma barra de chefe.
+- O chefe da região só é revelado quando o jogador inicia a missão correspondente; rótulos não entregam o encontro antes da história.
+
+### NPCs com aparência e personalidade
+O sistema visual compartilhado usa a mesma função de sprite do protagonista, com aparência individual por personagem: gênero, roupa, capa, pele, cabelo, acessórios e arma. A animação idle e props produzem pequenas poses (martelo, cesta, vara de pesca, bandeja). Retratos e cartões de diálogo exibem personalidade e biografia.
+
+Personagens novos:
+- **Liora:** rastreadora que perdeu a irmã após a névoa imitar sua voz; inicia a missão do Lobo da Névoa.
+- **Arven:** vigia e cartógrafo; pede ervas para marcar uma trilha mais segura.
+- **Yara:** cartógrafa das marés, cuja bússola aponta para o que foi perdido; inicia a missão do Leviatã de Vidro.
+- **Neris:** arquivista dos naufrágios, que guarda registros contraditórios.
+- **Descobertas ambientais:** altar das raízes e naufrágio sem nome recompensam leitura e investigação.
+
+### Progressão e clima
+- Cada nível concede um ponto de atributo e um ponto de talento. Força aumenta dano, Defesa reduz dano de ataques táticos, Vitalidade aumenta vida máxima e Sabedoria aumenta cura. Golpe Treinado, Postura de Pedra e Mãos Cuidadoras são talentos de até 3 ranks.
+- Relógio in-game persistente, começando às 08:00, avança um minuto por quatro segundos reais. Luz e UI lêem o relógio salvo.
+- Clima local pode ser limpo, chuva, folhas ou névoa. No modo dinâmico, cada estado dura um período aleatório de 35–190 segundos; a duração e o tipo atual entram no save.
+- O calendário diário tem cobre todos os dias, ervas no dia 3, minério no dia 5 e uma poção no dia 7. Os prêmios são locais ao navegador, não globais.
+
+### Migração e teste
+A migração de save fornece defaults para os novos atributos, relógio, clima, regiões e estados de missão, mantendo personagens antigos. A sintaxe JavaScript do script principal foi conferida após o reboot; o próximo passo de QA é testar no navegador todas as rotas de região, diálogos, turn-in de missão, pontos de atributo/talento e combate contra chefes em desktop e celular.
+
+## Fronteira entre protótipo e mundo online
+O clima é visual local e não representa um evento sincronizado. Recompensas, conquistas, materiais, chefes e decisões ainda são locais ao navegador. Para contas multiplataforma, rankings públicos, guildas, comércio, eventos sincronizados e coop/PvP, usar autenticação e estado autoritativo no servidor; não confiar no navegador para validar itens ou recompensas.
