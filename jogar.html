@@ -463,7 +463,7 @@ const worldArt={};
 for(const id of ['brumaforte','bosque','lago','mina']){
  const art=new Image();
  art.onload=()=>{if(typeof render==='function')render();};
- art.src='assets/world-'+id+'.svg?v=20261014';
+ art.src='assets/world-'+id+'.svg?v=20261015';
  worldArt[id]=art;
 }
 const LEGACY_SAVE_KEY='cronicas_valoria_save';
@@ -638,15 +638,23 @@ function drawEnvironmentOverlay(){
  }
 }
 function renderWithEffects(){
+ ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;
  ctx.clearRect(0,0,W,H);
  ctx.save();
- if(gameSettings.effectsEnabled&&visualFX.shakeTime>0){
-  const m=visualFX.shakeTime/.16,p=visualFX.shakePower*m;
-  ctx.translate((Math.random()-.5)*p,(Math.random()-.5)*p);
- }
- if(g.scene==='map')drawMap();else drawAction();
- drawEnvironmentOverlay();
- ctx.restore();
+ try{
+  if(gameSettings.effectsEnabled&&visualFX.shakeTime>0){
+   const m=visualFX.shakeTime/.16,p=visualFX.shakePower*m;
+   ctx.translate((Math.random()-.5)*p,(Math.random()-.5)*p);
+  }
+  if(g.scene==='map')drawMap();else drawAction();
+  drawEnvironmentOverlay();
+ }catch(err){
+  console.error('Erro recuperável na renderização:',err);
+  ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;
+  const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#85b968');bg.addColorStop(1,'#46764a');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  if(g.scene==='map'){const p=g.mapPlayer;drawWorldPlayer(p.x,p.y,g.character,playerMotion);}
+ }finally{ctx.restore();}
 }
 let gameAudio=null,musicTimer=null,musicStep=0;
 function getAudioContext(){
@@ -2351,7 +2359,7 @@ function drawPlayer(x,y,rawAppearance,motion,targetCtx){
 function drawFieldCreature(x,y,m){
  const t=m.type||'slime',time=visualFX.worldSeconds||0,bob=Math.sin(time*2.4+(m.x||0)*.025)*1.2;
  const scale=m.boss?1.45:1;
- ctx.save();ctx.translate(x,y+bob);ctx.scale(scale,scale);
+ ctx.save();try{ctx.translate(x,y+bob);ctx.scale(scale,scale);
  const shadow=(rx=12)=>{ctx.fillStyle='rgba(18,42,31,.34)';ctx.beginPath();ctx.ellipse(0,5,rx,4,0,0,Math.PI*2);ctx.fill();};
  const shape=(d,fill,stroke=null,width=1)=>{ctx.beginPath();d(ctx);if(fill&&fill!=='none'){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();}};
  const grad=(top,bottom,y1=-14,y2=8)=>{const g=ctx.createLinearGradient(0,y1,0,y2);g.addColorStop(0,top);g.addColorStop(1,bottom);return g;};
@@ -2412,10 +2420,38 @@ function drawFieldCreature(x,y,m){
   shape(p=>{p.moveTo(4,-9);p.lineTo(10,-16);p.quadraticCurveTo(12,-10,8,-6);p.closePath();},'#6e9274','#294a3b',1.5);
   eye(-4,-3,1.4);eye(4,-3,1.4);
  }
- if(m.boss){ctx.restore();drawBossBar(m,x,y-28,72);}
- else ctx.restore();
+ }finally{ctx.restore();}
+ if(m.boss)drawBossBar(m,x,y-28,72);
  if(gameSettings.showLabels&&m.name)drawNameplate(m.name,x,y-(m.boss?34:22),m.boss?'#ffe19a':'#fff2d0',7);
 }
+function safeDrawFieldCreature(m){
+ if(!m)return;
+ try{drawFieldCreature(m.x,m.y,m);}
+ catch(err){
+  console.error('Falha ao desenhar criatura de campo:',err);
+  try{ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;drawSlime(m.x,m.y,m.boss?'#8aa2a0':'#78ad65',m.boss?1.45:1);}
+  catch(fallbackError){console.error('Falha no desenho alternativo da criatura:',fallbackError);}
+  if(gameSettings.showLabels&&m.name){try{drawNameplate(m.name,m.x,m.y-22,'#fff2d0',7);}catch(_){}}
+ }
+}
+function safeDrawNPCActor(id,x,y,prop='none'){
+ try{drawNPCActor(id,x,y,prop);}
+ catch(err){
+  console.error('Falha ao desenhar personagem '+id+':',err);
+  const a=NPC_APPEARANCES[id];if(!a)return;
+  try{ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.save();ctx.translate(x,y);ctx.scale(1.55,1.55);drawHandheldCharacter(0,0,a,{dir:'down',moving:false,phase:0});ctx.restore();}
+  catch(fallbackError){console.error('Falha no desenho alternativo de '+id+':',fallbackError);try{ctx.restore();}catch(_){}}
+ }
+}
+function drawWorldPlayer(x,y,appearance,motion){
+ try{drawPlayer(x,y,appearance,motion);}
+ catch(err){
+  console.error('Falha ao desenhar protagonista:',err);
+  try{ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.save();ctx.translate(x,y);ctx.scale(1.75,1.75);drawHandheldCharacter(0,0,appearance,{...motion,dir:motion?.dir||'down'});ctx.restore();}
+  catch(fallbackError){console.error('Falha no desenho alternativo do protagonista:',fallbackError);try{ctx.restore();}catch(_){}}
+ }
+}
+
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
 function drawBrumaforteMap(){
  const art=worldArt.brumaforte;
@@ -2427,10 +2463,10 @@ function drawBrumaforteMap(){
   for(let y=0;y<=H;y+=32){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
   ctx.restore();
  }
- for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
- drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
- drawNPCActor('toren',747,315,'hammer');drawNPCActor('elira',455,456,'basket');
- drawNPCActor('brann',248,452,'rod');drawNPCActor('sabela',565,315,'tray');
+ for(const m of allMobs())if(m.alive)safeDrawFieldCreature(m);
+ safeDrawNPCActor('mara',230,333,'staff');safeDrawNPCActor('ivo',350,333,'tray');
+ safeDrawNPCActor('toren',747,315,'hammer');safeDrawNPCActor('elira',455,456,'basket');
+ safeDrawNPCActor('brann',248,452,'rod');safeDrawNPCActor('sabela',565,315,'tray');
  if(gameSettings.showLabels){
   text('BRUMAFORTE',20,165,12,'#f8edc5');
   text('MERCADO',136,286,8,'#f8edc5','center');text('ESTALAGEM',362,285,8,'#f8edc5','center');text('FERREIRO',758,285,8,'#f8edc5','center');
@@ -2439,35 +2475,35 @@ function drawBrumaforteMap(){
   drawNPCName('BRANN · PESCADOR',248,452,g.sideQuests.brann);drawNPCName('SABELA · ESTALAJADEIRA',565,315,'none');
   text('CABANA DE BRANN',337,397,6,'#fff0c8','center');text('JARDIM DE ELIRA',557,397,7,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
 }
 function drawForestMap(){
  const art=worldArt.bosque;
  if(art&&art.complete&&art.naturalWidth)ctx.drawImage(art,0,0,W,H);
  else {const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#517e48');bg.addColorStop(1,'#254b32');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);}
- for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
- drawNPCActor('liora',180,366,'bow');drawNPCActor('arven',315,455,'sword');
+ for(const m of allMobs())if(m.alive)safeDrawFieldCreature(m);
+ safeDrawNPCActor('liora',180,366,'bow');safeDrawNPCActor('arven',315,455,'sword');
  if(gameSettings.showLabels){
   text('BOSQUE VELADO',18,164,12,'#f4edc5');
   drawNPCName('LIORA · RASTREADORA',180,366,g.sideQuests.liora);drawNPCName('ARVEN · VIGIA',315,455,g.sideQuests.arven);
   text('ALTAR DAS RAÍZES',726,117,8,'#fff0c8','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
 }
 function drawLakeMap(){
  const art=worldArt.lago;
  if(art&&art.complete&&art.naturalWidth)ctx.drawImage(art,0,0,W,H);
  else {const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#8cbd72');bg.addColorStop(1,'#527f4a');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);}
- for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
- drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'book');
+ for(const m of allMobs())if(m.alive)safeDrawFieldCreature(m);
+ safeDrawNPCActor('yara',270,419,'staff');safeDrawNPCActor('neris',457,388,'book');
  if(gameSettings.showLabels){
   text('LAGO SILENCIOSO',18,164,12,'#f4edc5');
   drawNPCName('YARA · CARTÓGRAFA',270,419,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,388,'none');
   text('ATRACADOURO',622,318,8,'#fff0c8','center');
   const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#fff0c8','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);drawWorldPlayer(p.x,p.y,g.character,playerMotion);
 }
 function drawMapCompass(){
  const x=914,y=232;ctx.save();ctx.globalAlpha=.96;
@@ -2477,7 +2513,15 @@ function drawMapCompass(){
  line(x-15,y,x+15,y,'#6a8e5c',1);line(x,y-15,x,y+15,'#6a8e5c',1);
  text('N',x,y-27,7,'#385d43','center');text('S',x,y+32,7,'#385d43','center');
 }
-function drawMap(){if(g.region==='bosque')drawForestMap();else if(g.region==='lago')drawLakeMap();else drawBrumaforteMap();drawMapCompass();drawWorldAtmosphere();}
+function drawMap(){
+ try{if(g.region==='bosque')drawForestMap();else if(g.region==='lago')drawLakeMap();else drawBrumaforteMap();}
+ catch(err){console.error('Falha na camada do mapa:',err);}
+ try{drawMapCompass();}catch(err){console.error('Falha na bússola:',err);}
+ try{drawWorldAtmosphere();}catch(err){console.error('Falha nos efeitos do mundo:',err);}
+ const p=g.mapPlayer;
+ drawWorldPlayer(p.x,p.y,g.character,playerMotion);
+ drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-48,'#f4d49a',8);
+}
 function drawWorldAtmosphere(){
  const t=visualFX.worldSeconds||0;ctx.save();
  const edge=ctx.createRadialGradient(W*.5,H*.48,Math.min(W,H)*.18,W*.5,H*.48,Math.max(W,H)*.72);
@@ -2558,7 +2602,7 @@ function drawAction(){
  if(art&&art.complete&&art.naturalWidth)ctx.drawImage(art,-camera,0,worldW,H);
  else {const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#728e65');bg.addColorStop(1,'#2f4f39');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);}
  for(const m of g.ruinMobs)if(m.alive){const x=m.x-camera;if(x>-40&&x<W+40)drawFieldCreature(x,m.y,m);}
- drawPlayer(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
+ drawWorldPlayer(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
  drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-48,'#f2d49a',8);
  if(gameSettings.showLabels){text('MINA ANTIGA',18,190,10,'#fff0c8');}
  ctx.save();ctx.fillStyle='rgba(17,39,27,.84)';ctx.strokeStyle='#bfa566';ctx.lineWidth=1;
