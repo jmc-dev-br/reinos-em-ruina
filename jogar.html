@@ -165,8 +165,18 @@ async function connectArcWallet(){
    }
   }
   arcAddress=accounts[0];arcProvider=new window.ethers.BrowserProvider(window.ethereum);arcSigner=await arcProvider.getSigner();
-  updateEconomyUI();
+  if(CHRONICLE_CONTRACT_ADDRESS){
+   const readContract=new window.ethers.Contract(CHRONICLE_CONTRACT_ADDRESS,CHRONICLE_ABI,arcProvider);
+   const prior=await readContract.chronicles(arcAddress,1);
+   if(prior.exists){
+    g.economy.decision=Number(prior.policyId);g.economy.decisionName=['Nenhuma decisão','Restaurar a estrada','Empréstimo da guilda','Congelar os preços'][g.economy.decision];
+    g.economy.treasury=Number(prior.treasury);g.economy.debt=Number(prior.debt);g.economy.trust=Number(prior.publicTrust);g.economy.priceIndex=Number(prior.priceIndex);g.economy.foodDays=Number(prior.foodDays);g.economy.receiptHash=String(prior.stateHash);g.economy.onchain=true;g.economy.lastOutcome='Resultado carregado da crônica pública registrada na Arc.';
+    try{localStorage.setItem('cronicas_valoria_save',JSON.stringify(saveData()));}catch(err){}
+   }
+  }
+  updateUI();
   if(!CHRONICLE_CONTRACT_ADDRESS)notify('Carteira conectada. O contrato do jogo ainda precisa ser implantado na Arc Mainnet.',4);
+  else if(g.economy.onchain)notify('Crônica anterior encontrada na Arc e sincronizada com este navegador.',4);
   else notify('Carteira conectada à crônica do reino.',3);
  }catch(err){notify('Conexão cancelada ou indisponível. Nenhuma transação foi enviada.',4);}
 }
