@@ -744,6 +744,32 @@ function talkMara(){
  }
  openDialogue('Mara, guardiã da vila','O reino não se recupera com uma única boa decisão. Continue investigando, compare os custos e desconfie de promessas fáceis.','Você concluiu o primeiro capítulo. Há outras histórias a descobrir.');
 }
+function openIntroCutscene(){
+ const scenes=[
+  {kicker:'PRÓLOGO · 01',title:'A estrada sem moedas',line:'Ao amanhecer, as carroças de Brumaforte chegam vazias. Os comerciantes juram que pagaram os pedágios; o Conselho diz que nunca recebeu nada.',bg:'linear-gradient(180deg,#9bc8dc 0 42%,#83b36e 42% 68%,#c7b887 68% 100%)'},
+  {kicker:'PRÓLOGO · 02',title:'Uma vila em silêncio',line:'Mara, guardiã da vila, encontra marcas de rodas que seguem até as ruínas. No chão, uma moeda partida brilha como se tivesse acabado de ser cunhada.',bg:'linear-gradient(180deg,#7b8fa8 0 38%,#435d49 38% 66%,#2c4038 66% 100%)'},
+  {kicker:'PRÓLOGO · 03',title:'A primeira escolha',line:'“Não precisamos de mais uma espada”, diz Mara. “Precisamos de alguém que investigue, compare as provas e descubra quem desviou os carregamentos.” Sua jornada começa agora.',bg:'linear-gradient(180deg,#d4a66a 0 38%,#8a8051 38% 65%,#45583d 65% 100%)'}
+ ];
+ let index=0;
+ const render=()=>{
+  const s=scenes[index];
+  const art='<div style="height:145px;border:3px solid #587e4b;background:'+s.bg+';position:relative;overflow:hidden;image-rendering:pixelated;box-shadow:3px 3px 0 #9ab77b;margin-bottom:14px">'+
+   '<div style="position:absolute;left:8%;bottom:22%;width:84%;height:5px;background:#b8b17b"></div>'+
+   '<div style="position:absolute;left:18%;bottom:27%;width:22px;height:52px;background:#6a4935;box-shadow:5px -15px 0 #31523b, -5px -9px 0 #31523b, 62px 12px 0 #7b5435, 66px -2px 0 #456644"></div>'+
+   '<div style="position:absolute;right:17%;bottom:22%;width:14px;height:34px;background:#4b3a31;box-shadow:0 -13px 0 #d6b48b, -4px -17px 0 #59402e, 2px 37px 0 #59402e"></div>'+
+   '<div style="position:absolute;right:12px;top:10px;padding:5px 7px;background:#eff0cb;border:2px solid #587e4b;color:#2d4a43;font:800 9px ui-monospace,monospace">CENA '+(index+1)+'/3</div></div>';
+  showModal('cutscene','PRÓLOGO · A MOEDA PARTIDA',art+'<div class="eyebrow">'+s.kicker+'</div><h3>'+s.title+'</h3><div class="dialogline">'+s.line+'</div><div class="modalnote">Cena narrativa em pixel art · história original de Reinos em Ruína.</div>',[
+   {label:index<scenes.length-1?'Próxima cena':'Começar aventura',primary:true,action:()=>{
+    index++;
+    if(index<scenes.length){render();return;}
+    closeModal();notify('Sua jornada começou. Fale com Mara e investigue os carregamentos.',4);
+    if(!g.starterChosen)openStarterSelection();
+   }},
+   {label:'Pular cena',action:()=>{closeModal();if(!g.starterChosen)openStarterSelection();}}
+  ]);
+ };
+ render();
+}
 function openDialogue(title,line,small){
  const id=npcForDialogue(title),profile=id&&NPC_PROFILES[id],src=id&&npcPortraitData(id);
  const portrait=profile?'<div class="dialogue-personality">'+(src?'<img class="dialogue-portrait" src="'+src+'" alt="">':'<div class="dialogue-portrait-fallback">✦</div>')+
@@ -2657,7 +2683,7 @@ if(gameParams.get('new')==='1'){
  const record=readActiveSlot();g.character=normalizeAppearance(record&&record.character||g.character);
  notify('Bem-vindo ao reino. Fale com Mara perto da praça: aproxime-se e pressione E.',5);
 }
-settleOfflineActivity(true);updateUI();render();if(!g.starterChosen)openStarterSelection();requestAnimationFrame(loop);
+settleOfflineActivity(true);updateUI();render();if(gameParams.get('new')==='1')openIntroCutscene();else if(!g.starterChosen)openStarterSelection();requestAnimationFrame(loop);
 })();
 </script>
 </body>
