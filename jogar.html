@@ -985,115 +985,178 @@ function openActivityMenu(){
 }
 
 let tacticalBattle=null;
-function openTacticalBattle(){
- if(modalType)return;
- const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=125;
+function openStarterSelection(){
+ if(g.starterChosen&&g.team&&g.team.length){openCreatureTeam();return;}
+ const cards=['folhote','braseco','gotil'].map(id=>{
+  const c=CREATURE_SPECIES[id];
+  return '<button class="starter-card" data-starter="'+id+'"><span class="starter-portrait">'+c.icon+'</span><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>VIDA BASE '+c.baseHp+' · '+c.type.toUpperCase()+'</em></button>';
+ }).join('');
+ const body='<div class="retro-copy"><strong>UMA JORNADA COMEÇA COM UMA AMIZADE</strong><p>Escolha uma criatura para acompanhar você. Ela vai crescer com as batalhas e ajudar a descobrir os segredos do reino.</p></div><div class="starter-grid">'+cards+'</div>';
+ showModal('starter','Escolha seu primeiro parceiro',body,[{label:'Explorar primeiro',action:()=>{g.starterChosen=true;g.team=[];persistProgress();closeModal();notify('Você pode conseguir sua primeira criatura mais tarde.',3);},primary:false}]);
+ $('modalBody').querySelectorAll('[data-starter]').forEach(button=>button.addEventListener('click',()=>chooseStarter(button.dataset.starter)));
+}
+function chooseStarter(id){
+ if(!CREATURE_SPECIES[id]||!CREATURE_SPECIES[id].starter)return;
+ g.team=[makeCreature(id,5)];g.activeCreature=0;g.starterChosen=true;g.captureOrbs=Math.max(3,Number(g.captureOrbs)||0);
+ closeModal();updateUI();persistProgress();playSfx('win');notify('Seu parceiro é '+CREATURE_SPECIES[id].name+'! Explore, encontre criaturas e pressione J para iniciar um duelo.',4.2);
+}
+function openCreatureTeam(){
+ if(!g.team||!g.team.length){openStarterSelection();return;}
+ const cards=g.team.map((c,i)=>{
+  const p=CREATURE_SPECIES[c.species]||CREATURE_SPECIES.folhote,active=i===g.activeCreature,hp=Math.max(0,c.hp||0),max=Math.max(1,c.maxHp||p.baseHp);
+  return '<button class="party-card '+(active?'selected':'')+'" data-active-index="'+i+'"><span class="party-sprite">'+p.icon+'</span><span class="party-details"><strong>'+escapeHtml(c.nickname||p.name)+(active?' · PARCEIRO':'')+'</strong><small>'+p.type.toUpperCase()+' · NÍVEL '+c.level+' · '+hp+'/'+max+' VIDA</small><span class="party-hp"><i style="width:'+Math.max(0,Math.min(100,hp/max*100))+'%"></i></span><em>'+p.desc+'</em></span><span class="party-arrow">'+(active?'✓':'→')+'</span></button>';
+ }).join('');
+ const body='<div class="retro-copy"><strong>SEUS PARCEIROS</strong><p>Leve até seis criaturas. Escolha quem vai caminhar ao seu lado; criaturas capturadas podem ser trocadas a qualquer momento fora de um duelo.</p></div>'+
+ '<div class="party-strip"><span>CRIATURAS <b>'+g.team.length+'/6</b></span><span>LAÇOS DE SEMENTE <b>'+g.captureOrbs+'</b></span><span>ENCONTROS VENCIDOS <b>'+g.encountersWon+'</b></span></div><div class="party-list">'+cards+'</div>'+
+ '<div class="menu-note">Dica: enfraqueça uma criatura selvagem antes de usar um Laço de Semente. Chefes únicos não podem ser capturados.</div>';
+ showModal('team','Equipe de criaturas',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-active-index]').forEach(button=>button.addEventListener('click',()=>{
+  const index=Number(button.dataset.activeIndex),c=g.team[index];if(!c)return;
+  if(c.hp<=0){notify('Essa criatura precisa descansar antes de lutar.',2.5);return;}
+  g.activeCreature=index;persistProgress();updateUI();openCreatureTeam();notify((c.nickname||CREATURE_SPECIES[c.species].name)+' vai acompanhar você.',2);
+ }));
+}
+function nearestWildCreature(maxDistance=125){
+ const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=maxDistance;
  for(const mob of allMobs()){
   if(!mob.alive)continue;
-  const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));
+  const d=Math.hypot(p.x-mob.x,p.y-mob.y);
   if(d<best){best=d;target=mob;}
  }
- if(!target){notify('Aproxime-se de uma criatura para iniciar o combate tático.',2.8);return;}
- const hadEnemyHp=typeof target.hp==='number',originalEnemyHp=target.hp;
- const hadEnemyMaxHp=typeof target.maxHp==='number',originalEnemyMaxHp=target.maxHp;
- const maxHp=target.maxHp||(target.hp>0?target.hp:Math.max(26,Math.min(78,Math.round((target.xp||25)*.75+15))));
- target.maxHp=maxHp;if(typeof target.hp!=='number'||target.hp<=0)target.hp=maxHp;
- tacticalBattle={mob:target,scene:g.scene,enemyHp:Math.min(target.hp,maxHp),enemyMax:maxHp,originalEnemyHp,hadEnemyHp,originalEnemyMaxHp,hadEnemyMaxHp,energy:3,block:0,turn:1,log:'Você começa com 3 pontos de energia. Escolha cartas e pense na defesa.',finished:false};
+ return target;
+}
+function openTacticalBattle(){
+ if(modalType)return;
+ if(!g.team||!g.team.length){openStarterSelection();return;}
+ const active=activeCreature();
+ if(active&&active.hp<=0){
+  const next=g.team.findIndex(c=>c.hp>0);
+  if(next<0){notify('Sua equipe precisa descansar. Abra Equipe.',2.5);return;}
+  g.activeCreature=next;
+ }
+ const target=nearestWildCreature(135);
+ if(!target){notify('Aproxime-se de uma criatura selvagem e pressione J para iniciar o duelo.',3);playSfx('ui');return;}
+ ensureMobStats(target);
+ const speciesId=speciesForMob(target),wildLevel=Math.max(2,Math.min(20,g.level+(target.boss?3:0)));
+ tacticalBattle={mob:target,speciesId,wildLevel,enemyHp:target.hp,enemyMax:target.maxHp,turn:1,log:target.boss?'Uma criatura rara bloqueia a passagem!':'Uma criatura selvagem apareceu!',finished:false};
  renderTacticalBattle();
+}
+function creatureDamage(creature,move){
+ const profile=CREATURE_MOVES[move]||CREATURE_MOVES.bump;
+ if(profile.heal)return 0;
+ const level=Math.max(1,Number(creature&&creature.level)||1);
+ return Math.max(2,Math.round((profile.power+Math.floor((level-1)*1.6))*difficultyProfile().outgoing));
+}
+function wildDamage(mob,level){
+ const base=mob.type==='leviathan'?16:mob.type==='mistwolf'?14:mob.type==='knight'?12:mob.type==='skeleton'?9:mob.type==='bat'?8:mob.name&&mob.name.includes('Besouro')?9:7;
+ return Math.max(2,Math.round((base+Math.floor(level*1.4)+(mob.boss?5:0))*difficultyProfile().incoming));
 }
 function renderTacticalBattle(){
  if(!tacticalBattle||tacticalBattle.finished)return;
- const b=tacticalBattle;
- const cls=classProfile();
- const guardValue=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4+(g.classId==='guardian'?Math.max(0,g.skillRanks?.bulwark||0)*6:0);
- const enemy=escapeHtml(b.mob.name||'Criatura desconhecida');
- const ep=Math.max(0,Math.min(100,b.enemyHp/b.enemyMax*100));
- const pp=Math.max(0,Math.min(100,g.hp/g.maxHp*100));
- const energy=Array.from({length:3},(_,i)=>'<span class="energy-pip '+(i<b.energy?'ready':'')+'"></span>').join('');
- const body=
-  '<div class="battle-intro"><span>Turno '+b.turn+' · Até 3 pontos de energia</span><span>'+(b.mob.boss?'CHEFE · FASE '+(b.enemyHp<=b.enemyMax*.45?'2 · FÚRIA':'1'):'Combate tático')+'</span></div>'+
-  '<div class="battle-versus">'+
-   '<section class="battle-side"><div class="battle-avatar">🛡️</div><div class="battle-name">'+escapeHtml(g.character.name||'Aventureiro')+'</div>'+
-    '<div class="battle-meta"><span>VIDA</span><strong>'+Math.max(0,g.hp)+' / '+g.maxHp+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+pp+'%"></div></div>'+
-    '<div class="battle-meta"><span>Bloqueio</span><strong>'+b.block+'</strong></div></section>'+
-   '<div class="battle-vs">VS</div>'+
-   '<section class="battle-side enemy"><div class="battle-avatar">'+(b.mob.type==='mistwolf'?'🐺':b.mob.type==='leviathan'?'🐉':b.mob.boss?'☠':'👾')+'</div><div class="battle-name">'+enemy+'</div>'+
-    '<div class="battle-meta"><span>RESISTÊNCIA</span><strong>'+Math.max(0,b.enemyHp)+' / '+b.enemyMax+'</strong></div><div class="battle-hp"><div class="battle-hp-fill" style="width:'+ep+'%"></div></div>'+
-    '<div class="battle-meta"><span>Ameaça</span><strong>'+(b.mob.boss?'CHEFE':b.mob.type==='knight'?'Alta':b.mob.type==='skeleton'?'Média':'Baixa')+'</strong></div></section></div>'+
-  '<div class="battle-section-title">ENERGIA DISPONÍVEL</div><div class="battle-energy">'+energy+'<span style="font-size:10px;color:#b8c7ae;margin-left:4px">'+b.energy+' / 3 pontos</span></div>'+
-  '<div class="battle-section-title">SUA MÃO · ESCOLHA UMA CARTA</div><div class="card-grid">'+
-   '<button class="battle-card" data-card="quick" '+(b.energy<1?'disabled':'')+'><strong>⚔ Golpe preciso</strong><small>Causa '+playerDamage('basic')+' de dano fixo.</small><span class="card-cost">1 ENERGIA</span></button>'+
-   '<button class="battle-card" data-card="heavy" '+(b.energy<2?'disabled':'')+'><strong>🗡 Estocada pesada</strong><small>Causa '+playerDamage('heavy')+' de dano fixo.</small><span class="card-cost">2 ENERGIA</span></button>'+
-   '<button class="battle-card" data-card="guard" '+(b.energy<2?'disabled':'')+'><strong>🛡 Guarda de pedra</strong><small>Bloqueia até '+guardValue+' pontos do próximo ataque.</small><span class="card-cost">2 ENERGIA</span></button>'+
-   '<button class="battle-card" data-card="potion" '+(b.energy<1||g.potions<1||g.hp>=g.maxHp?'disabled':'')+'><strong>✚ Poção de ervas</strong><small>Recupera 30 de vida. Você tem '+g.potions+' poção(ões).</small><span class="card-cost">1 ENERGIA</span></button>'+
-  '<button class="battle-card" data-card="classpower" '+(b.energy<2||g.level<2?'disabled':'')+'><strong>'+cls.powerIcon+' '+escapeHtml(cls.powerName)+'</strong><small>'+(cls.powerType==='shield'?'Gera escudo para o próximo ataque.':'Causa '+playerDamage('power')+' de dano fixo.')+'</small><span class="card-cost">2 ENERGIA</span></button>'+
-  '</div><div class="battle-log"><strong>Registro de combate:</strong> '+escapeHtml(b.log)+'</div>'+
-  '<div class="battle-disclaimer">Recursos e recompensas são fictícios. Este é um combate local; PvP e mundo compartilhado ainda exigem um servidor.</div>';
- showModal('tactical','Combate tático · Cartas',body,[
-  {label:'Concluir turno',action:endTacticalTurn,primary:true},
-  {label:'Recuar',action:exitTacticalBattle}
- ]);
- $('modalBody').querySelectorAll('[data-card]').forEach(el=>el.addEventListener('click',()=>playTacticalCard(el.dataset.card)));
+ const b=tacticalBattle,c=activeCreature(),cp=CREATURE_SPECIES[c.species]||CREATURE_SPECIES.folhote,wp=CREATURE_SPECIES[b.speciesId]||CREATURE_SPECIES.musguito;
+ const enemy=escapeHtml(b.mob.name||wp.name),eh=Math.max(0,b.enemyHp),em=Math.max(1,b.enemyMax),hp=Math.max(0,c.hp||0),hm=Math.max(1,c.maxHp||cp.baseHp);
+ const captureReady=eh/em<=.4&&!b.mob.boss&&g.captureOrbs>0&&g.team.length<6;
+ const moves=[...(c.moves||cp.moves||['bump']),...(c.moves||cp.moves||['bump']).length<4?['rest']:[]].slice(0,4);
+ const moveCards=moves.map((id,i)=>{
+  const move=CREATURE_MOVES[id]||CREATURE_MOVES.bump,damage=creatureDamage(c,id);
+  return '<button class="classic-move" data-creature-move="'+id+'"><span class="move-index">'+(i+1)+'</span><strong>'+move.name+'</strong><small>'+(move.heal?'Cura até '+move.heal+' pontos de vida':'Dano fixo: '+damage)+' · '+move.desc+'</small></button>';
+ }).join('');
+ const body='<div class="retro-duel"><div class="duel-kicker">ENCONTRO SELVAGEM · TURNO '+b.turn+'</div>'+
+  '<div class="duel-field">'+
+   '<div class="wild-side"><div class="wild-status"><strong>'+enemy+'</strong><small>NÍVEL '+b.wildLevel+'</small><div class="duel-hp"><i style="width:'+Math.max(0,eh/em*100)+'%"></i></div><small>PV '+eh+' / '+em+'</small></div><div class="duel-creature wild">'+wp.icon+'</div></div>'+
+   '<div class="partner-side"><div class="duel-creature partner">'+cp.icon+'</div><div class="partner-status"><strong>'+escapeHtml(c.nickname||cp.name)+'</strong><small>NÍVEL '+c.level+'</small><div class="duel-hp"><i style="width:'+Math.max(0,hp/hm*100)+'%"></i></div><small>PV '+hp+' / '+hm+'</small></div></div>'+
+  '</div><div class="duel-message">'+escapeHtml(b.log)+'</div>'+
+  '<div class="battle-section-title">ESCOLHA UM MOVIMENTO</div><div class="classic-moves">'+moveCards+'</div>'+
+  '<div class="classic-actions">'+
+   '<button class="classic-action" data-creature-action="potion" '+(g.potions<=0||hp>=hm?'disabled':'')+'>✚ Erva curativa <small>'+g.potions+' no bolso</small></button>'+
+   '<button class="classic-action" data-creature-action="capture" '+(!captureReady?'disabled':'')+'>'+(b.mob.boss?'★ Chefe único':g.team.length>=6?'Equipe cheia':g.captureOrbs<=0?'Sem laços':eh/em>.4?'Enfraqueça para capturar':'◎ Laço de Semente')+' <small>'+(captureReady?'Pode ser capturada agora':b.mob.boss?'Não capturável':'Use com até 40% de vida')+'</small></button>'+
+   '<button class="classic-action" data-creature-action="switch" '+(g.team.filter((t,i)=>i!==g.activeCreature&&t.hp>0).length===0?'disabled':'')+'>↔ Trocar parceiro <small>Escolher próxima criatura saudável</small></button>'+
+   '<button class="classic-action" data-creature-action="run">→ Fugir <small>Voltar à exploração</small></button>'+
+  '</div><div class="battle-disclaimer">Danos fixos · parceiros ganham experiência · Laços de Semente capturam criaturas enfraquecidas.</div></div>';
+ showModal('tactical','Duelo de criaturas',body,[{label:'Fechar duelo',action:()=>runFromCreatureBattle()}]);
+ $('modalBody').querySelectorAll('[data-creature-move]').forEach(el=>el.addEventListener('click',()=>playCreatureMove(el.dataset.creatureMove)));
+ $('modalBody').querySelectorAll('[data-creature-action]').forEach(el=>el.addEventListener('click',()=>playCreatureAction(el.dataset.creatureAction)));
 }
-function playTacticalCard(id){
+function playCreatureMove(id){
  const b=tacticalBattle;if(!b||b.finished)return;
- const cards={quick:{cost:1},heavy:{cost:2},guard:{cost:2},potion:{cost:1},classpower:{cost:2}};
- const card=cards[id];if(!card||b.energy<card.cost)return;
- if(id==='classpower'&&g.level<2){notify('Seu poder de classe desperta no nível 2.',2.5);return;}
- if(id==='classpower'&&g.powerCooldown>0){notify(classProfile().powerName+' ainda recarrega por '+g.powerCooldown.toFixed(1)+'s.',2.5);renderTacticalBattle();return;}
- if(id==='potion'&&(g.potions<1||g.hp>=g.maxHp)){notify(g.potions<1?'Você não tem poções.':'Sua vida já está cheia.',2);renderTacticalBattle();return;}
- b.energy-=card.cost;
- if(id==='quick'){const damage=playerDamage('basic');b.enemyHp-=damage;b.log='Golpe preciso: '+damage+' de dano fixo por 1 energia.';spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#ffb27e');playSfx('hit');triggerScreenShake(2.4,.12);}
- else if(id==='heavy'){const damage=playerDamage('heavy');b.enemyHp-=damage;b.log='Estocada pesada: '+damage+' de dano fixo por 2 energias.';spawnCombatText('-'+damage+'!',b.mob.x,b.mob.y-30,'#ffd06d');playSfx('hit');triggerScreenShake(5,.2);}
- else if(id==='guard'){const guard=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4+(g.classId==='guardian'?Math.max(0,g.skillRanks?.bulwark||0)*6:0);b.block+=guard;b.log='Guarda de pedra: até '+guard+' pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
- else if(id==='potion'){g.potions--;const healed=Math.min(30+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4,g.maxHp-g.hp);g.hp+=healed;spawnCombatText('+'+healed+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-40,'#7ee59d');playSfx('heal');b.log='Poção: você recuperou '+healed+' pontos de vida.';}
- else if(id==='classpower'){
-  const c=classProfile();g.powerCooldown=c.cooldown;
-  if(c.powerType==='shield'){
-   const shield=c.powerShield+Math.max(0,g.skillRanks?.bulwark||0)*6+Math.max(0,g.skillRanks?.stoneGuard||0)*4;
-   b.block+=shield;b.log=c.powerName+': '+shield+' pontos de bloqueio.';playSfx('magic');
-  }else{
-   const damage=playerDamage('power');b.enemyHp-=damage;b.log=c.powerName+': '+damage+' de dano fixo.';
-   spawnCombatText('-'+damage,b.mob.x,b.mob.y-30,'#c7a6ff');playSfx('magic');triggerScreenShake(4,.18);
-   if(g.classId==='arcanist'){
-    const splash=Math.max(1,Math.round(12*difficultyProfile().outgoing));
-    for(const other of allMobs())if(other!==b.mob&&other.alive&&Math.abs(other.x-b.mob.x)<=105)damageMob(other,splash,'poder');
-   }
-  }
+ const c=activeCreature(),p=CREATURE_SPECIES[c.species]||CREATURE_SPECIES.folhote,move=CREATURE_MOVES[id];
+ if(!move||!(c.moves||p.moves||[]).includes(id)&&id!=='rest')return;
+ if(c.hp<=0){notify('Escolha um parceiro saudável.',2);return;}
+ if(move.heal){
+  const restored=Math.min(move.heal+(c.level||1),c.maxHp-c.hp);
+  c.hp+=restored;b.log=restored?' '+(c.nickname||p.name)+' descansou e recuperou '+restored+' PV.':'A energia já está cheia.';playSfx('heal');
+ }else{
+  const damage=creatureDamage(c,id);b.enemyHp=Math.max(0,b.enemyHp-damage);b.mob.hp=b.enemyHp;
+  b.log=(c.nickname||p.name)+' usou '+move.name+' e causou '+damage+' de dano fixo.';
+  spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#e6cb76');playSfx('hit');triggerScreenShake(b.enemyHp<=0?4:2,.12);
  }
- b.mob.hp=Math.max(0,b.enemyHp);
  if(b.enemyHp<=0){finishTacticalVictory();return;}
- updateUI();renderTacticalBattle();
+ performWildTurn();
+ if(tacticalBattle&&!tacticalBattle.finished){updateUI();persistProgress();renderTacticalBattle();}
 }
-function endTacticalTurn(){
+function performWildTurn(){
+ const b=tacticalBattle;if(!b||b.finished||b.enemyHp<=0)return;
+ const c=activeCreature();if(!c)return;
+ const damage=wildDamage(b.mob,b.wildLevel);
+ c.hp=Math.max(0,c.hp-damage);b.turn++;
+ b.log=(b.mob.name||'A criatura')+' usou um ataque e causou '+damage+' de dano fixo a '+(c.nickname||CREATURE_SPECIES[c.species].name)+'.';
+ spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#d96b62');playSfx('hit');
+ if(c.hp<=0){
+  const next=g.team.findIndex((entry,index)=>index!==g.activeCreature&&entry.hp>0);
+  if(next>=0){g.activeCreature=next;b.log=(c.nickname||CREATURE_SPECIES[c.species].name)+' cansou. '+g.team[next].nickname+' entrou no duelo.';}
+  else{finishTacticalDefeat();return;}
+ }
+}
+function playCreatureAction(id){
  const b=tacticalBattle;if(!b||b.finished)return;
- const enraged=!!b.mob.boss&&b.enemyHp<=b.enemyMax*.45;
- const incoming=applyIncomingDamage(b.mob,b.block,enraged);b.block=0;const damage=incoming.damage;
- g.hp=Math.max(0,g.hp-damage);
- b.log=(b.mob.name||'A criatura')+(enraged?' entrou em FÚRIA e atacou: ':' atacou: ')+damage+' de dano fixo após defesa e bloqueio.';
- if(g.hp<=0){finishTacticalDefeat();return;}
- b.turn++;b.energy=3;updateUI();persistProgress();renderTacticalBattle();
+ const c=activeCreature();
+ if(id==='run'){runFromCreatureBattle();return;}
+ if(id==='potion'){
+  if(g.potions<=0||c.hp>=c.maxHp)return;
+  const amount=Math.min(30,c.maxHp-c.hp);c.hp+=amount;g.potions--;b.log='Você usou uma erva curativa: +'+amount+' PV.';playSfx('heal');
+ }else if(id==='capture'){
+  if(b.mob.boss){notify('Esta criatura é única e não pode ser capturada.',2);return;}
+  if(g.team.length>=6){notify('Sua equipe já tem seis criaturas. Libere um espaço no menu Equipe.',2.5);return;}
+  if(g.captureOrbs<=0){notify('Você não tem Laços de Semente.',2.5);return;}
+  if(b.enemyHp/b.enemyMax>.4){notify('A criatura ainda tem energia demais. Reduza a vida para 40% ou menos.',2.5);return;}
+  const captured=makeCreature(b.speciesId,b.wildLevel);captured.hp=Math.max(1,Math.round(captured.maxHp*.55));g.team.push(captured);g.captureOrbs--;b.mob.alive=false;b.mob.hp=0;
+  g.encountersWon++;g.xp+=5;addCreatureXP(activeCreature(),8);updateUI();persistProgress();tacticalBattle=null;closeModal();
+  notify(captured.nickname+' entrou para sua equipe! +5 XP de exploração.',4);return;
+ }else if(id==='switch'){
+  const next=g.team.findIndex((entry,index)=>index!==g.activeCreature&&entry.hp>0);
+  if(next<0){notify('Não há outro parceiro saudável.',2);return;}
+  g.activeCreature=next;b.log='Você chamou '+(g.team[next].nickname||CREATURE_SPECIES[g.team[next].species].name)+' para o duelo.';
+ }else return;
+ performWildTurn();
+ if(tacticalBattle&&!tacticalBattle.finished){updateUI();persistProgress();renderTacticalBattle();}
 }
 function finishTacticalVictory(){
  const b=tacticalBattle;if(!b||b.finished)return;
  b.finished=true;b.mob.hp=0;b.mob.alive=false;
- const xp=b.mob.xp||25;g.xp+=xp;g.coins+=3;g.kills++;spawnCombatText('+'+xp+' XP',b.mob.x,b.mob.y-38,'#f2d16f');spawnCombatText('+3 cobre',b.mob.x,b.mob.y-50,'#9fe28f');playSfx('win');triggerScreenShake(4,.16);addXP(0);
+ const xp=Number(b.mob.xp)||25,partner=activeCreature();g.xp+=xp;g.coins+=3;g.kills++;g.encountersWon++;
+ addCreatureXP(partner,Math.max(8,Math.round(xp*.6)));
+ playSfx('win');triggerScreenShake(4,.16);
  if(g.questStep===1&&g.kills>=3)g.questStep=g.ledgerFound?3:2;
  updateUI();persistProgress();tacticalBattle=null;closeModal();
- notify((b.mob.name||'Criatura')+' derrotado! +'+xp+' XP · +3 cobre fictício.',4);
+ notify((b.mob.name||'Criatura')+' deixou o caminho livre! '+(partner?partner.nickname+' ganhou experiência. ':'')+'+'+xp+' XP · +3 cobres.',4);
 }
 function finishTacticalDefeat(){
  if(!tacticalBattle)return;
- tacticalBattle=null;g.hp=Math.max(25,Math.ceil(g.maxHp*.4));g.coins=Math.max(0,g.coins-3);
- updateUI();persistProgress();closeModal();
- notify('Você foi derrotado e recuou. Recuperou parte da saúde e perdeu 3 cobres fictícios.',4.5);
+ const b=tacticalBattle;tacticalBattle=null;
+ g.coins=Math.max(0,g.coins-3);
+ for(const c of g.team)c.hp=Math.max(1,Math.round((c.maxHp||30)*.35));
+ g.activeCreature=0;
+ if(g.scene==='action'){g.scene='map';g.region='brumaforte';g.mapPlayer.x=128;g.mapPlayer.y=334;}
+ else if(g.region==='bosque'){g.mapPlayer.x=78;g.mapPlayer.y=446;}
+ else if(g.region==='lago'){g.mapPlayer.x=88;g.mapPlayer.y=450;}
+ else{g.mapPlayer.x=128;g.mapPlayer.y=334;}
+ closeModal();setScene('map');persistProgress();updateUI();
+ notify('A equipe recuou para descansar. Todos recuperaram parte da vida e você perdeu 3 cobres fictícios.',4);
 }
-function exitTacticalBattle(){
- const b=tacticalBattle;
- if(b){if(b.hadEnemyHp)b.mob.hp=b.originalEnemyHp;else delete b.mob.hp;if(b.hadEnemyMaxHp)b.mob.maxHp=b.originalEnemyMaxHp;else delete b.mob.maxHp;}
- tacticalBattle=null;closeModal();notify('Você recuou. O inimigo recuperou a resistência que tinha antes desta batalha; recursos usados continuam gastos.',3.2);
+function runFromCreatureBattle(){
+ if(tacticalBattle){tacticalBattle.mob.hp=tacticalBattle.mob.maxHp||mobBaseHealth(tacticalBattle.mob);}
+ tacticalBattle=null;closeModal();notify('Você se afastou da criatura. Ela continua no mapa.',2.5);
 }
-
 function openGameMenu(){
   keys.clear();
   const body=`
@@ -1361,9 +1424,10 @@ function openAchievements(){
 
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function usePotion(){
- if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}
- if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
- g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
+ if(g.potions<=0){notify('Você não tem ervas curativas. Compre no mercador (T) perto da praça.',2.7);return;}
+ const partner=activeCreature();if(!partner){notify('Escolha uma criatura parceira primeiro.',2.5);return;}
+ if(partner.hp>=partner.maxHp){notify('A vida do parceiro já está cheia.',2.5);return;}
+ g.potions--;const healed=Math.min(30,partner.maxHp-partner.hp);partner.hp+=healed;spawnCombatText('+'+healed+' PV',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-20:g.actionPlayer.y-22,'#9dd889');playSfx('heal');persistProgress();notify('Erva curativa: +'+healed+' pontos de vida para '+partner.nickname+'.',2.5);updateUI();
 }
 function saveData(){return {character:normalizeAppearance(g.character),team:g.team,starterChosen:g.starterChosen,activeCreature:g.activeCreature,captureOrbs:g.captureOrbs,encountersWon:g.encountersWon,classId:g.classId,classHpBonusApplied:g.classHpBonusApplied,difficulty:g.difficulty,powerShield:g.powerShield||0,scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
@@ -1451,11 +1515,12 @@ function resetGame(){
 }
 function updateUI(){
  checkAchievements();
- $('lv').textContent='Nível '+g.level;
- $('xp').textContent=g.xp+' / '+xpToNext()+' XP';
- $('xpfill').style.width=Math.min(100,g.xp/xpToNext()*100)+'%';
- $('hp').textContent='♥ '+g.hp+' / '+g.maxHp;
- $('hpfill').style.width=Math.max(0,g.hp/g.maxHp*100)+'%';
+ const partner=activeCreature();
+ $('lv').textContent=partner?'Nível '+partner.level:'Sem parceiro';
+ $('xp').textContent=partner?partner.xp+' / '+creatureXpNext(partner)+' XP':'Escolha uma criatura';
+ $('xpfill').style.width=partner?Math.min(100,partner.xp/creatureXpNext(partner)*100)+'%':'0%';
+ $('hp').textContent=partner?'♥ '+partner.hp+' / '+partner.maxHp:'♥ —';
+ $('hpfill').style.width=partner?Math.max(0,partner.hp/partner.maxHp*100)+'%':'0%';
  $('coins').textContent='◈ '+g.coins+' cobre';$('potions').textContent='♜ '+g.potions;
  const cp=classProfile(),df=difficultyProfile();$('classDifficulty').textContent=cp.icon+' '+cp.short+' · '+df.short;
  $('powerBtn').innerHTML=(cp.powerIcon||'✦')+' '+(g.powerCooldown>0?g.powerCooldown.toFixed(1)+'s':'Poder')+' <span class="kbd">Q</span>';
