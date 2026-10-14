@@ -117,3 +117,18 @@ O cliente recebeu uma grande atualização local:
 - **Calendário diário de 7 dias:** cobre fictício, ervas no dia 3, minério no dia 5 e poção no dia 7; sequência e resgates permanecem locais ao espaço de salvamento no navegador.
 
 O jogo antigo não é apagado: os dados de personagem e progresso são migrados com valores padrão para os campos novos. O estado das regiões e das missões é gravado no save local. Esta ainda é uma experiência individual no navegador, não um mundo multiplayer compartilhado.
+
+
+## Reboot 1.1 — classes, combate previsível e atlas
+
+A atualização amplia a evolução do personagem e organiza melhor a exploração:
+
+- **Quatro classes:** Guerreiro (resistência e combate corpo a corpo), Patrulheiro (alcance), Arcanista (magia em área) e Guardião (vida extra e escudo). Cada classe tem valores próprios de vida, golpe, ataque pesado e poder.
+- **Dano determinístico:** golpes e ataques inimigos usam valores definidos por tipo, classe, perícias e dificuldade. O mesmo ataque sob as mesmas condições gera o mesmo dano; defesa, bloqueio, escudo e fúria dos chefes são aplicados como modificadores explícitos.
+- **Três dificuldades:** Aventureiro, Sobrevivente e Lenda Sombria ajustam o dano recebido e causado.
+- **Poderes de classe:** a partir do nível 2, use **Q** ou o botão **Poder**. Cada poder tem recarga: Ruptura do Guardião, Tiro Perfurante, Explosão Arcana ou Muralha Viva.
+- **Perícias:** Golpe Treinado, Postura de Pedra e Mãos Cuidadoras; especializações de classe como Olho de Falcão, Maestria Arcana e Baluarte. Pontos de perícia vêm da progressão e as especializações são restritas à classe correspondente.
+- **Atlas e mapas:** mapa de regiões com rota esquemática, bússola, níveis de perigo e caminhos de pedra em Brumaforte.
+- **Salvamentos retrocompatíveis:** classe, dificuldade e escudo agora fazem parte do progresso salvo; jogos antigos recebem valores padrão e continuam no navegador.
+
+Os valores de dano são previsíveis, mas a experiência ainda precisa de testes visuais e sessões completas em desktop e celular. O protótipo permanece local para um jogador; contas, partidas compartilhadas e validação anti-trapaça exigem backend.
