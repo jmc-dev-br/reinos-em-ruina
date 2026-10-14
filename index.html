@@ -31,6 +31,57 @@ h1{margin:23px 0 19px;font-size:clamp(43px,6.5vw,82px);line-height:.91;letter-sp
 @media(max-width:850px){.hero{grid-template-columns:1fr}.hero-art{position:absolute;right:0;top:12%;width:55%;min-height:0;height:65vh;opacity:.29;z-index:-1}.art-note{display:none}.hero-copy{position:relative}.stage{align-items:flex-start;padding-top:48px}.slots{grid-template-columns:1fr;max-width:540px}.slot{min-height:unset;display:grid;grid-template-columns:75px 1fr;column-gap:12px;padding:17px}.slot-top{grid-column:1/-1}.slot-mark{grid-column:1;grid-row:2/5;margin:20px 0 10px}.slot-name,.slot-desc,.slot-stats,.slot-actions{grid-column:2}.slot-name{align-self:end}.slot-desc{min-height:0}.slot-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.creator-layout{grid-template-columns:1fr;max-width:600px}.preview-card{display:grid;grid-template-columns:150px 1fr;column-gap:15px;align-items:center}.preview-stage{grid-row:span 2;min-height:210px}.preview-stage:before{bottom:16px}.preview-name{align-self:end}.preview-caption{align-self:start}}
 @media(max-width:540px){.topbar{min-height:65px;padding:0 15px}.brandname{font-size:10px;letter-spacing:.12em}.brandsub,.network{display:none}.crest{width:33px;height:36px}.stage{padding:32px 15px 40px;min-height:calc(100vh - 114px)}h1{font-size:clamp(43px,14vw,66px)}.lede{font-size:17px}.description{font-size:11px}.hero-art{right:-23%;width:88%;top:6%;opacity:.22}.page-head{align-items:flex-start}.page-title{font-size:31px}.back-btn{padding:9px;font-size:9px;white-space:nowrap}.slot{grid-template-columns:58px 1fr;padding:14px}.slot-mark{width:49px;height:56px}.slot-actions{grid-template-columns:1fr 1fr}.slot-button{padding:9px 6px;font-size:9px}.creator-card{padding:15px}.preview-card{grid-template-columns:115px 1fr;padding:12px}.preview-stage{min-height:185px}#characterPreview{height:205px;width:150px}.color-grid{gap:4px}.color-choice{font-size:8px}.color-dot{width:20px;height:20px}.language-list{grid-template-columns:1fr}.language-card{padding:15px}.footer{align-items:flex-start;flex-direction:column;gap:6px;padding:12px 15px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+/* Centered, pixel-art kingdom menu */
+body{font-family:"Courier New",Consolas,monospace;background:#080b13}
+.backdrop{background:#0d1421 url("assets/kingdom-bg.svg") center center/cover no-repeat}
+.backdrop:after{background:linear-gradient(90deg,#060a11a8 0%,#060a1170 28%,#060a1140 70%,#060a1180 100%),linear-gradient(0deg,#05080fca 0%,transparent 40%,#05080f36 100%)}
+.backdrop svg{display:none}
+.backdrop .fog{opacity:.45}
+.topbar{min-height:62px;background:linear-gradient(180deg,#080b12ee,#080b1299);border-bottom:3px solid #342b20;box-shadow:0 4px 0 #070910}
+.brandname,.action-label strong,.back-btn,.subtle-btn,.slot-top,.slot-button,.form-label,.language-card strong{font-family:"Courier New",Consolas,monospace;letter-spacing:.08em}
+.crest{clip-path:none;border:3px solid #1b1712;outline:1px solid #b88b4b;box-shadow:inset 0 0 0 2px #efcc7b}
+.stage{min-height:calc(100vh - 111px);align-items:center;justify-content:center;padding-top:30px;padding-bottom:34px}
+#homeView{max-width:100%;display:none}#homeView.active{display:block}
+.hero{display:flex;justify-content:center;align-items:center;gap:0;width:100%}
+.hero-copy{width:min(470px,100%);max-width:470px;padding:28px 34px 24px;text-align:center;background:linear-gradient(180deg,#090c13f4,#11131af2);border:4px solid #1a1512;outline:2px solid #b58a4d;box-shadow:0 0 0 7px #090b11d9,0 18px 0 #05070bcc,0 28px 85px #000b;position:relative}
+.hero-copy:before,.hero-copy:after{content:"◆";position:absolute;color:#d3a75f;font-size:13px;background:#101117;padding:0 5px;left:calc(50% - 9px}
+.hero-copy:before{top:-12px}.hero-copy:after{bottom:-12px}
+.hero-copy .eyebrow{justify-content:center;font-size:9px;letter-spacing:.15em}.hero-copy .eyebrow:before{display:none}
+h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);line-height:.95;letter-spacing:-.045em;margin:17px 0 13px;text-shadow:3px 3px 0 #16121a,5px 5px 0 #8a542b,0 7px 25px #000}
+.title-line.gold{color:#eac579;text-shadow:3px 3px 0 #291d16,5px 5px 0 #744226}
+.lede{font:700 13px/1.6 "Courier New",Consolas,monospace;color:#f4dfb4;margin:0 auto 10px;max-width:360px}
+.description{display:none}.ornament{width:76%;margin:17px auto 14px;background:linear-gradient(90deg,transparent,#b48a4e,transparent)}
+.primary-actions{width:100%;max-width:340px;margin:0 auto;gap:8px}
+.action{min-height:48px;border:3px solid #18130f;outline:1px solid #725638;box-shadow:4px 4px 0 #050609;background:#202127;color:#e6dcc9;padding:8px 12px;transition:transform .12s,background .12s,outline-color .12s}
+.action:hover,.action:focus-visible{transform:translate(1px,1px);background:#333039;outline-color:#edc77b}
+.action.primary{background:#772d2d;border-color:#1b1010;outline:2px solid #d0a354;color:#fff0cb}.action.primary:hover{background:#963a35}
+.action-icon{color:#e5bc70;font-family:monospace}.action-label{text-align:left}
+.action-label strong{font-size:12px;letter-spacing:.12em}.action-label small{font:10px/1.4 "Courier New",Consolas,monospace;color:#aca394}
+.action .arrow{font-size:18px;color:#e8c579}.save-note,.form-help{font:9px/1.6 "Courier New",Consolas,monospace;color:#969083;max-width:340px;margin:12px auto 0;min-height:14px}
+.hero-art{display:none}.footer{background:#070910ed;border-top:3px solid #30271e;font-family:"Courier New",Consolas,monospace;letter-spacing:.06em}
+.page-head{align-items:center;padding:17px 19px;background:#0a0d14ed;border:3px solid #17130f;outline:1px solid #9c7843;box-shadow:5px 5px 0 #05060a;margin-bottom:22px}
+.page-title{font-family:"Courier New",Consolas,monospace;color:#efca83;text-shadow:2px 2px 0 #302016;font-size:clamp(24px,3vw,36px)}
+.page-subtitle,.slots-note,.language-note{font-family:"Courier New",Consolas,monospace}
+.back-btn,.subtle-btn{border:3px solid #17130f;outline:1px solid #8e6c3d;box-shadow:3px 3px 0 #050609;background:#252127;color:#f1dfc1}
+.slots{gap:15px}.slot,.preview-card,.creator-card,.language-card,.story-card{border:3px solid #1c1712;outline:1px solid #8b683c;box-shadow:5px 5px 0 #050609;background:linear-gradient(145deg,#11151def,#0b0e15f5);border-radius:0}
+.slot:before{height:3px;left:0;right:0;background:#b88b4a}.slot-mark,.language-flag{clip-path:none;border:2px solid #9e7948;background:#292219;color:#e8c578}
+.slot-button,.choice,.outfit,.color-choice,.language-card{border-radius:0}
+.slot-button{border:2px solid #54412a;box-shadow:2px 2px 0 #050609;background:#222127;color:#f4e2bf}
+.slot-button.primary{background:#702b2b;border-color:#c19b5b}.slot-button.danger{background:#2b1717}
+.name-input,.select-input{font-family:"Courier New",Consolas,monospace;border:2px solid #51402b;border-radius:0}
+.choice.active,.outfit.active,.color-choice.active,.language-card.active{background:#342718;border-color:#d6ac5c}
+.story-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;max-width:1020px;margin:auto}
+.story-card{padding:22px;position:relative;min-width:0}
+.story-card.wide{grid-column:1/-1}.story-kicker{font:10px "Courier New",Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:#c6a263}
+.story-card h3{font:700 20px/1.25 "Courier New",Consolas,monospace;color:#f0cf8b;margin:11px 0 12px}
+.story-card p,.story-card li{color:#d0c7b8;font:12px/1.8 "Courier New",Consolas,monospace}.story-card p{margin:8px 0}
+.story-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
+.story-fact{padding:11px;border:2px solid #373027;background:#10131a}
+.story-fact strong{display:block;color:#e5be77;font:700 11px "Courier New",Consolas,monospace;margin-bottom:5px}
+.story-fact span{display:block;color:#a9a193;font:10px/1.6 "Courier New",Consolas,monospace}
+.story-quote{padding:13px;border-left:3px solid #b88947;background:#b8894710;color:#f0d7a7!important}
+@media(max-width:850px){.hero{display:flex}.hero-art{display:none}.stage{align-items:center}.story-layout{grid-template-columns:1fr}.story-card.wide{grid-column:auto}}
+@media(max-width:540px){.topbar{min-height:58px;padding:0 12px}.stage{padding:25px 14px 31px}.hero-copy{padding:24px 20px 22px;width:min(100%,430px)}h1{font-size:clamp(33px,10vw,48px)}.hero-copy .eyebrow{font-size:8px;letter-spacing:.09em}.lede{font-size:12px}.action{min-height:46px}.page-head{align-items:flex-start;padding:14px;flex-direction:column}.page-head .back-btn{align-self:flex-start}.story-facts{grid-template-columns:1fr}.slot{grid-template-columns:57px 1fr}.slot-actions{grid-template-columns:1fr 1fr}.creator-layout{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -60,6 +111,7 @@ h1{margin:23px 0 19px;font-size:clamp(43px,6.5vw,82px);line-height:.91;letter-sp
     <div class="primary-actions">
      <button class="action primary" id="playButton"><span class="action-icon">⚔</span><span class="action-label"><strong id="playLabel">Jogar</strong><small id="playSub">Escolha um espaço de salvamento</small></span><span class="arrow">›</span></button>
      <button class="action" id="languageButton"><span class="action-icon">文</span><span class="action-label"><strong id="languageLabel">Idioma</strong><small id="languageSub">Português (Brasil)</small></span><span class="arrow">›</span></button>
+     <button class="action" id="aboutButton"><span class="action-icon">▤</span><span class="action-label"><strong id="aboutLabel">Sobre</strong><small id="aboutSub">Intenção, universo e história</small></span><span class="arrow">›</span></button>
     </div>
     <p class="form-help" id="homeNote">Até 3 jornadas salvas neste navegador. Moedas de jogo são fictícias.</p>
    </div>
@@ -100,6 +152,10 @@ h1{margin:23px 0 19px;font-size:clamp(43px,6.5vw,82px);line-height:.91;letter-sp
   <div class="page-head"><div><div class="eyebrow" id="langEyebrow">PREFERÊNCIAS</div><h2 class="page-title" id="langTitle">Idioma</h2><p class="page-subtitle" id="langSubtitle">Escolha o idioma dos menus e da criação de personagem.</p></div><button class="back-btn" id="langBack">← Voltar</button></div>
   <div class="language-list" id="languageList"></div>
   <p class="language-note" id="languageNote">A história e os diálogos da versão jogável ainda estão em português; a tradução completa do jogo será feita numa etapa posterior.</p>
+ </section>
+ <section class="view" id="aboutView">
+  <div class="page-head"><div><div class="eyebrow" id="aboutEyebrow">O PROPÓSITO DA AVENTURA</div><h2 class="page-title" id="aboutTitle">Sobre Reinos em Ruína</h2><p class="page-subtitle" id="aboutSubtitle">Um RPG medieval onde explorar, lutar e decidir são partes da mesma história.</p></div><button class="back-btn" id="aboutBack">← Voltar</button></div>
+  <div class="story-layout" id="aboutContent"></div>
  </section>
 </main>
 <footer class="footer"><span><b>Reinos em Ruína</b> · <span id="footerLeft">Projeto independente</span></span><span id="footerRight">Protótipo de navegador · salvamentos locais</span></footer>
