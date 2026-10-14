@@ -821,7 +821,7 @@ function professionsData(){
  return {...d,...raw,mining:{...d.mining,...(raw.mining||{})},herbalism:{...d.herbalism,...(raw.herbalism||{})},fishing:{...d.fishing,...(raw.fishing||{})},materials:{...d.materials,...(raw.materials||{})}};
 }
 function saveProfessions(data){return writeLocalRecord(slotLocalKey('reinos_ruina_professions'),data);}
-let professionNotice='';
+let professionNotice='',professionRefreshTimer=null;
 function openProfessionsMenu(){
  const data=professionsData(),m=data.materials,now=Date.now();
  const row=(id,name,desc,icon)=>{const p=data[id],wait=Math.max(0,Math.ceil((p.nextAt-now)/1000));return '<div class="profession-row"><div><strong>'+icon+' '+name+' · Nível '+p.level+'</strong><small>'+desc+' Total coletado: '+p.total+'. XP: '+p.xp+'/'+(p.level*24)+(wait>0?' · Disponível em '+wait+'s':' · Pronto para coletar')+'</small></div><button class="btn" data-gather="'+id+'" '+(wait>0?'disabled':'')+'>'+(wait>0?wait+'s':'Coletar')+'</button></div>';};
@@ -834,6 +834,9 @@ function openProfessionsMenu(){
  showModal('profession','Profissões e ofícios',body,[{label:'Fechar',action:()=>closeModal(),primary:true}]);
  $('modalBody').querySelectorAll('[data-gather]').forEach(button=>button.addEventListener('click',()=>gatherProfession(button.dataset.gather)));
  $('craftPotion').onclick=craftProfessionPotion;$('sellOre').onclick=refineOre;
+ if(professionRefreshTimer)clearTimeout(professionRefreshTimer);
+ const waits=[data.mining.nextAt,data.herbalism.nextAt,data.fishing.nextAt].map(at=>Math.max(0,at-Date.now())).filter(ms=>ms>0);
+ if(waits.length){professionRefreshTimer=setTimeout(()=>{if(modalType==='profession')openProfessionsMenu();},Math.min(...waits)+80);}
 }
 function gatherProfession(kind){
  const data=professionsData(),prof=data[kind];if(!prof)return;
