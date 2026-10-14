@@ -52,7 +52,7 @@ const requiredGameFeatures = [
   "function writeActiveSlot(record)",
   "function drawPlayer(x,y,rawAppearance)",
   "character:normalizeAppearance(g.character)",
-  "localStorage.setItem(slotStorageKey(activeSlotNumber),JSON.stringify(current))",
+  "return writeActiveSlot(current)",
   "function openCouncil()",
   "function talkMara()",
   "function normalizeSave(d)",
