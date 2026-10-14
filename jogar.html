@@ -421,7 +421,7 @@ function line(x1,y1,x2,y2,c,width=1){ctx.strokeStyle=c;ctx.lineWidth=width;ctx.b
 function circle(x,y,r,c){ctx.fillStyle=c;ctx.beginPath();ctx.arc(Math.round(x),Math.round(y),r,0,Math.PI*2);ctx.fill();}
 function poly(points,c){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.closePath();ctx.fill();}
 function text(s,x,y,size=12,color='#f1eddf',align='left'){ctx.fillStyle=color;ctx.font=`${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;ctx.textAlign=align;ctx.fillText(s,x,y);ctx.textAlign='left';}
-function drawTree(x,y,scale=1){rect(x-4*scale,y+4*scale,8*scale,13*scale,'#60462e');rect(x-11*scale,y-7*scale,22*scale,15*scale,'#254a2e');rect(x-8*scale,y-14*scale,16*scale,12*scale,'#35643a');rect(x-4*scale,y-18*scale,8*scale,8*scale,'#4b7942');rect(x-9*scale,y-6*scale,4*scale,4*scale,'#65924a');}
+function drawTree(x,y,scale=1){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.fillStyle='#101a1b';ctx.beginPath();ctx.ellipse(0,12,14,5,0,0,Math.PI*2);ctx.fill();rect(-3,-3,6,21,'#44372a');rect(-4,7,8,3,'#6b5035');poly([[-15,3],[0,-25],[15,3]],'#20382d');poly([[-12,-5],[0,-31],[12,-5]],'#2a4634');poly([[-9,-13],[0,-37],[9,-13]],'#36523a');line(-9,-2,-1,-19,'#526343',1.2);line(2,-7,8,-18,'#41583b',1);ctx.restore();}
 function drawHuman(x,y,isMara=false){rect(x-7,y-2,14,13,isMara?'#6b3f9b':'#344b61');rect(x-8,y+9,6,8,'#40372c');rect(x+2,y+9,6,8,'#40372c');circle(x,y-8,7,'#dbb28a');rect(x-7,y-15,14,5,isMara?'#b5a05c':'#5c4730');rect(x-5,y-8,2,2,'#2a2624');rect(x+3,y-8,2,2,'#2a2624');if(isMara){rect(x+9,y-12,3,28,'#8f7443');circle(x+10,y-14,4,'#d4ba75');}}
 function drawPlayer(x,y,rawAppearance){
  const a=normalizeAppearance(rawAppearance||g.character);
@@ -430,7 +430,7 @@ function drawPlayer(x,y,rawAppearance){
  const o=outfits[a.outfit]||outfits.traveler,coat=coatColors[a.outfitColor]||o.coat,cape=capes[a.cloak]||'#702b32',hair=hairs[a.hair]||hairs.brown,skin=skins[a.skin]||skins.light;
  const side=g.scene==='action',face=side?(g.actionPlayer.face||1):1;
  const metal=ctx.createLinearGradient(-13,-49,13,-20);metal.addColorStop(0,'#b9b0a0');metal.addColorStop(.24,'#696b6b');metal.addColorStop(.5,'#292f36');metal.addColorStop(.78,'#77746d');metal.addColorStop(1,'#282b31');
- const path=(p,fill,stroke,sw=1)=>{ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw;ctx.stroke();}};
+ const path=(p,fill,stroke,sw=1)=>{ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0],p[i][1]);ctx.closePath();if(fill!=='none'){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw;ctx.stroke();}};
  const ln=(x1,y1,x2,y2,c,w=1)=>{ctx.strokeStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();};
  ctx.save();ctx.translate(x,y);if(side&&face<0)ctx.scale(-1,1);
  ctx.fillStyle='#05060788';ctx.beginPath();ctx.ellipse(0,-1,20,4,0,0,Math.PI*2);ctx.fill();
