@@ -107,6 +107,26 @@ body{position:fixed;inset:0}
   .actionrow{bottom:4px;max-height:82px;padding:4px}.actionrow .btn{min-height:25px;padding:4px 7px}
   .toast{bottom:115px}
 }
+
+/* Help/pause menu */
+.menu-intro{font-size:12px;line-height:1.55;color:#c9d4bc;padding:10px 12px;margin-bottom:14px;border:1px solid #435d40;background:#17251c}
+.game-menu-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:14px;align-items:start}
+.menu-section{min-width:0;border:1px solid #4d6846;background:#121c16;padding:13px}
+.menu-kicker{font-size:9px;letter-spacing:.18em;color:#9fc77d;font-weight:800}
+.menu-section h3{font-size:20px;margin:5px 0 12px;color:#e0edbe}
+.control-list{display:grid;gap:6px}
+.control-row{display:grid;grid-template-columns:80px 1fr;gap:9px;align-items:start;padding:7px 0;border-bottom:1px solid #344633}
+.control-row:last-child{border-bottom:0}
+.control-row kbd{font:700 10px ui-monospace,monospace;color:#263d2c;background:#c6d99c;border:1px solid #e2edc4;padding:5px 4px;text-align:center;white-space:nowrap}
+.control-row strong,.setting-row strong{display:block;color:#e8edcc;font-size:11px}
+.control-row small,.setting-row small{display:block;color:#abbba0;font-size:10px;line-height:1.45;margin-top:3px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #344633;cursor:pointer}
+.setting-row input[type=checkbox]{width:17px;height:17px;accent-color:#a8cc7a;flex:0 0 auto}
+.setting-row select{min-width:92px;background:#273c2b;border:1px solid #6a8a53;color:#e5efc8;padding:7px 8px;font:inherit;font-size:11px}
+.setting-speed{align-items:flex-start;flex-wrap:wrap}.setting-speed>span{flex:1 1 130px}
+.menu-note{margin-top:12px;padding:9px 10px;background:#20291c;border-left:3px solid #9dbe6f;color:#bdc9ae;font-size:10px;line-height:1.5}
+@media(max-width:760px){.game-menu-grid{grid-template-columns:1fr;gap:10px}.menu-section{padding:10px}.menu-section h3{font-size:17px;margin-bottom:8px}.control-list{gap:3px}.control-row{grid-template-columns:72px 1fr;padding:5px 0}.control-row small,.setting-row small{font-size:9px}.menu-intro{font-size:11px;margin-bottom:9px}.modal{max-height:91vh}.modalbody{padding:12px}.modalhead{padding:12px}.modalfoot{padding:9px 12px}}
+
 </style>
 </head>
 <body>
@@ -136,7 +156,7 @@ body{position:fixed;inset:0}
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
       <button class="btn" id="loadBtn">↑ Carregar save</button><input id="loadFile" type="file" accept="application/json,.json" hidden />
-      <button class="btn" id="resetBtn">↻ Reiniciar</button>
+      <button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
     </div>
     <div class="mobilehelp" aria-label="Controles de toque">
       <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑ / pular</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
@@ -193,6 +213,20 @@ function writeActiveSlot(record){
  try{localStorage.setItem(slotStorageKey(activeSlotNumber),JSON.stringify(record));return true;}catch(e){return false;}
 }
 const keys=new Set();
+const SETTINGS_KEY='reinos_ruina_settings_v1';
+function readGameSettings(){
+  const defaults={showGrid:false,showLabels:true,walkSpeed:'normal'};
+  try{
+    const saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
+    return {showGrid:typeof saved.showGrid==='boolean'?saved.showGrid:defaults.showGrid,
+      showLabels:typeof saved.showLabels==='boolean'?saved.showLabels:defaults.showLabels,
+      walkSpeed:['slow','normal','fast'].includes(saved.walkSpeed)?saved.walkSpeed:defaults.walkSpeed};
+  }catch(err){return defaults;}
+}
+let gameSettings=readGameSettings();
+function saveGameSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(gameSettings));}catch(err){}}
+function speedFactor(){return gameSettings.walkSpeed==='slow'?.8:gameSettings.walkSpeed==='fast'?1.35:1;}
+
 const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
@@ -372,6 +406,50 @@ async function recordArcChapter(){
 
 function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML='';for(const b of buttons||[]){const el=document.createElement('button');el.className='btn'+(b.primary?' primary':'');el.textContent=b.label;el.onclick=b.action;$('modalFoot').appendChild(el);} $('modalback').classList.add('open');$('modalClose').focus();}
 function closeModal(){modalType=null;$('modalback').classList.remove('open');canvas.focus();}
+
+function openGameMenu(){
+  keys.clear();
+  const body=`
+    <div class="menu-intro">A jornada fica pausada enquanto este menu estiver aberto. Configure a experiência ou consulte os comandos sem perder o progresso.</div>
+    <div class="game-menu-grid">
+      <section class="menu-section">
+        <div class="menu-kicker">GUIA DE CONTROLES</div><h3>Como jogar</h3>
+        <div class="control-list">
+          <div class="control-row"><kbd>W A S D</kbd><span><strong>Mover</strong><small>Anda pelo mapa; nas ruínas, A/D movem para os lados.</small></span></div>
+          <div class="control-row"><kbd>← ↑ → ↓</kbd><span><strong>Movimento alternativo</strong><small>Setas para explorar. ↑ também salta nas ruínas.</small></span></div>
+          <div class="control-row"><kbd>E / Enter</kbd><span><strong>Interagir</strong><small>Conversa com Mara, abre o mercador perto dele e atravessa o portão.</small></span></div>
+          <div class="control-row"><kbd>J</kbd><span><strong>Atacar</strong><small>Golpeia uma criatura próxima. Aproxime-se antes de atacar.</small></span></div>
+          <div class="control-row"><kbd>H</kbd><span><strong>Usar poção</strong><small>Recupera até 35 pontos de vida, se tiver uma na bolsa.</small></span></div>
+          <div class="control-row"><kbd>M / N</kbd><span><strong>Caderno financeiro</strong><small>M abre a lição; N avança para a próxima lição.</small></span></div>
+          <div class="control-row"><kbd>T</kbd><span><strong>Mercador</strong><small>Abre a loja quando você está perto do comerciante na vila.</small></span></div>
+          <div class="control-row"><kbd>Tab</kbd><span><strong>Mapa / Ruínas</strong><small>Alterna entre a exploração vista de cima e o combate lateral.</small></span></div>
+          <div class="control-row"><kbd>Esc</kbd><span><strong>Menu / pausa</strong><small>Abre este painel; Esc novamente volta à aventura.</small></span></div>
+        </div>
+        <div class="menu-note">No celular, use os botões de toque que aparecem perto da parte inferior da tela.</div>
+      </section>
+      <section class="menu-section">
+        <div class="menu-kicker">PREFERÊNCIAS</div><h3>Configurações</h3>
+        <label class="setting-row"><span><strong>Grade do mapa</strong><small>Mostra os limites dos blocos de terreno.</small></span><input id="settingGrid" type="checkbox" ${gameSettings.showGrid?'checked':''}></label>
+        <label class="setting-row"><span><strong>Nomes e placas</strong><small>Exibe nomes da vila, NPCs e locais importantes.</small></span><input id="settingLabels" type="checkbox" ${gameSettings.showLabels?'checked':''}></label>
+        <label class="setting-row setting-speed"><span><strong>Velocidade de movimento</strong><small>Também vale para o deslocamento horizontal nas ruínas.</small></span>
+          <select id="settingSpeed">
+            <option value="slow" ${gameSettings.walkSpeed==='slow'?'selected':''}>Lenta</option>
+            <option value="normal" ${gameSettings.walkSpeed==='normal'?'selected':''}>Normal</option>
+            <option value="fast" ${gameSettings.walkSpeed==='fast'?'selected':''}>Rápida</option>
+          </select>
+        </label>
+        <div class="menu-note"><strong>Salvar:</strong> o botão Salvar guarda o avanço da aventura. Estas preferências são guardadas automaticamente neste navegador.</div>
+      </section>
+    </div>`;
+  showModal('gameMenu','Menu da jornada',body,[
+    {label:'Restaurar padrões',action:()=>{gameSettings={showGrid:false,showLabels:true,walkSpeed:'normal'};saveGameSettings();openGameMenu();}},
+    {label:'Salvar progresso',action:()=>{closeModal();saveGame();}},
+    {label:'Voltar à aventura (Esc)',action:()=>closeModal(),primary:true}
+  ]);
+  $('settingGrid').addEventListener('change',e=>{gameSettings.showGrid=e.target.checked;saveGameSettings();render();});
+  $('settingLabels').addEventListener('change',e=>{gameSettings.showLabels=e.target.checked;saveGameSettings();render();});
+  $('settingSpeed').addEventListener('change',e=>{gameSettings.walkSpeed=e.target.value;saveGameSettings();});
+}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function usePotion(){if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}g.potions--;g.hp=Math.min(g.maxHp,g.hp+35);persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();}
 function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
@@ -691,157 +769,121 @@ function drawPlayer(x,y,rawAppearance){
 }
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
 function drawMap(){
-  // Brumaforte: vila medieval no vale, com relevo, bosques e caminho de pedra.
-  rect(0,0,W,H,'#2d422e');
-  for(let x=0;x<W;x+=16){
-    for(let y=0;y<H;y+=16){
-      const n=(Math.abs(Math.sin(x*12.9898+y*78.233)*43758.5453)%1);
-      const c=n>.78?'#3b5035':n>.43?'#34492f':n>.2?'#31452d':'#2d402b';
-      rect(x,y,16,16,c);
-      if(n>.91){
-        rect(x+3,y+5,2,5,'#71804a');
-        rect(x+6,y+8,2,2,'#9b9859');
-      }else if(n<.06){
-        rect(x+5,y+5,5,3,'#3f4938');
-      }
+  // Brumaforte in classic handheld-RPG style: tile grass, chalk paths, tiny buildings and trees.
+  const tile=16;
+  const hash=(x,y)=>{const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n);};
+  rect(0,0,W,H,'#81b56d');
+  for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){
+    const n=hash(x/tile,y/tile);
+    rect(x,y,tile,tile,n>.82?'#8abf75':n>.45?'#80b36b':n>.18?'#7bad68':'#76a962');
+    if(n>.9){rect(x+3,y+4,2,3,'#527e4d');rect(x+9,y+10,2,2,'#d0d98d');}
+    else if(n<.07){rect(x+5,y+8,3,2,'#669653');rect(x+8,y+7,2,2,'#9ac77b');}
+  }
+  if(gameSettings.showGrid){
+    ctx.save();ctx.strokeStyle='#355b3d70';ctx.lineWidth=1;
+    for(let x=0;x<=W;x+=tile){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke();}
+    for(let y=0;y<=H;y+=tile){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke();}
+    ctx.restore();
+  }
+  function pathCell(tx,ty){
+    const x=tx*tile,y=ty*tile,n=hash(tx+82,ty+17);
+    rect(x,y,tile,tile,n>.72?'#dce9b5':n>.35?'#d3e4ad':'#c9dca2');
+    line(x,y,x+tile,y,'#eff3cb',1);line(x,y,x,y+tile,'#b5cf91',1);
+    if(n>.76){rect(x+4,y+5,4,2,'#b5c991');rect(x+10,y+11,3,2,'#e8edc6');}
+    else if(n<.12)rect(x+7,y+3,2,2,'#acc58a');
+  }
+  // Main roads and short paths to the building entrances.
+  for(let tx=0;tx<60;tx++)for(let ty=18;ty<=21;ty++)pathCell(tx,ty);
+  for(let ty=8;ty<34;ty++)for(let tx=22;tx<=25;tx++)pathCell(tx,ty);
+  for(let tx=25;tx<=43;tx++)for(let ty=22;ty<=24;ty++)pathCell(tx,ty);
+  for(let ty=24;ty<=32;ty++)for(let tx=40;tx<=43;tx++)pathCell(tx,ty);
+  for(let tx=8;tx<=10;tx++)for(let ty=16;ty<=18;ty++)pathCell(tx,ty);
+  for(let tx=43;tx<=47;tx++)for(let ty=15;ty<=18;ty++)pathCell(tx,ty);
+
+  function topTree(x,y,scale=1){
+    ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+    ctx.fillStyle='#537d4d';ctx.beginPath();ctx.ellipse(1,13,14,6,0,0,Math.PI*2);ctx.fill();
+    rect(-3,5,7,13,'#725438');rect(-4,8,9,5,'#8a6842');
+    rect(-10,-10,20,18,'#385f43');rect(-7,-15,14,7,'#385f43');
+    rect(-13,-6,4,11,'#385f43');rect(9,-7,4,12,'#385f43');
+    rect(-9,-10,18,16,'#4c7c4b');rect(-6,-14,12,5,'#4c7c4b');
+    rect(-8,-11,7,5,'#7ea95e');rect(1,-7,6,4,'#609352');rect(-11,-3,4,5,'#416c46');
+    rect(4,1,5,4,'#396744');rect(-4,4,6,3,'#4b7b49');
+    ctx.restore();
+  }
+  function flower(x,y,color='#e8e8ab'){rect(x,y,2,4,'#4d843f');rect(x-2,y-2,3,3,color);rect(x+1,y-3,3,3,'#f3f0c1');}
+  function rock(x,y){rect(x-4,y-1,8,5,'#63785a');rect(x-2,y-3,5,3,'#87916a');rect(x-3,y+2,6,1,'#475e49');}
+  for(let x=-5;x<W+20;x+=34){topTree(x+8,151,.76);topTree(x+18,526,.78);}
+  for(const [x,y,z] of [[26,203,.86],[67,245,.78],[245,163,.7],[521,163,.83],[570,202,.78],[622,164,.78],[821,177,.82],[920,207,.86],[941,277,.72],[52,458,.83],[240,449,.77],[455,469,.8],[535,469,.72],[818,475,.9],[920,438,.8]])topTree(x,y,z);
+
+  // A little pond on the western edge, with highlights and stepping-stone banks.
+  ctx.save();ctx.fillStyle='#527c4c';ctx.beginPath();ctx.ellipse(89,414,56,31,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#3c6d70';ctx.beginPath();ctx.ellipse(88,409,50,25,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#578f89';ctx.beginPath();ctx.ellipse(83,404,34,11,-.08,0,Math.PI*2);ctx.fill();
+  rect(62,407,28,2,'#a4c9ac');rect(95,415,25,2,'#7bb2a0');rect(73,424,17,2,'#669b91');
+  for(const [x,y] of [[42,411],[47,426],[119,393],[133,414],[109,438],[66,387]]){rect(x,y,5,4,'#9b9b78');rect(x+1,y-1,2,2,'#c3bd94');}
+  rect(39,409,3,9,'#587d4c');rect(134,405,3,8,'#587d4c');ctx.restore();
+
+  // Top-down house: striped roof, timber trim, front wall, windows and a door.
+  function house(x,y,w,h,palette,kind='house'){
+    const roof=palette.roof,wall=palette.wall,trim=palette.trim;
+    rect(x+7,y+12,w,h,'#55794c');rect(x+4,y+6,w,h,'#486a45');
+    rect(x,y,w,Math.round(h*.54),'#2e503e');rect(x+4,y+3,w-8,Math.round(h*.54)-6,roof);
+    for(let yy=y+7;yy<y+h*.49;yy+=7){line(x+6,yy,x+w-7,yy,trim,2);line(x+5,yy+2,x+w-5,yy+2,'#253f37',1);}
+    rect(x+2,y+h*.51,w-4,5,'#2e4e3c');
+    const fy=y+h*.54;rect(x+5,fy,w-10,h*.44,wall);rect(x+5,fy,w-10,5,trim);
+    rect(x+8,fy+5,4,h*.39,'#654c35');rect(x+w-12,fy+5,4,h*.39,'#654c35');
+    for(const wx of [x+w*.22,x+w*.64]){
+      rect(wx-5,fy+10,25,22,'#274846');rect(wx-2,fy+13,19,16,'#aecb8b');
+      rect(wx+6,fy+13,3,16,'#42604d');rect(wx-2,fy+19,19,3,'#42604d');
+      rect(wx-7,fy+8,29,3,'#4d4937');rect(wx-7,fy+31,29,3,'#4d4937');rect(wx+1,fy+15,4,4,'#d6e6ae');
     }
+    const dx=x+w*.47,dy=y+h*.72;
+    rect(dx-3,dy-2,30,h*.27+4,'#51402d');rect(dx,dy,24,h*.27,'#6b4d35');
+    rect(dx+17,dy+h*.12,3,3,'#e2c36e');rect(dx-5,dy+h*.27,34,4,'#b4c18a');
+    if(kind==='inn'){rect(x+w*.72,y+5,13,13,'#3e3f32');rect(x+w*.745,y+8,7,7,'#829d70');}
+    if(kind==='forge'){rect(x+w*.76,fy+4,11,18,'#2a3938');rect(x+w*.79,fy+7,5,12,'#d9ab59');}
   }
+  house(54,158,162,112,{roof:'#d6e3a0',wall:'#c2d39c',trim:'#426849'},'market');
+  house(264,145,195,126,{roof:'#6d9a65',wall:'#b9ce91',trim:'#355f43'},'inn');
+  house(688,166,139,105,{roof:'#7d998d',wall:'#a8c78a',trim:'#3b6144'},'forge');
 
-  // Hazy hills behind the northern tree line.
-  poly([[0,102],[82,48],[150,82],[218,35],[302,91],[380,52],[461,91],[545,47],[629,94],[718,43],[814,94],[899,48],[960,75],[960,142],[0,142]],'#344732');
-  poly([[0,116],[104,73],[177,105],[264,65],[348,115],[443,71],[528,113],[634,72],[726,111],[823,69],[917,107],[960,94],[960,151],[0,151]],'#3b5036');
+  // Fenced vegetable beds and a cottage off the path to the east.
+  rect(552,369,171,80,'#4c7649');rect(558,374,159,70,'#315c42');rect(565,381,145,56,'#a7c986');
+  rect(565,381,145,5,'#6b984e');rect(565,432,145,5,'#6b984e');
+  for(let row=0;row<3;row++)for(let col=0;col<9;col++){const x=573+col*15,y=392+row*13;rect(x,y,8,5,(row+col)%2?'#86ae68':'#90b66e');rect(x+2,y-3,2,4,'#3d7a45');rect(x+4,y-4,3,3,'#558d4c');}
+  rect(712,397,9,32,'#5d714d');rect(709,394,15,4,'#b2cc92');
+  house(658,405,151,104,{roof:'#779e73',wall:'#b5ca8f',trim:'#3e6846'},'house');
 
-  // Pond with a mossy shore, reflections, and small stepping stones.
-  ctx.save();
-  ctx.fillStyle='#1e3228';ctx.beginPath();ctx.ellipse(84,273,57,27,-.12,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#385b59';ctx.beginPath();ctx.ellipse(83,270,51,21,-.12,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#4f7970';ctx.beginPath();ctx.ellipse(74,265,31,9,-.12,0,Math.PI*2);ctx.fill();
-  line(53,269,78,267,'#82a69a',1.4);line(86,277,113,273,'#73998e',1.1);line(61,279,74,278,'#5e8880',1);
-  for(const [x,y] of [[35,269],[42,291],[104,294],[129,269],[118,250],[53,249]]){circle(x,y,3,'#777d65');circle(x+1,y-1,1,'#a6a187');}
-  ctx.restore();
+  // Market awning, colorful crates and fence details.
+  rect(111,373,76,42,'#557447');rect(118,378,64,30,'#9e7548');
+  poly([[106,379],[150,352],[193,379]],'#386043');poly([[111,375],[150,357],[188,375]],'#d9b26a');
+  rect(112,379,77,5,'#4d4e37');
+  for(let x=121;x<187;x+=16){rect(x,384,7,22,'#c49a5c');rect(x+7,384,7,22,'#805738');}
+  rect(105,407,90,5,'#536b43');rect(122,411,17,10,'#926843');rect(148,411,17,10,'#b98d55');rect(172,411,17,10,'#755238');
+  for(let x=583;x<727;x+=12){rect(x,360,3,16,'#597847');rect(x+1,360,1,16,'#b1b88a');}
+  rect(580,359,148,3,'#527446');rect(580,372,148,3,'#527446');
 
-  // Dense woodland frames the playable valley without hiding the village.
-  for(let x=-8;x<W+25;x+=38){
-    drawTree(x+6,72,.82+(x%3)*.025);
-    drawTree(x+21,508,.78);
-  }
-  for(const [x,y,z] of [[26,164,.78],[63,204,.67],[140,185,.72],[191,238,.7],[716,151,.68],[754,193,.78],[813,168,.75],[941,210,.83],[738,428,.78],[812,456,.83],[907,433,.76],[68,451,.77],[214,482,.72]]) drawTree(x,y,z);
+  for(const [x,y] of [[260,278],[280,280],[479,279],[486,284],[638,282],[730,272],[755,284],[821,361],[500,430],[758,458],[204,452],[35,366],[315,390]])rock(x,y);
+  for(const [x,y] of [[42,364],[68,356],[292,373],[310,390],[473,375],[496,402],[525,424],[735,344],[747,366],[791,378],[831,387],[240,455],[287,441],[478,464],[535,454],[790,500]])flower(x,y);
 
-  // Stone road: dark edge, packed earth, worn middle strip.
-  function roadLayer(color,width){
-    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();
-    ctx.moveTo(-25,432);ctx.quadraticCurveTo(130,424,279,399);ctx.quadraticCurveTo(403,379,468,330);
-    ctx.quadraticCurveTo(517,294,592,314);ctx.quadraticCurveTo(704,341,827,331);ctx.quadraticCurveTo(895,324,988,346);
-    ctx.stroke();ctx.restore();
-  }
-  roadLayer('#282a25',72);roadLayer('#62503b',66);roadLayer('#887052',57);
-  roadLayer('#927b59',2);
-  ctx.save();ctx.strokeStyle='#b29a72';ctx.lineWidth=1;ctx.setLineDash([3,11]);ctx.beginPath();
-  ctx.moveTo(-20,431);ctx.quadraticCurveTo(130,422,279,398);ctx.quadraticCurveTo(403,378,468,330);
-  ctx.quadraticCurveTo(517,294,592,314);ctx.quadraticCurveTo(704,341,827,331);ctx.quadraticCurveTo(895,324,988,346);
-  ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  // Gate and sign stay at the same location as the existing interaction logic.
+  rect(834,287,7,70,'#406247');rect(843,286,8,73,'#406247');rect(838,286,8,71,'#a0b67a');rect(849,292,5,65,'#314c3d');
+  for(let x=842;x<=872;x+=8){rect(x,295,3,57,'#a2b785');rect(x+2,295,2,57,'#52704a');}
+  rect(831,283,49,7,'#3c5b43');rect(830,354,53,7,'#31523e');
+  rect(852,265,5,31,'#755638');rect(817,256,75,22,'#3b5b3f');rect(821,260,67,14,'#d5e3a1');
+  if(gameSettings.showLabels)text('RUÍNAS',854,270,9,'#39533b','center');
 
-  // Worn cobbles around the inn entrance and crossroads.
-  poly([[330,294],[552,294],[583,320],[558,350],[369,359],[323,331]],'#76654e');
-  poly([[337,298],[550,298],[572,319],[550,343],[372,350],[334,328]],'#8b785a');
-  for(let y=303;y<344;y+=10){
-    for(let x=345+(Math.floor(y/10)%2)*8;x<558;x+=22){
-      line(x,y,x+12,y,'#a48d69',1);
-      line(x+12,y,x+15,y+5,'#6f6049',1);
-    }
-  }
-
-  // The inn, with a layered shingle roof, timber framing and warm windows.
-  poly([[273,148],[295,130],[572,130],[596,149],[589,305],[286,305]],'#202b23');
-  rect(300,157,267,143,'#5f6049');rect(307,163,253,133,'#8d8060');
-  rect(307,163,253,9,'#aa946d');rect(307,292,253,8,'#504638');
-  // Roof shadow and roof planes.
-  poly([[264,150],[324,108],[538,108],[603,149],[582,157],[324,136]],'#191d1b');
-  poly([[277,143],[327,112],[535,112],[588,143],[565,148],[328,128]],'#49372d');
-  poly([[286,139],[330,116],[533,116],[577,139],[558,143],[331,124]],'#65483a');
-  for(let y=121;y<141;y+=5){
-    line(322,y,554,y+7,'#89634a',2);
-    line(347,y-2,574,y+5,'#392d28',1);
-  }
-  // Chimney and smoke wisps.
-  rect(508,88,20,34,'#4b3d32');rect(511,92,13,27,'#82614a');rect(505,87,26,5,'#292725');
-  circle(520,78,5,'#73736a');circle(527,68,4,'#5b6259');circle(525,58,3,'#62685f');
-  // Timber crossbeams.
-  rect(309,177,251,5,'#4b3b2c');rect(309,235,251,4,'#4b3b2c');
-  rect(319,173,5,121,'#55402e');rect(550,173,5,121,'#55402e');
-  line(324,178,351,231,'#55402e',4);line(545,178,519,231,'#55402e',4);
-  // Glowing windows.
-  for(const x of [333,466]){
-    rect(x-4,184,37,43,'#3c3027');rect(x,188,29,34,'#263c3d');
-    rect(x+3,191,23,28,'#9a956b');rect(x+6,194,17,22,'#d4b879');
-    rect(x+14,191,4,28,'#514633');rect(x+3,203,23,4,'#514633');
-    rect(x-5,182,39,4,'#4a3629');rect(x-4,223,37,4,'#4a3629');
-    rect(x+7,197,3,5,'#f1d99b');rect(x+19,208,3,4,'#f1d99b');
-  }
-  // Entrance, stone steps, hanging sign and lantern.
-  rect(388,237,43,62,'#382b23');rect(393,242,33,57,'#6b4a31');
-  rect(398,247,23,52,'#34271f');rect(414,267,3,3,'#e2be72');
-  rect(382,296,55,5,'#5e5040');rect(378,301,63,4,'#b4a078');
-  rect(438,244,8,17,'#352b22');circle(442,264,5,'#e5a854');circle(442,264,2,'#ffe2a0');
-  // Small cottage on the western side of the pond.
-  poly([[155,235],[178,208],[249,208],[273,235]],'#292721');
-  poly([[162,232],[181,212],[246,212],[265,232]],'#793d36');
-  for(let y=218;y<232;y+=4)line(176,y,250,y+2,'#a35a48',1.4);
-  rect(166,233,96,55,'#6b6048');rect(173,238,82,46,'#aa966e');
-  rect(181,247,17,18,'#314044');rect(184,250,11,12,'#d3b978');
-  rect(223,247,17,18,'#314044');rect(226,250,11,12,'#d3b978');
-  rect(204,260,19,28,'#4a3328');rect(218,272,2,3,'#e3bc71');
-  rect(163,285,102,5,'#534434');
-  // Forge hut on the eastern edge with a blue slate roof.
-  poly([[621,246],[647,218],[711,218],[739,246]],'#202624');
-  poly([[627,242],[650,222],[708,222],[733,242]],'#3f4e54');
-  poly([[635,239],[652,226],[706,226],[725,239]],'#647176');
-  rect(632,244,96,63,'#76664d');rect(638,249,84,56,'#a08b67');
-  rect(645,258,20,23,'#283b3c');rect(648,261,14,17,'#d2b875');rect(684,265,23,40,'#4a3329');
-  rect(680,260,30,5,'#534338');circle(694,282,3,'#f2a24c');circle(694,282,1.5,'#ffe09b');
-  rect(627,304,108,5,'#504133');
-  // Market awning and crates, kept near its original interaction point.
-  rect(115,344,82,36,'#493426');rect(121,349,71,27,'#78523b');
-  poly([[105,350],[155,313],[205,350]],'#432b27');poly([[111,345],[155,318],[199,345]],'#963e3a');
-  for(let x=117;x<197;x+=16){line(x,342,x+1,350,'#d1a05b',2);}
-  rect(110,349,91,5,'#d6ad66');rect(118,354,6,23,'#bd955b');rect(145,354,6,23,'#d1b477');rect(172,354,6,23,'#9c6b45');
-  rect(128,381,20,11,'#60452f');rect(151,381,20,11,'#725238');rect(174,381,17,11,'#4a3529');
-  // Fences, field plots and a roadside sign.
-  for(let x=584;x<758;x+=17){rect(x,338,3,20,'#64462f');rect(x+1,339,2,18,'#9b7046');}
-  rect(580,341,185,3,'#6a5037');rect(580,352,185,3,'#6a5037');
-  for(let row=0;row<3;row++)for(let x=775;x<830;x+=11){
-    rect(x,410+row*10,7,3,row%2?'#8c9b58':'#a3a05d');
-    rect(x+2,405+row*10,2,5,'#4d713d');
-  }
-  rect(814,283,7,66,'#49372a');rect(783,278,69,27,'#3a2a22');
-  poly([[784,278],[795,269],[843,269],[853,278]],'#272724');
-  rect(788,281,61,19,'#d1b678');text('RUÍNAS',818,294,10,'#44382b','center');
-  // A fortified gate and the road beyond the village.
-  rect(865,278,58,79,'#222a25');rect(870,285,48,72,'#73563a');rect(876,291,36,66,'#202725');
-  rect(868,278,52,7,'#342e27');rect(870,279,48,3,'#9e8051');
-  for(let x=877;x<913;x+=9){rect(x,292,3,64,'#a58a5b');rect(x+1,292,1,64,'#4e402e');}
-  rect(856,274,9,88,'#3a3027');rect(921,274,9,88,'#3a3027');
-  // Stones, grass clumps, mushrooms and flowers placed deterministically.
-  for(const [x,y] of [[243,420],[263,431],[284,412],[557,405],[575,398],[606,419],[748,377],[769,385],[217,282],[284,291],[600,284],[753,238],[775,254],[815,389],[862,404],[348,430],[390,416]]){
-    circle(x,y,3,'#7d8060');circle(x-1,y-1,1.5,'#b0a47c');
-  }
-  for(const [x,y] of [[213,414],[236,426],[286,425],[556,397],[574,406],[608,418],[744,371],[755,385],[360,435],[394,411],[817,402]]){
-    line(x,y+3,x-1,y+9,'#4b733c',1.5);circle(x,y,2.6,'#d8bd75');circle(x+2,y-1,1.6,'#f0d89b');
-  }
-  // A few loose boulders and weathered standing stones.
-  for(const [x,y] of [[271,275],[291,281],[604,374],[775,302],[837,240],[690,390]]){
-    poly([[x-7,y+2],[x-5,y-3],[x+1,y-5],[x+7,y-1],[x+8,y+3],[x,y+5]],'#465047');
-    line(x-3,y-1,x+2,y-3,'#7d866f',1);
-  }
-
-  // Villagers and monsters are drawn last, so they remain readable.
-  for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*2,m.name.includes('Besouro')?'#8d9161':'#5c9e70',m.name.includes('Besouro')?1.05:1);
+  // Creatures, NPCs and player remain on their original interaction coordinates.
+  for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);
   drawHuman(230,333,true);drawHuman(350,333,false);
-  circle(230,306,5,'#f1d171');text('MARA',230,291,10,'#fff1c8','center');
-  text('MERCADOR',350,291,9,'#fff1c8','center');
+  if(gameSettings.showLabels){
+    text('BRUMAFORTE',18,166,12,'#eaf2c8');
+    text('MERCADO',136,286,8,'#f5f4cc','center');text('ESTALAGEM',362,285,8,'#f5f4cc','center');text('FERREIRO',758,285,8,'#f5f4cc','center');
+    text('MARA',230,311,9,'#f7f0be','center');text('MERCADOR',350,311,8,'#f7f0be','center');
+    text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
+  }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character);
-  text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),p.x,p.y-65,8,'#f7e7bf','center');
-  rect(p.x-12,p.y-60,24,4,'#1b211e');rect(p.x-10,p.y-59,20,2,'#c6a15a');
 }
 
 function drawKnight(x,y,camera){const sx=x-camera;rect(sx-9,y-32,18,23,'#414b4d');rect(sx-8,y-37,16,8,'#9ca3a0');rect(sx-6,y-33,12,6,'#20292b');rect(sx-10,y-7,7,15,'#343a3c');rect(sx+3,y-7,7,15,'#343a3c');rect(sx-11,y-25,5,15,'#9d9b88');rect(sx+6,y-26,5,8,'#b8b6a5');rect(sx-3,y-30,3,2,'#e7a66b');}
@@ -867,13 +909,13 @@ rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.
 }
 function render(){ctx.clearRect(0,0,W,H);if(g.scene==='map')drawMap();else drawAction();}
 function update(dt){g.attackCD=Math.max(0,g.attackCD-dt);g.invuln=Math.max(0,g.invuln-dt);g.toastTimer=Math.max(0,g.toastTimer-dt);if(g.toastTimer===0)$('toast').classList.remove('show');if(modalType){render();return;}
-if(g.scene==='map'){const p=g.mapPlayer;let dx=0,dy=0;if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;if(keys.has('KeyW')||keys.has('ArrowUp'))dy--;if(keys.has('KeyS')||keys.has('ArrowDown'))dy++;if(dx||dy){let n=Math.hypot(dx,dy);p.x+=dx/n*160*dt;p.y+=dy/n*160*dt;}p.x=Math.max(25,Math.min(935,p.x));p.y=Math.max(140,Math.min(505,p.y));}
-else{const p=g.actionPlayer;let dx=0;if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;if(dx)p.face=Math.sign(dx);p.x+=dx*220*dt;p.x=Math.max(25,Math.min(1880,p.x));p.vy+=980*dt;const oldY=p.y;p.y+=p.vy*dt;p.onGround=false;const camera=Math.max(0,Math.min(1900-W,p.x-330));let landed=false;if(p.y>=448){p.y=448;p.vy=0;p.onGround=true;landed=true;}const plats=[{x:460,y:350,w:150},{x:760,y:295,w:125},{x:1115,y:365,w:160},{x:1450,y:307,w:145}];if(p.vy>=0)for(const plat of plats){if(p.x+10>plat.x&&p.x-10<plat.x+plat.w&&oldY<=plat.y&&p.y>=plat.y){p.y=plat.y;p.vy=0;p.onGround=true;landed=true;break;}}if((keys.has('Space')||keys.has('KeyW')||keys.has('ArrowUp'))&&p.onGround){p.vy=-430;p.onGround=false;}}
+if(g.scene==='map'){const p=g.mapPlayer;let dx=0,dy=0;if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;if(keys.has('KeyW')||keys.has('ArrowUp'))dy--;if(keys.has('KeyS')||keys.has('ArrowDown'))dy++;if(dx||dy){let n=Math.hypot(dx,dy);p.x+=dx/n*160*speedFactor()*dt;p.y+=dy/n*160*dt;}p.x=Math.max(25,Math.min(935,p.x));p.y=Math.max(140,Math.min(505,p.y));}
+else{const p=g.actionPlayer;let dx=0;if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;if(dx)p.face=Math.sign(dx);p.x+=dx*220*speedFactor()*dt;p.x=Math.max(25,Math.min(1880,p.x));p.vy+=980*dt;const oldY=p.y;p.y+=p.vy*dt;p.onGround=false;const camera=Math.max(0,Math.min(1900-W,p.x-330));let landed=false;if(p.y>=448){p.y=448;p.vy=0;p.onGround=true;landed=true;}const plats=[{x:460,y:350,w:150},{x:760,y:295,w:125},{x:1115,y:365,w:160},{x:1450,y:307,w:145}];if(p.vy>=0)for(const plat of plats){if(p.x+10>plat.x&&p.x-10<plat.x+plat.w&&oldY<=plat.y&&p.y>=plat.y){p.y=plat.y;p.vy=0;p.onGround=true;landed=true;break;}}if((keys.has('Space')||keys.has('KeyW')||keys.has('ArrowUp'))&&p.onGround){p.vy=-430;p.onGround=false;}}
 render();}
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){notify('Nenhum menu aberto.',1.3);}}
+function handleAction(key){if(modalType){if(key==='Escape'){closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
-$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
