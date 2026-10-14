@@ -169,5 +169,18 @@ A direção ativa abandona o combate lateral e a ênfase em classes de RPG em fa
 3. Testar diálogos, missões de NPCs, chefes de história e decisões econômicas em desktop e celular.
 4. Conferir que nenhum texto ou botão ainda apresenta o antigo sistema de combate lateral, classes de RPG ou combate por cartas como comportamento ativo. Verificar também que o criador e os saves antigos não renderizam o protagonista sem roupa.
 
+## Reboot 3.0 — arte de portátil e exploração top-down
+
+A direção ativa agora é uma aventura própria de exploração 16-bit, inspirada na simplicidade visual dos portáteis clássicos. Não é necessário tratar a experiência como um RPG de classes: o foco é caminhar, descobrir lugares, conversar, conhecer criaturas e batalhar por turnos.
+
+- **Protagonista:** sprite compacto de 16×24 pixels, quatro direções e ciclos curtos de caminhada. Cabelo, tom de pele, roupa e acessórios continuam personalizáveis.
+- **NPCs:** compartilham o mesmo padrão de proporção e escala, usando paletas e detalhes próprios para que cada morador seja legível sem parecer um guerreiro de fantasia pesada.
+- **Criador:** prévia compacta em pixel art, com uma paleta clara e proporções consistentes com o personagem no mapa.
+- **Interface e terreno:** paleta de céu, grama, pedra e painéis claros; árvores quadradas, caminhos legíveis e uma bússola adequada ao estilo portátil.
+- **Movimento de exploração:** movimento ortogonal para reduzir o deslizamento diagonal e reforçar a sensação de jogo de portátil.
+- **Continuidade:** regiões, missões da Moeda Partida, decisões do Conselho, criaturas, captura e equipe por turnos permanecem. As criaturas e personagens são criações originais do projeto.
+
+**Validação:** sintaxe JavaScript, IDs de interface e pontos de integração foram conferidos por análise estática. Ainda é necessário validar visualmente uma jornada completa em desktop e celular.
+
 ## Fronteira entre protótipo e mundo online
 O clima é visual local e não representa um evento sincronizado. Recompensas, conquistas, materiais, chefes e decisões ainda são locais ao navegador. Para contas multiplataforma, rankings públicos, guildas, comércio, eventos sincronizados e coop/PvP, usar autenticação e estado autoritativo no servidor; não confiar no navegador para validar itens ou recompensas.
