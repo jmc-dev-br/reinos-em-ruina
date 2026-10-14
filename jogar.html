@@ -221,7 +221,7 @@ body{position:fixed;inset:0}
 <body>
 <div class="shell">
   <header class="top">
-    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 1.0</p></div></div>
+    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 1.1</p></div></div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ REBOOT · MUNDO VIVO · MOEDAS FICTÍCIAS</div></div>
   </header>
   <section class="stats" aria-label="Status do personagem">
@@ -1857,10 +1857,15 @@ function drawBrumaforteMap(){
   }
   function pathCell(tx,ty){
     const x=tx*tile,y=ty*tile,n=hash(tx+82,ty+17);
-    rect(x,y,tile,tile,n>.72?'#dce9b5':n>.35?'#d3e4ad':'#c9dca2');
-    line(x,y,x+tile,y,'#eff3cb',1);line(x,y,x,y+tile,'#b5cf91',1);
-    if(n>.76){rect(x+4,y+5,4,2,'#b5c991');rect(x+10,y+11,3,2,'#e8edc6');}
-    else if(n<.12)rect(x+7,y+3,2,2,'#acc58a');
+    const stone=n>.72?'#c8b184':n>.35?'#b8a174':'#a58e65';
+    // Weathered cobblestones with darker joints and broken highlights.
+    rect(x,y,tile,tile,'#796849');rect(x+1,y+1,tile-2,tile-2,stone);
+    line(x+2,y+4,x+tile-3,y+4,'#dbc69a',1);
+    line(x+2,y+11,x+tile-3,y+11,'#8e7954',1);
+    line(x+5,y+5,x+5,y+10,'#8e7954',1);
+    if(n>.76){rect(x+8,y+6,5,2,'#d8c194');rect(x+2,y+13,4,1,'#e0cea5');}
+    else if(n<.12){line(x+8,y+6,x+12,y+8,'#776448',1);rect(x+3,y+13,2,1,'#8fa16a');}
+    else rect(x+9,y+7,2,2,'#b19b70');
   }
   // Main roads and short paths to the building entrances.
   for(let tx=0;tx<60;tx++)for(let ty=18;ty<=21;ty++)pathCell(tx,ty);
