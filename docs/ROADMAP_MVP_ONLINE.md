@@ -153,7 +153,7 @@ A direção ativa abandona o combate lateral e a ênfase em classes de RPG em fa
 
 ### Exploração e personagens
 - As quatro áreas jogáveis usam visão superior: Brumaforte, Bosque Velado, Lago Silencioso e Mina Antiga. A mina foi convertida de plataformas laterais para um mapa com caminhos, paredes quebradas, plantas, lampiões, altar e livro-razão.
-- O protagonista, os NPCs e a prévia do criador compartilham proporções compactas de sprite portátil; nomes destacados e silhuetas por função mantêm a leitura do mapa. O criador usa roupas como padrão, boné/capuz/tiara e acessórios simples; a aparência antiga de corpo-base migra para viajante.
+- O protagonista, os NPCs e a prévia do criador compartilham sprites 16×24 compactos. O protagonista tem quatro direções e um ciclo curto de caminhada; os moradores recebem paletas próprias e objetos de profissão. As roupas são descritas como peças cotidianas e a aparência antiga de corpo-base migra para viajante.
 - A arte dos parceiros e criaturas é desenhada em pixel art pelo cliente, para não depender de emojis na interface de equipe e no duelo.
 
 ### Parceiros, encontros e progressão
@@ -169,7 +169,7 @@ A direção ativa abandona o combate lateral e a ênfase em classes de RPG em fa
 3. Testar diálogos, missões de NPCs, chefes de história e decisões econômicas em desktop e celular.
 4. Conferir que nenhum texto ou botão ainda apresenta o antigo sistema de combate lateral, classes de RPG ou combate por cartas como comportamento ativo. Verificar também que o criador e os saves antigos não renderizam o protagonista sem roupa.
 
-## Reboot 3.0 — arte de portátil e exploração top-down
+## Reboot 3.0 — sprites compactos e visual de portátil
 
 A direção ativa agora é uma aventura própria de exploração 16-bit, inspirada na simplicidade visual dos portáteis clássicos. Não é necessário tratar a experiência como um RPG de classes: o foco é caminhar, descobrir lugares, conversar, conhecer criaturas e batalhar por turnos.
 
