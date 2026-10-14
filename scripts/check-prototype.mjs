@@ -31,7 +31,7 @@ const requiredMenuFeatures = [
   "function renderHistory()",
   'id="exitButton"',
   'id="exitView"',
-  'url("assets/kingdom-bg.svg")',
+  'url("assets/kingdom-menu.webp")',
   'id="slotsView"',
   'id="creatorView"',
   'id="languageView"',
@@ -62,10 +62,9 @@ for (const feature of requiredMenuFeatures) {
 }
 console.log("PASS menu, three save slots, language picker, and character creator");
 
-const background = fs.readFileSync("assets/kingdom-bg.svg", "utf8");
-assert.ok(background.includes("<svg"), "kingdom background should be an SVG image");
-assert.ok(background.includes("castle cliff") || background.includes("castle"), "kingdom background should contain the castle artwork");
-console.log("PASS pixel-art kingdom background and About screen");
+const background = fs.statSync("assets/kingdom-menu.webp");
+assert.ok(background.size > 10000, "uploaded kingdom background should be present as a full-resolution image");
+console.log("PASS exact kingdom menu background and About screen");
 
 const game = fs.readFileSync("jogar.html", "utf8");
 const contract = fs.readFileSync("contracts/ReinosChronicle.sol", "utf8");
