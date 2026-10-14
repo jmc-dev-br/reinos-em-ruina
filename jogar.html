@@ -268,17 +268,6 @@ function normalizeSave(d){
  if(typeof merged.ledgerFound!=='boolean')merged.ledgerFound=false;
  return merged;
 }
- const defaults=originalState();
- const merged=Object.assign(defaults,d);
- merged.economy=Object.assign({},defaults.economy,d.economy||{});
- if(!d.questVersion){
-  if(merged.questStep===3&&merged.questRewarded){merged.questStep=4;merged.ledgerFound=true;}
-  else if(merged.questStep===2&&merged.kills>=3){merged.questStep=3;merged.ledgerFound=true;}
-  merged.questVersion=2;
- }
- if(typeof merged.ledgerFound!=='boolean')merged.ledgerFound=false;
- return merged;
-}
 function loadSaveFile(raw){try{const d=JSON.parse(raw);if(!d||!d.mapPlayer||!d.actionPlayer||!Array.isArray(d.slimes)||!Array.isArray(d.ruinMobs))throw new Error('Arquivo não reconhecido.');g=normalizeSave(d);closeModal();setScene(g.scene==='action'?'action':'map');updateUI();notify('Progresso carregado do arquivo.',3);}catch(err){notify('Não consegui carregar esse arquivo de progresso. Use um JSON salvo pelo jogo.',4.5);}}
 function loadGame(){try{const raw=localStorage.getItem('cronicas_valoria_save');if(!raw)return false;const d=JSON.parse(raw);g=normalizeSave(d);return true;}catch(e){return false;}}
 function resetGame(){if(!confirm('Reiniciar a aventura? O progresso salvo neste navegador também será apagado.'))return;try{window.localStorage.removeItem('cronicas_valoria_save');}catch(err){}g=originalState();closeModal();setScene('map');notify('Nova aventura iniciada. Fale com Mara perto da praça.',3);updateUI();}
