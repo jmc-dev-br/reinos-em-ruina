@@ -139,6 +139,9 @@ body{position:fixed;inset:0}
 .battle-log{min-height:38px;padding:9px 10px;margin-top:10px;background:#0c110e;border:1px solid #2c3a2d;color:#b8c7ae;font-size:10px;line-height:1.5}.battle-disclaimer{margin-top:8px;font-size:9px;color:#8fa18b;line-height:1.45}
 @media(max-width:560px){.battle-versus{grid-template-columns:1fr 20px 1fr;gap:5px}.battle-side{padding:7px}.battle-avatar{font-size:21px}.battle-name{font-size:10px}.card-grid{gap:6px}.battle-card{padding:7px;min-height:92px}.battle-card strong{font-size:10px}.battle-card small{font-size:9px}}
 
+
+.activity-options{display:grid;gap:9px;margin:12px 0}.activity-option{display:flex;gap:11px;align-items:flex-start;background:#172119;border:1px solid #405a3d;padding:11px}.activity-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;background:#293c2b;color:#e3c276;font-size:19px;border:1px solid #62774f}.activity-option strong{font-size:12px;color:#e4eacb}.activity-option p{margin:5px 0 0;color:#acbca1;font-size:11px;line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -168,7 +171,7 @@ body{position:fixed;inset:0}
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
       <button class="btn" id="loadBtn">↑ Carregar save</button><input id="loadFile" type="file" accept="application/json,.json" hidden />
-      <button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
+      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
     </div>
     <div class="mobilehelp" aria-label="Controles de toque">
       <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑ / pular</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
@@ -420,6 +423,49 @@ async function recordArcChapter(){
 
 function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML='';for(const b of buttons||[]){const el=document.createElement('button');el.className='btn'+(b.primary?' primary':'');el.textContent=b.label;el.onclick=b.action;$('modalFoot').appendChild(el);} $('modalback').classList.add('open');$('modalClose').focus();}
 function closeModal(){modalType=null;$('modalback').classList.remove('open');canvas.focus();}
+
+const activityKey='reinos_ruina_activity_slot_'+(activeSlotNumber||0);
+function readOfflineActivity(){try{return JSON.parse(localStorage.getItem(activityKey)||'null');}catch(err){return null;}}
+function writeOfflineActivity(value){try{localStorage.setItem(activityKey,JSON.stringify(value));return true;}catch(err){return false;}}
+function settleOfflineActivity(showNotice){
+ const a=readOfflineActivity();if(!a||!['train','work'].includes(a.mode)||!a.lastClaimAt)return 0;
+ const elapsed=Date.now()-Number(a.lastClaimAt),hours=Math.min(8,Math.floor(elapsed/3600000));
+ if(hours<1)return 0;
+ a.lastClaimAt=Date.now();writeOfflineActivity(a);
+ if(a.mode==='train'){
+  const earned=hours*12;g.xp+=earned;addXP(0);updateUI();persistProgress();
+  if(showNotice)notify('Treinamento offline: +'+earned+' XP em '+hours+' hora(s).',4);
+ }else{
+  const earned=hours*5;g.coins+=earned;updateUI();persistProgress();
+  if(showNotice)notify('Trabalho na taverna: +'+earned+' cobres fictícios em '+hours+' hora(s).',4);
+ }
+ return hours;
+}
+function startOfflineActivity(mode){
+ if(!['train','work','rest'].includes(mode))return;
+ settleOfflineActivity(true);
+ if(mode==='rest'){try{localStorage.removeItem(activityKey);}catch(err){}closeModal();notify('Atividade offline desativada.',2.4);return;}
+ const value={mode,lastClaimAt:Date.now()};
+ if(!writeOfflineActivity(value)){notify('O navegador não permitiu salvar a atividade neste dispositivo.',3);return;}
+ closeModal();
+ notify(mode==='train'?'Atividade definida: treinar força (+12 XP por hora, limite de 8 horas).':'Atividade definida: trabalhar na taverna (+5 cobres por hora, limite de 8 horas).',4);
+}
+function openActivityMenu(){
+ const a=readOfflineActivity(),mode=a&&a.mode;
+ const status=mode==='train'?'Treinando força':mode==='work'?'Trabalhando na taverna':'Nenhuma atividade definida';
+ const copy=mode==='train'?'Ao voltar, você recebe 12 XP por hora concluída.':mode==='work'?'Ao voltar, você recebe 5 cobres fictícios por hora concluída.':'Escolha o que seu personagem fará enquanto você estiver longe.';
+ const body='<div class="menu-intro"><strong>Estado atual:</strong> '+escapeHtml(status)+'<br>'+escapeHtml(copy)+'</div>'+
+ '<div class="activity-options">'+
+ '<div class="activity-option"><div class="activity-icon">⚔</div><div><strong>Treinar força</strong><p>Prática diária para ganhar experiência. +12 XP por hora, até 8 horas.</p></div></div>'+
+ '<div class="activity-option"><div class="activity-icon">◈</div><div><strong>Trabalhar na taverna</strong><p>Ganhar uma pequena renda em moeda fictícia. +5 cobres por hora, até 8 horas.</p></div></div>'+
+ '</div><div class="menu-note">Protótipo local: os resultados são calculados neste navegador e não são sincronizados com outros jogadores. O servidor online será necessário para validar atividades sem trapaças.</div>';
+ showModal('activity','Atividade durante sua ausência',body,[
+  {label:'Treinar força',action:()=>startOfflineActivity('train'),primary:mode==='train'},
+  {label:'Trabalhar na taverna',action:()=>startOfflineActivity('work'),primary:mode==='work'},
+  {label:'Desativar',action:()=>startOfflineActivity('rest')},
+  {label:'Voltar',action:()=>closeModal()}
+ ]);
+}
 
 let tacticalBattle=null;
 function openTacticalBattle(){
@@ -1132,7 +1178,7 @@ function update(dt){
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
 function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
-$('menuBtn').onclick=openGameMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
@@ -1143,7 +1189,7 @@ if(gameParams.get('new')==='1'){
  const record=readActiveSlot();g.character=normalizeAppearance(record&&record.character||g.character);
  notify('Bem-vindo ao reino. Fale com Mara perto da praça: aproxime-se e pressione E.',5);
 }
-updateUI();render();requestAnimationFrame(loop);
+settleOfflineActivity(true);updateUI();render();requestAnimationFrame(loop);
 })();
 </script>
 </body>
