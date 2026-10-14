@@ -75,16 +75,22 @@ const SLOT_PREFIX='reinos_ruina_slot_';
 const gameParams=new URLSearchParams(window.location.search);
 const activeSlotNumber=[1,2,3].includes(Number(gameParams.get('slot')))?Number(gameParams.get('slot')):0;
 const slotStorageKey=slot=>SLOT_PREFIX+slot;
-function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light'};}
+function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light',hairstyle:'short',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'default'};}
 function normalizeAppearance(value){
  const d=defaultAppearance(),v=value&&typeof value==='object'?value:{};
  return {name:String(v.name||d.name).trim().slice(0,16)||d.name,
   gender:['masculino','feminino'].includes(v.gender)?v.gender:d.gender,
-  outfit:['traveler','guard','mage','noble'].includes(v.outfit)?v.outfit:d.outfit,
+  outfit:['traveler','guard','mage','noble','ranger','royal'].includes(v.outfit)?v.outfit:d.outfit,
   cloak:['none','red','green','blue','ivory'].includes(v.cloak)?v.cloak:d.cloak,
-  hair:['brown','black','blond','silver'].includes(v.hair)?v.hair:d.hair,
-  skin:['light','tan','dark'].includes(v.skin)?v.skin:d.skin};
+  hair:['brown','black','blond','silver','red','blue','purple','pink'].includes(v.hair)?v.hair:d.hair,
+  skin:['pale','light','tan','warm','olive','dark','deep'].includes(v.skin)?v.skin:d.skin,
+  hairstyle:['short','medium','long','ponytail','braids','mohawk'].includes(v.hairstyle)?v.hairstyle:d.hairstyle,
+  headwear:['none','hood','crown','wizardHat','helmet','circlet'].includes(v.headwear)?v.headwear:d.headwear,
+  accessory:['none','glasses','eyepatch','earrings','necklace'].includes(v.accessory)?v.accessory:d.accessory,
+  weapon:['sword','staff','bow','none'].includes(v.weapon)?v.weapon:d.weapon,
+  outfitColor:['default','crimson','emerald','sapphire','violet','charcoal'].includes(v.outfitColor)?v.outfitColor:d.outfitColor};
 }
+
 function readActiveSlot(){
  if(!activeSlotNumber)return null;
  try{const value=localStorage.getItem(slotStorageKey(activeSlotNumber));if(!value)return null;const record=JSON.parse(value);return record&&record.version===1?record:null;}catch(e){return null;}
@@ -374,21 +380,39 @@ function drawTree(x,y,scale=1){rect(x-4*scale,y+4*scale,8*scale,13*scale,'#60462
 function drawHuman(x,y,isMara=false){rect(x-7,y-2,14,13,isMara?'#6b3f9b':'#344b61');rect(x-8,y+9,6,8,'#40372c');rect(x+2,y+9,6,8,'#40372c');circle(x,y-8,7,'#dbb28a');rect(x-7,y-15,14,5,isMara?'#b5a05c':'#5c4730');rect(x-5,y-8,2,2,'#2a2624');rect(x+3,y-8,2,2,'#2a2624');if(isMara){rect(x+9,y-12,3,28,'#8f7443');circle(x+10,y-14,4,'#d4ba75');}}
 function drawPlayer(x,y,rawAppearance){
  const a=normalizeAppearance(rawAppearance||g.character);
- const outfits={traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c'},guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39'},mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744'},noble:{coat:'#783c3c',trim:'#dcbd7a',pants:'#4a2d2d'}};
- const cloakColors={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
- const hairColors={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5'};
- const skinColors={light:'#dbb28a',tan:'#b8794f',dark:'#754833'};
- const o=outfits[a.outfit]||outfits.traveler,cloak=cloakColors[a.cloak],hair=hairColors[a.hair]||hairColors.brown,skin=skinColors[a.skin]||skinColors.light;
+ const outfits={traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c'},guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39'},mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744'},noble:{coat:'#783c3c',trim:'#dcbd7a',pants:'#4a2d2d'},ranger:{coat:'#35513b',trim:'#c79c5a',pants:'#292f29'},royal:{coat:'#353f70',trim:'#e1c16d',pants:'#292d47'}};
+ const coatColors={default:null,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+ const cloaks={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
+ const hairColors={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
+ const skinColors={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
+ const o=outfits[a.outfit]||outfits.traveler,coat=coatColors[a.outfitColor]||o.coat;
+ const cloak=cloaks[a.cloak],hair=hairColors[a.hair]||hairColors.brown,skin=skinColors[a.skin]||skinColors.light;
  if(cloak){rect(x-8,y-13,16,24,cloak);rect(x-10,y-7,4,16,cloak);}
  rect(x-7,y+8,6,9,o.pants);rect(x+2,y+8,6,9,o.pants);rect(x-8,y+15,7,3,'#211c19');rect(x+2,y+15,7,3,'#211c19');
- rect(x-7,y-2,14,13,o.coat);rect(x-8,y-2,3,12,o.trim);rect(x+5,y-2,3,12,o.trim);rect(x-7,y+7,14,3,o.trim);rect(x-2,y+5,4,5,'#292724');
+ rect(x-7,y-2,14,13,coat);rect(x-8,y-2,3,12,o.trim);rect(x+5,y-2,3,12,o.trim);rect(x-7,y+7,14,3,o.trim);rect(x-2,y+5,4,5,'#292724');
  circle(x,y-8,7,skin);rect(x-7,y-11,14,3,skin);
- if(a.gender==='feminino'){rect(x-8,y-14,4,14,hair);rect(x+4,y-14,4,14,hair);rect(x-6,y-16,12,4,hair);rect(x-7,y-10,3,6,skin);rect(x+4,y-10,3,6,skin);}
- else{rect(x-7,y-16,14,4,hair);rect(x-8,y-13,4,6,hair);rect(x+4,y-13,4,6,hair);}
+ if(a.hairstyle==='short'){rect(x-7,y-16,14,4,hair);rect(x-8,y-13,4,6,hair);rect(x+4,y-13,4,6,hair);}
+ if(a.hairstyle==='medium'){rect(x-7,y-16,14,4,hair);rect(x-8,y-13,4,9,hair);rect(x+4,y-13,4,9,hair);}
+ if(a.hairstyle==='long'){rect(x-7,y-16,14,4,hair);rect(x-9,y-13,4,17,hair);rect(x+5,y-13,4,17,hair);}
+ if(a.hairstyle==='ponytail'){rect(x-7,y-16,14,4,hair);rect(x+4,y-13,4,7,hair);rect(x+7,y-8,3,10,hair);}
+ if(a.hairstyle==='braids'){rect(x-7,y-16,14,4,hair);rect(x-9,y-12,4,8,hair);rect(x+5,y-12,4,8,hair);rect(x-8,y-4,3,4,hair);rect(x+6,y-4,3,4,hair);}
+ if(a.hairstyle==='mohawk'){rect(x-2,y-21,4,10,hair);rect(x-5,y-17,10,3,hair);}
  rect(x-4,y-9,2,2,'#292522');rect(x+2,y-9,2,2,'#292522');
+ if(a.headwear==='hood'){rect(x-9,y-17,18,6,cloak||'#393944');rect(x-9,y-12,3,12,cloak||'#393944');rect(x+6,y-12,3,12,cloak||'#393944');}
+ if(a.headwear==='helmet'){rect(x-8,y-18,16,7,'#9da3a3');rect(x-7,y-19,14,3,'#c8c9bd');rect(x-8,y-11,16,3,'#454a51');}
+ if(a.headwear==='crown'){rect(x-7,y-19,14,3,'#e0bd5c');rect(x-6,y-22,3,4,'#e0bd5c');rect(x-1,y-24,3,6,'#e0bd5c');rect(x+4,y-22,3,4,'#e0bd5c');}
+ if(a.headwear==='circlet'){rect(x-7,y-17,14,2,'#dfbc64');rect(x-1,y-19,3,3,'#7db4ca');}
+ if(a.headwear==='wizardHat'){rect(x-8,y-18,16,3,'#594184');rect(x-5,y-21,10,4,'#594184');rect(x-2,y-25,5,5,'#594184');rect(x-3,y-18,7,2,'#e5c36d');}
+ if(a.accessory==='glasses'){rect(x-6,y-10,5,3,'#d7b96d');rect(x+1,y-10,5,3,'#d7b96d');rect(x-1,y-9,3,1,'#d7b96d');}
+ if(a.accessory==='eyepatch'){rect(x+1,y-10,4,3,'#231d1a');rect(x+2,y-11,2,1,'#d7b96d');}
+ if(a.accessory==='earrings'){rect(x-8,y-5,2,3,'#e9c66a');rect(x+6,y-5,2,3,'#e9c66a');}
+ if(a.accessory==='necklace'){rect(x-3,y+1,6,2,'#e3c26f');rect(x-1,y+3,3,3,'#e6bf6e');}
  if(a.outfit==='guard'){rect(x-10,y-4,3,8,o.trim);rect(x+7,y-4,3,8,o.trim);}
  if(a.outfit==='mage'){rect(x-8,y-18,16,3,o.trim);}
- if(a.outfit==='noble'){rect(x-2,y-18,4,3,o.trim);}
+ if(a.outfit==='noble'||a.outfit==='royal'){rect(x-2,y-18,4,3,o.trim);}
+ if(a.weapon==='sword'){rect(x+9,y-3,2,16,'#b7c3c8');rect(x+7,y+7,6,2,'#e2bf70');rect(x+9,y+12,3,4,'#6b442a');}
+ if(a.weapon==='staff'){rect(x+10,y-12,2,26,'#765236');rect(x+8,y-14,6,3,'#b79a62');rect(x+9,y-18,4,4,'#67a1bf');}
+ if(a.weapon==='bow'){rect(x+10,y-12,2,20,'#a87542');rect(x+12,y-10,2,3,'#a87542');rect(x+12,y+4,2,3,'#a87542');}
 }
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
 function drawMap(){rect(0,0,W,H,'#78983d');for(let x=0;x<W;x+=24)for(let y=0;y<H;y+=24){let k=((x/24+y/24)%2===0);rect(x,y,24,24,k?'#7fa143':'#76963a');if((x*7+y*3)%11===0)rect(x+5,y+6,2,2,'#99b957');}
