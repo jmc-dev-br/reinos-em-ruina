@@ -27,7 +27,12 @@ The decision changes the kingdom dashboard and the merchant's prices. The player
 - Side-view action/combat in the ruins.
 - A sequenced first-chapter quest: investigate road attacks, find unique ledger evidence, report to Mara, and complete the council decision.
 - Quest rewards cannot be repeatedly claimed from the same ledger; important story milestones autosave locally.
-- Quest progression, XP/levels, health, potions, inventory economy, manual/automatic save/load.
+- Main menu with Play and Language options (Portuguese and English menu UI).
+- Three independent local save slots, each with Continue, Customize, and Delete actions.
+- Character creator with masculine/feminine appearance, name, four outfits, cloak color, hair color, and skin tone.
+- Character appearance is rendered in both top-down exploration and side-view combat and saved with the selected slot.
+- Legacy browser save is imported into Slot 1 once to preserve earlier progress.
+- Quest progression, XP/levels, health, potions, inventory economy, manual and milestone save/load.
 - Fictional kingdom economy: treasury, debt, public trust, food reserves, and price index.
 - Dynamic merchant prices connected to the simulated price index.
 - In-game codex with plain-language topics: budgeting, inflation, interest, scams, and crypto risks.
