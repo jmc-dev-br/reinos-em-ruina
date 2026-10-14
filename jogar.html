@@ -152,6 +152,12 @@ body{position:fixed;inset:0}
 .achievement-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #303e30}.achievement-medal{font-size:20px;width:29px;flex:0 0 29px;filter:grayscale(1);opacity:.45}.achievement-row.unlocked .achievement-medal{filter:none;opacity:1}.achievement-row strong{display:block;color:#e3e7cd;font-size:11px}.achievement-row small{display:block;color:#99ac91;font-size:10px;line-height:1.4;margin-top:3px}.achievement-row .status{margin-left:auto;font-size:9px;color:#b6c8a6;white-space:nowrap}
 @media(max-width:560px){.feature-grid{grid-template-columns:1fr}.feature-hero{padding:10px}.profession-row{grid-template-columns:1fr auto}.feature-actions .btn{flex-basis:100%}}
 
+
+.dialogue-personality{display:flex;align-items:center;gap:12px;padding:11px;margin-bottom:12px;border:1px solid #566e4a;background:linear-gradient(115deg,#243425,#151d17)}
+.dialogue-portrait{width:48px;height:72px;flex:0 0 48px;image-rendering:pixelated;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 3px 0 #0b100c)}
+.dialogue-portrait-fallback{width:48px;height:72px;display:grid;place-items:center;background:#344635;color:#e5cf8c;font-size:22px;flex:0 0 48px}
+.dialogue-personality-copy{min-width:0}.dialogue-personality-copy strong{display:block;color:#ecd7a0;font-size:12px}.dialogue-personality-copy small{display:block;color:#c3d1b5;font-size:10px;line-height:1.4;margin-top:4px}.dialogue-personality-copy p{color:#91a48d;font-size:10px;line-height:1.45;margin:5px 0 0}
+
 </style>
 </head>
 <body>
@@ -475,7 +481,12 @@ function talkMara(){
  }
  openDialogue('Mara, guardiã da vila','O reino não se recupera com uma única boa decisão. Continue investigando, compare os custos e desconfie de promessas fáceis.','Você concluiu o primeiro capítulo. Há outras histórias a descobrir.');
 }
-function openDialogue(title,line,small){showModal('dialogue',title,`<div class="dialogline">${escapeHtml(line)}</div><div class="modalnote">${escapeHtml(small)}</div>`,[{label:'Continuar',action:()=>closeModal(),primary:true}]);}
+function openDialogue(title,line,small){
+ const id=npcForDialogue(title),profile=id&&NPC_PROFILES[id],src=id&&npcPortraitData(id);
+ const portrait=profile?'<div class="dialogue-personality">'+(src?'<img class="dialogue-portrait" src="'+src+'" alt="">':'<div class="dialogue-portrait-fallback">✦</div>')+
+ '<div class="dialogue-personality-copy"><strong>'+escapeHtml(profile.display)+'</strong><small>'+escapeHtml(profile.personality)+'</small><p>'+escapeHtml(profile.history)+'</p></div></div>':'';
+ showModal('dialogue',title,portrait+'<div class="dialogline">'+escapeHtml(line)+'</div><div class="modalnote">'+escapeHtml(small)+'</div>',[{label:'Continuar',action:()=>closeModal(),primary:true}]);
+}
 function interact(){
  if(modalType)return;
  if(g.scene==='map'){
@@ -1093,6 +1104,72 @@ function drawNamedNPC(x,y,shirt,skin,hat,prop){
  if(prop==='basket'){rect(x-14,y-8,7,7,'#987448');rect(x-13,y-10,5,3,'#6fa05d');rect(x-11,y-12,3,3,'#91bd70');}
  if(prop==='rod'){line(x+9,y-12,x+18,y-29,'#775639',2);line(x+18,y-29,x+24,y-35,'#d3d6b4',1);}
 }
+
+const NPC_APPEARANCES={
+ mara:{name:'Mara',gender:'feminino',outfit:'mage',cloak:'ivory',hair:'silver',skin:'olive',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'staff',outfitColor:'default',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
+ ivo:{name:'Ivo',gender:'masculino',outfit:'noble',cloak:'red',hair:'brown',skin:'warm',hairstyle:'medium',headwear:'none',accessory:'necklace',weapon:'none',outfitColor:'crimson',faceShape:'round',eyeColor:'brown',facialHair:'mustache'},
+ toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
+ elira:{name:'Elira',gender:'feminino',outfit:'ranger',cloak:'green',hair:'red',skin:'pale',hairstyle:'braids',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'emerald',faceShape:'oval',eyeColor:'green',facialHair:'none'},
+ brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'blue',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hood',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
+ sabela:{name:'Sabela',gender:'feminino',outfit:'noble',cloak:'red',hair:'black',skin:'warm',hairstyle:'long',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'crimson',faceShape:'oval',eyeColor:'brown',facialHair:'none'},
+ liora:{name:'Liora',gender:'feminino',outfit:'ranger',cloak:'green',hair:'silver',skin:'olive',hairstyle:'ponytail',headwear:'hood',accessory:'earrings',weapon:'bow',outfitColor:'emerald',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
+ arven:{name:'Arven',gender:'masculino',outfit:'guard',cloak:'green',hair:'blond',skin:'light',hairstyle:'short',headwear:'helmet',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'blue',facialHair:'goatee'},
+ yara:{name:'Yara',gender:'feminino',outfit:'mage',cloak:'blue',hair:'blue',skin:'deep',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'staff',outfitColor:'sapphire',faceShape:'oval',eyeColor:'green',facialHair:'none'},
+ neris:{name:'Neris',gender:'masculino',outfit:'ranger',cloak:'ivory',hair:'red',skin:'pale',hairstyle:'ponytail',headwear:'none',accessory:'glasses',weapon:'bow',outfitColor:'charcoal',faceShape:'round',eyeColor:'gray',facialHair:'mustache'}
+};
+const NPC_PROFILES={
+ mara:{display:'Mara · Guardiã de Brumaforte',personality:'Firme, cuidadosa e difícil de enganar.',history:'Foi escriba antes de proteger a vila. Lê recibos como outras pessoas leem rostos; raramente fala antes de ter provas.'},
+ ivo:{display:'Ivo · Mercador',personality:'Carismático, calculista e sempre atento aos preços.',history:'Aprendeu comércio com uma caravana que faliu durante a antiga inflação do reino. Agora registra cada troca em dois livros para não repetir o passado.'},
+ toren:{display:'Toren · Ferreiro',personality:'Direto, leal e impaciente com promessas vazias.',history:'Seu pai forjou as dobradiças do portão das ruínas. Toren teme que o metal esteja enfraquecendo e que a ferraria seja a última defesa da vila.'},
+ elira:{display:'Elira · Cuidadora do jardim',personality:'Gentil, observadora e teimosa quando alguém precisa de ajuda.',history:'Guarda sementes de plantas que quase desapareceram durante a Maré Cinzenta. Cada feixe colhido é contado porque ela quer deixar um jardim para a próxima geração.'},
+ brann:{display:'Brann · Pescador',personality:'Bem-humorado, supersticioso e mais atento do que parece.',history:'Diz que o lago avisa quando algo ruim se aproxima. Perdeu seu barco velho na noite em que as águas ficaram prateadas.'},
+ sabela:{display:'Sabela · Estalajadeira',personality:'Acolhedora, irônica e dona da melhor rede de rumores da vila.',history:'Abriga viajantes sem fazer perguntas, mas lembra de cada rosto. Os rumores que escuta viram um mapa invisível das estradas.'},
+ liora:{display:'Liora · Rastreadora do Bosque Velado',personality:'Silenciosa, paciente e desconfiada da magia fácil.',history:'Seguiu rastros para além do bosque por anos. Um inverno inteiro, a névoa imitou a voz de sua irmã; desde então, Liora nunca segue um som sem procurar pegadas.'},
+ arven:{display:'Arven · Vigia da trilha',personality:'Protetor, disciplinado e secretamente poético.',history:'Era guarda da ponte do norte quando a ponte caiu. Ele desenha mapas à mão porque acredita que uma rota lembrada pode salvar mais gente do que uma espada.'},
+ yara:{display:'Yara · Cartógrafa das marés',personality:'Curiosa, ousada e fascinada por coisas que não deveriam existir.',history:'Encontrou no lago uma bússola que aponta para o que foi perdido, não para o norte. Desde então, ela tenta descobrir o que acordou sob a água.'},
+ neris:{display:'Neris · Arquivista dos naufrágios',personality:'Reservado, metódico e gentil com quem faz boas perguntas.',history:'Catalogou nomes de barcos que jamais voltaram. Esconde um mapa que muda com as marés e teme que alguém o use para chamar algo do fundo.'}
+};
+function drawNPCActor(id,x,y,prop='none'){
+ const appearance=NPC_APPEARANCES[id];if(!appearance)return;
+ const time=performance.now()/1000,phase={mara:.2,ivo:1.1,toren:2.3,elira:3.2,brann:4.1,sabela:5,liora:2.8,arven:1.7,yara:4.7,neris:.8}[id]||0;
+ drawPlayer(x,y+Math.sin(time*1.35+phase)*.65,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
+ ctx.save();
+ if(prop==='hammer'){
+  const swing=Math.sin(time*3.4+phase)*.24;ctx.translate(x+13,y-25);ctx.rotate(swing);
+  rect(-1,0,3,13,'#6f4c31');rect(-5,-5,11,5,'#a7ada7');rect(-4,-7,9,2,'#d5d4c5');
+  ctx.restore();
+  if(Math.sin(time*3.4+phase)>.88){circle(x+16,y-29,2,'#ffe49a');circle(x+20,y-31,1,'#f4ae59');}
+  return;
+ }
+ if(prop==='basket'){
+  rect(x-16,y-9,9,8,'#8f6a45');rect(x-15,y-8,7,6,'#b78b58');rect(x-13,y-12,3,5,'#5a9652');rect(x-9,y-13,3,5,'#8fbe67');rect(x-6,y-11,3,4,'#d4ca76');
+ }else if(prop==='rod'){
+  const wave=Math.sin(time*1.7+phase)*2;
+  line(x+12,y-16,x+20,y-37+wave,'#704c2e',2);line(x+20,y-37+wave,x+30,y-43+wave,'#9c815b',1);
+  line(x+30,y-43+wave,x+33,y-28+wave,'#d7e4d0',1);
+ }else if(prop==='tray'){
+  rect(x+8,y-18,13,2,'#7d5a38');rect(x+10,y-22,4,4,'#d6b777');rect(x+16,y-21,3,3,'#94a66b');
+ }else if(prop==='staff'){
+  line(x+15,y-8,x+18,y-43,'#775536',3);circle(x+18,y-46,5,'#86c5cc');circle(x+18,y-46,2,'#dbf4d4');
+ }else if(prop==='bow'){
+  ctx.strokeStyle='#98663c';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+13,y-20,11,-Math.PI*.6,Math.PI*.6);ctx.stroke();line(x+19,y-29,x+19,y-11,'#e1d5ad',1);
+ }
+ ctx.restore();
+}
+function npcForDialogue(title){
+ const t=String(title||'').toLowerCase();
+ if(t.includes('mara'))return 'mara';
+ if(t.includes('mercador')||t.includes('ivo'))return 'ivo';
+ for(const id of ['toren','elira','brann','sabela','liora','arven','yara','neris'])if(t.includes(id))return id;
+ return null;
+}
+function npcPortraitData(id){
+ if(!id||!NPC_APPEARANCES[id])return '';
+ const a=normalizeAppearance(NPC_APPEARANCES[id]),key=JSON.stringify(a);
+ const sprite=drawPlayer.cache&&drawPlayer.cache.get(key);
+ try{return sprite?sprite.toDataURL():'';}catch(err){return '';}
+}
+
 function drawNPCName(name,x,y,status){
  if(!gameSettings.showLabels)return;
  const color=status==='complete'?'#b6e68a':status==='active'?'#ffd06b':'#f5edc5';
@@ -1383,7 +1460,7 @@ function drawPlayer(x,y,rawAppearance,motion){
  if(!drawPlayer.poseCache)drawPlayer.poseCache=new Map();
  const poseKey=cacheKey+'|'+dir+'|'+(moving?'walk'+step:'idle');let pose=drawPlayer.poseCache.get(poseKey);
  if(!pose){pose=buildAnimatedPlayerFrame(sprite,a,dir,step,moving);drawPlayer.poseCache.set(poseKey,pose);if(drawPlayer.poseCache.size>220)drawPlayer.poseCache.delete(drawPlayer.poseCache.keys().next().value);}
- const height=56,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.35);
+ const height=56,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
  const dx=Math.round(x-width/2),dy=Math.round(y-height+bob);ctx.save();ctx.imageSmoothingEnabled=false;
  if(dir==='left'){ctx.translate(dx+width,dy);ctx.scale(-1,1);ctx.drawImage(pose,0,0,width,height);}
  else ctx.drawImage(pose,dx,dy,width,height);
@@ -1506,19 +1583,19 @@ function drawMap(){
 
   // Creatures, NPCs and player remain on their original interaction coordinates.
   for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);
-  drawHuman(230,333,true);drawHuman(350,333,false);
-  drawNamedNPC(747,315,'#8a5b43','#d3a17b','#a7a9a3','hammer');
-  drawNamedNPC(455,456,'#456f4e','#e0b58d','#c5a45a','basket');
-  drawNamedNPC(248,452,'#3e6570','#b97b56','#4a4034','rod');
-  drawNamedNPC(565,315,'#8b573d','#dcad83','#75442f','basket');
+  drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
+  drawNPCActor('toren',747,315,'hammer');
+  drawNPCActor('elira',455,456,'basket');
+  drawNPCActor('brann',248,452,'rod');
+  drawNPCActor('sabela',565,315,'tray');
   if(gameSettings.showLabels){
     text('BRUMAFORTE',18,166,12,'#eaf2c8');
     text('MERCADO',136,286,8,'#f5f4cc','center');text('ESTALAGEM',362,285,8,'#f5f4cc','center');text('FERREIRO',758,285,8,'#f5f4cc','center');
-    text('MARA',230,311,9,'#f7f0be','center');text('IVO · MERCADO',350,311,7,'#f7f0be','center');
-    drawNPCName('TOREN',747,279,g.sideQuests.toren);
-    drawNPCName('ELIRA',455,422,g.sideQuests.elira);
-    drawNPCName('BRANN',248,418,g.sideQuests.brann);
-    text('SABELA',565,279,8,'#fff0c5','center');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
+    text('MARA',230,269,9,'#f7f0be','center');text('IVO · MERCADO',350,269,7,'#f7f0be','center');
+    drawNPCName('TOREN',747,252,g.sideQuests.toren);
+    drawNPCName('ELIRA',455,393,g.sideQuests.elira);
+    drawNPCName('BRANN',248,389,g.sideQuests.brann);
+    text('SABELA',565,252,8,'#fff0c5','center');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
     text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
