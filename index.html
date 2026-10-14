@@ -357,6 +357,30 @@ body:has(#homeView.active) .menu-hotspots{display:none!important}
 @media(max-width:850px){.preview-stage{min-height:255px}#characterPreview{width:160px!important;height:240px!important}}
 @media(max-width:540px){#characterPreview{width:124px!important;height:186px!important}}
 
+
+/* Character creator categories inspired by readable RPG character editors */
+.creator-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;margin-bottom:12px;border:1px solid #51412f;background:linear-gradient(90deg,#272019,#15161b)}
+.creator-tools-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.creator-tools-copy strong{font:700 10px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#e5c47f}
+.creator-tools-copy small{font:10px/1.5 Arial,sans-serif;color:#a9a090}
+.creator-tools .slot-button{flex:0 0 auto}
+.creator-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:0 0 18px;padding:5px;border:1px solid #403328;background:#0c0e13}
+.creator-tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:0;min-height:58px;padding:8px 4px;border:1px solid transparent;background:#12141a;color:#a8a091;font:700 10px Arial,sans-serif;letter-spacing:.04em;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.creator-tab span{font-size:17px;color:#c1a06b;line-height:1}
+.creator-tab:hover{border-color:#6a5336;color:#ead5ad}
+.creator-tab.active{border-color:#c49a58;background:linear-gradient(180deg,#3a2a1b,#211b18);color:#f3dca9;box-shadow:inset 0 0 0 1px #d7ae6440}
+.form-section[hidden]{display:none!important}
+.creator-card .form-section{animation:creatorFade .16s ease-out}
+@keyframes creatorFade{from{opacity:.4;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
+#randomizeCharacter{font-size:9px;letter-spacing:.04em;white-space:nowrap;padding:10px}
+@media(max-width:540px){
+ .creator-tools{align-items:flex-start;flex-direction:column}
+ .creator-tools .slot-button{width:100%}
+ .creator-tabs{gap:3px;padding:3px;margin-bottom:13px}
+ .creator-tab{font-size:8px;min-height:53px;letter-spacing:0}
+ .creator-tab span{font-size:15px}
+}
+
 </style>
 </head>
 <body>
@@ -471,6 +495,7 @@ let currentView='home';
 let creatorSlot=1;
 let creatorMode='new';
 let creatorDraft=defaultCharacter();
+let creatorCategory='identity';
 const TEXT={
  'pt-BR':{
   subtitle:'RPG medieval · escolhas e consequências',status:'Projeto independente',eyebrow:'UMA AVENTURA EM UM REINO ESQUECIDO',
@@ -484,6 +509,7 @@ const TEXT={
   editTitle:'Personalize seu personagem',editSubtitle:'Mude a aparência sem apagar o progresso desta jornada.',name:'Nome do personagem',namePlaceholder:'Digite um nome',nameHelp:'Máximo de 16 caracteres.',gender:'Aparência',male:'Masculino',female:'Feminino',maleDesc:'Corte curto e silhueta clássica.',femaleDesc:'Cabelo longo e silhueta clássica.',clothes:'Roupas',cloak:'Manto',hair:'Cor do cabelo',skin:'Tom de pele',none:'Sem manto',red:'Vinho',green:'Floresta',blue:'Azul',ivory:'Marfim',brown:'Castanho',black:'Preto',blond:'Loiro',silver:'Prateado',light:'Claro',tan:'Bronzeado',dark:'Escuro',
   traveler:'Viajante',travelerDesc:'Couro e tecido resistentes',guard:'Guarda',guardDesc:'Couro reforçado e aço',mage:'Místico',mageDesc:'Manto arcano',noble:'Nobre',nobleDesc:'Roupa fina e detalhes dourados',ranger:'Batedor',rangerDesc:'Couro, folhas e viagem',royal:'Real',royalDesc:'Manto nobre e detalhes de ouro',
   faceShape:'Formato do rosto',ovalFace:'Oval',angularFace:'Angular',roundFace:'Arredondado',eyeColor:'Cor dos olhos',eyeBrown:'Castanhos',eyeBlue:'Azuis',eyeGreen:'Verdes',eyeGray:'Cinzentos',facialHair:'Barba e bigode',noFacialHair:'Sem barba',stubble:'Barba por fazer',shortBeard:'Barba curta',mustache:'Bigode',goatee:'Cavanhaque',
+  tabProfile:'Identidade',tabFace:'Rosto',tabHair:'Cabelo',tabOutfit:'Traje',tabGear:'Equipamento',randomize:'Aleatorizar aparência',randomizeHelp:'Gera uma combinação nova sem alterar o nome.',
   preview:'Prévia do personagem',newSave:'Criar jornada',saveAppearance:'Salvar aparência',cancel:'Cancelar',nameRequired:'Escolha um nome para seu personagem.',slotTaken:'Este espaço já tem uma jornada. Exclua-a antes de criar outra.',
   languageEyebrow:'PREFERÊNCIAS',languageTitle:'Idioma',languageSubtitle:'Escolha o idioma dos menus e da criação de personagem.',portuguese:'Português (Brasil)',english:'English',selected:'Selecionado',choose:'Usar este idioma',languageNote:'A história e os diálogos da versão jogável ainda estão em português; a tradução completa do jogo será feita numa etapa posterior.',
   hairStyle:'Estilo de cabelo',shortHair:'Curto',mediumHair:'Médio',longHair:'Longo',ponytail:'Rabo de cavalo',braids:'Tranças',mohawk:'Moicano',headwear:'Cabeça',noneHeadwear:'Nenhum',hood:'Capuz',crown:'Coroa',wizardHat:'Chapéu de mago',helmet:'Elmo',circlet:'Tiara',accessory:'Acessório',noneAccessory:'Nenhum',glasses:'Óculos',eyepatch:'Tapa-olho',earrings:'Brincos',necklace:'Colar',weapon:'Arma',sword:'Espada',staff:'Cajado',bow:'Arco',noneWeapon:'Desarmado',outfitColor:'Cor da roupa',defaultColor:'Original',crimson:'Carmesim',emerald:'Esmeralda',sapphire:'Safira',violet:'Violeta',charcoal:'Carvão',redHair:'Ruivo',blueHair:'Azul',purpleHair:'Roxo',pinkHair:'Rosa',warm:'Médio quente',deep:'Escuro',olive:'Oliva',pale:'Claro',footerLeft:'v0.1.0',footerRight:'REINOS EM RUÍNA · SALVAMENTOS LOCAIS',timeNow:'Atualizado agora',genderLabel:{masculino:'Masculino',feminino:'Feminino'},
@@ -501,6 +527,7 @@ const TEXT={
   editTitle:'Customize your character',editSubtitle:'Change appearance without erasing this journey’s progress.',name:'Character name',namePlaceholder:'Enter a name',nameHelp:'Maximum 16 characters.',gender:'Appearance',male:'Masculine',female:'Feminine',maleDesc:'Short hair and classic silhouette.',femaleDesc:'Long hair and classic silhouette.',clothes:'Clothing',cloak:'Cloak',hair:'Hair color',skin:'Skin tone',none:'No cloak',red:'Burgundy',green:'Forest',blue:'Blue',ivory:'Ivory',brown:'Brown',black:'Black',blond:'Blond',silver:'Silver',light:'Light',tan:'Tan',dark:'Dark',
   traveler:'Traveler',travelerDesc:'Hardwearing cloth and leather',guard:'Guard',guardDesc:'Reinforced leather and steel',mage:'Mystic',mageDesc:'Arcane robes',noble:'Noble',nobleDesc:'Fine clothes and gold trim',ranger:'Ranger',rangerDesc:'Leather, leaves, and travel',royal:'Royal',royalDesc:'Noble cloak and gold trim',
   faceShape:'Face shape',ovalFace:'Oval',angularFace:'Angular',roundFace:'Round',eyeColor:'Eye color',eyeBrown:'Brown',eyeBlue:'Blue',eyeGreen:'Green',eyeGray:'Gray',facialHair:'Facial hair',noFacialHair:'Clean-shaven',stubble:'Stubble',shortBeard:'Short beard',mustache:'Mustache',goatee:'Goatee',
+  tabProfile:'Identity',tabFace:'Face',tabHair:'Hair',tabOutfit:'Outfit',tabGear:'Equipment',randomize:'Randomize appearance',randomizeHelp:'Create a new look without changing the name.',
   preview:'Character preview',newSave:'Create journey',saveAppearance:'Save appearance',cancel:'Cancel',nameRequired:'Please choose a character name.',slotTaken:'This slot already has a journey. Delete it before creating another.',
   languageEyebrow:'PREFERENCES',languageTitle:'Language',languageSubtitle:'Choose the language for menus and character creation.',portuguese:'Português (Brasil)',english:'English',selected:'Selected',choose:'Use this language',languageNote:'The playable chapter and dialogue are currently in Portuguese; full game localization will come in a later update.',
   hairStyle:'Hairstyle',shortHair:'Short',mediumHair:'Medium',longHair:'Long',ponytail:'Ponytail',braids:'Braids',mohawk:'Mohawk',headwear:'Headwear',noneHeadwear:'None',hood:'Hood',crown:'Crown',wizardHat:'Wizard hat',helmet:'Helmet',circlet:'Circlet',accessory:'Accessory',noneAccessory:'None',glasses:'Glasses',eyepatch:'Eyepatch',earrings:'Earrings',necklace:'Necklace',weapon:'Weapon',sword:'Sword',staff:'Staff',bow:'Bow',noneWeapon:'Unarmed',outfitColor:'Clothing color',defaultColor:'Original',crimson:'Crimson',emerald:'Emerald',sapphire:'Sapphire',violet:'Violet',charcoal:'Charcoal',redHair:'Red',blueHair:'Blue',purpleHair:'Purple',pinkHair:'Pink',warm:'Warm medium',deep:'Deep',olive:'Olive',pale:'Light',footerLeft:'v0.1.0',footerRight:'REALMS IN RUIN · LOCAL SAVES',timeNow:'Just updated',genderLabel:{masculino:'Masculine',feminino:'Feminine'},
@@ -603,7 +630,7 @@ function deleteSlot(slot){
  renderSlots();
 }
 function beginCreator(slot,mode){
- creatorSlot=slot;creatorMode=mode;
+ creatorSlot=slot;creatorMode=mode;creatorCategory='identity';
  const record=readSlot(slot);
  creatorDraft=mode==='edit'&&record&&record.character?Object.assign(defaultCharacter(),record.character):defaultCharacter();
  $('creatorTitle').textContent=t(mode==='edit'?'editTitle':'creatorTitle');
@@ -637,12 +664,48 @@ function beginCreator(slot,mode){
    '</div></div>'+
    '<div class="form-section two-selects">'+select('hairStyle','hairStyle','hairstyle',hairStyleItems)+select('hairColor','hair','hair',hairItems)+'</div>'+
    '<div class="form-section two-selects">'+select('headwear','headwear','headwear',headwearItems)+select('accessory','accessory','accessory',accessoryItems)+'</div>'+
-   '<div class="form-section two-selects">'+select('weapon','weapon','weapon',weaponItems)+select('skinTone','skin','skin',skinItems)+'</div>'+
-   '<div class="form-section two-selects">'+select('faceShape','faceShape','faceShape',faceShapeItems)+select('eyeColor','eyeColor','eyeColor',eyeColorItems)+select('facialHair','facialHair','facialHair',facialHairItems)+'</div>'+
+   '<div class="form-section">'+select('weapon','weapon','weapon',weaponItems)+'</div>'+
+   '<div class="form-section two-selects">'+select('faceShape','faceShape','faceShape',faceShapeItems)+select('skinTone','skin','skin',skinItems)+'</div>'+
+   '<div class="form-section two-selects">'+select('eyeColor','eyeColor','eyeColor',eyeColorItems)+select('facialHair','facialHair','facialHair',facialHairItems)+'</div>'+
    '<div class="form-section"><span class="form-label">'+esc(t('outfitColor'))+'</span><div class="color-grid">'+
    [['default','#4c5361'],['crimson','#87333a'],['emerald','#315c43'],['sapphire','#354e91'],['violet','#644488'],['charcoal','#41434a']].map(item=>'<button type="button" class="color-choice '+(char.outfitColor===item[0]?'active':'')+'" data-outfit-color="'+item[0]+'"><span class="color-dot" style="background:'+item[1]+'"></span>'+esc(t(item[0]==='default'?'defaultColor':item[0]))+'</button>').join('')+
    '</div></div>'+
    '<div class="creator-actions"><button type="button" class="slot-button" id="cancelCreator">'+esc(t('cancel'))+'</button><button type="button" class="slot-button primary" id="confirmCreator">'+esc(t(creatorMode==='edit'?'saveAppearance':'newSave'))+'</button></div>';
+  controls.insertAdjacentHTML('afterbegin',
+   '<div class="creator-tools"><div class="creator-tools-copy"><strong>'+esc(t('randomize'))+'</strong><small>'+esc(t('randomizeHelp'))+'</small></div><button type="button" class="slot-button" id="randomizeCharacter">✦ '+esc(t('randomize'))+'</button></div>'+
+   '<div class="creator-tabs" role="tablist" aria-label="Categorias do personagem">'+
+   [['identity','tabProfile','♙'],['face','tabFace','◉'],['hair','tabHair','✦'],['outfit','tabOutfit','♜'],['gear','tabGear','⚔']].map(([id,key,icon])=>'<button type="button" role="tab" aria-selected="'+(creatorCategory===id?'true':'false')+'" class="creator-tab '+(creatorCategory===id?'active':'')+'" data-creator-tab="'+id+'"><span>'+icon+'</span>'+esc(t(key))+'</button>').join('')+
+   '</div>');
+  const creatorSections=Array.from(controls.querySelectorAll(':scope > .form-section'));
+  const sectionCategories=['identity','identity','outfit','outfit','hair','gear','gear','face','face','outfit'];
+  creatorSections.forEach((section,index)=>{section.dataset.creatorCategory=sectionCategories[index]||'outfit';});
+  const applyCreatorTab=()=>{
+    controls.querySelectorAll('[data-creator-tab]').forEach(btn=>{
+      const active=btn.dataset.creatorTab===creatorCategory;
+      btn.classList.toggle('active',active);
+      btn.setAttribute('aria-selected',String(active));
+    });
+    creatorSections.forEach(section=>{section.hidden=section.dataset.creatorCategory!==creatorCategory;});
+  };
+  controls.querySelectorAll('[data-creator-tab]').forEach(btn=>btn.addEventListener('click',()=>{creatorCategory=btn.dataset.creatorTab;applyCreatorTab();}));
+  $('randomizeCharacter').addEventListener('click',()=>{
+    const pick=items=>items[Math.floor(Math.random()*items.length)];
+    creatorDraft.gender=pick(['masculino','feminino']);
+    creatorDraft.outfit=pick(Object.keys(OUTFITS));
+    creatorDraft.cloak=pick(['none','red','green','blue','ivory']);
+    creatorDraft.hair=pick(Object.keys(HAIR));
+    creatorDraft.skin=pick(['pale','light','tan','warm','olive','dark','deep']);
+    creatorDraft.hairstyle=pick(['short','medium','long','ponytail','braids','mohawk']);
+    creatorDraft.headwear=pick(['none','hood','crown','wizardHat','helmet','circlet']);
+    creatorDraft.accessory=pick(['none','glasses','eyepatch','earrings','necklace']);
+    creatorDraft.weapon=pick(['sword','staff','bow','none']);
+    creatorDraft.outfitColor=pick(['default','crimson','emerald','sapphire','violet','charcoal']);
+    creatorDraft.faceShape=pick(['oval','angular','round']);
+    creatorDraft.eyeColor=pick(['brown','blue','green','gray']);
+    creatorDraft.facialHair=pick(['none','stubble','shortBeard','mustache','goatee']);
+    renderCreator();
+  });
+  applyCreatorTab();
   const name=$('characterName');
   name.addEventListener('input',()=>{creatorDraft.name=name.value.slice(0,16)||t('empty');drawPreview();});
   controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;renderCreator();}));
