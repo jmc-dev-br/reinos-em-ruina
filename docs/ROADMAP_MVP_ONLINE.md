@@ -91,3 +91,18 @@ A versão atual continua sendo um jogo estático para um jogador. Clima é apena
 5. **Áudio final:** manter o áudio procedural como fallback e acrescentar trilhas e efeitos originais/licenciados quando houver um pipeline de assets.
 
 Esses sistemas só devem ser chamados de globais/multiplayer depois de implementar autenticação, APIs confiáveis, persistência PostgreSQL, transações, logs de auditoria e proteção contra abuso.
+
+
+## Vila de Brumaforte — NPCs, lojas e missões secundárias
+
+O mapa local agora inclui Toren (ferreiro), Elira (cuidadora do jardim), Brann (pescador) e Sabela (estalajadeira), além de Mara e Ivo. Os novos moradores têm sprites/cores próprias, rótulos e interações por proximidade com **E / Enter**.
+
+### Missões secundárias implementadas no cliente
+- **Ferro para as ferramentas:** entregar 3 minérios a Toren; recompensa de 18 cobres fictícios e 28 XP.
+- **Ervas para os feridos:** entregar 4 ervas a Elira; recompensa de 10 cobres, 22 XP e 1 poção.
+- **A pesca do dia:** entregar 3 peixes a Brann; recompensa de 15 cobres e 20 XP.
+- **Estalagem da Folha Dourada:** Sabela vende caldo que recupera até 20 pontos de vida por 4 cobres e oferece um diálogo com rumor sobre os carregamentos.
+
+Os estados das missões secundárias são incluídos em salvamentos novos e migram de forma segura em jornadas antigas. A ferraria oferece minério, ervas e peixe para que as missões possam ser concluídas sem depender apenas da sorte da coleta. Casas, caminhos, placas e colisões básicas foram adicionados ao mapa.
+
+Esses sistemas são locais ao navegador e ao save do jogador. Uma futura guilda com edifícios, mercado entre jogadores, eventos globais e reputação pública precisará de validação no servidor; estes novos NPCs não representam jogadores online.
