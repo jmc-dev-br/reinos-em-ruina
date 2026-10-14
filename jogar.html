@@ -261,7 +261,7 @@ let gameSettings=readGameSettings();
 function saveGameSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(gameSettings));}catch(err){}}
 function speedFactor(){return gameSettings.walkSpeed==='slow'?.8:gameSettings.walkSpeed==='fast'?1.35:1;}
 
-const visualFX={particles:[],floating:[],shakeTime:0,shakePower:0,weather:'clear',weatherUntil:Date.now()+45000,worldSeconds:0};
+const visualFX={particles:[],floating:[],shakeTime:0,shakePower:0,weather:'clear',weatherUntil:Date.now()+45000,worldSeconds:0,saveTick:0};
 function rand01(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
 function initializeParticles(){
  if(visualFX.particles.length)return;
@@ -279,24 +279,38 @@ function updateAmbient(dt){
  for(const item of visualFX.floating){item.life-=dt;item.y-=20*dt;}
  visualFX.floating=visualFX.floating.filter(item=>item.life>0);
  initializeParticles();
+ // Four real seconds equal one minute in the world. The clock belongs to the save, not the PC clock.
+ if(!g.worldClock)g.worldClock={minuteOfDay:480,totalMinutes:0};
+ const minutesAdvanced=dt/4;
+ g.worldClock.minuteOfDay=(g.worldClock.minuteOfDay+minutesAdvanced)%1440;
+ g.worldClock.totalMinutes=(g.worldClock.totalMinutes||0)+minutesAdvanced;
+ if(!g.weatherState)g.weatherState={kind:'clear',remaining:60};
  if(gameSettings.weatherMode==='auto'){
-  if(Date.now()>visualFX.weatherUntil){
-   const options=['clear','rain','leaves'];
-   const current=options.indexOf(visualFX.weather);
-   visualFX.weather=options[(current+1+Math.floor(Math.random()*2))%options.length];
-   visualFX.weatherUntil=Date.now()+90000+Math.random()*90000;
+  g.weatherState.remaining-=dt;
+  if(g.weatherState.remaining<=0){
+   const choices=['clear','rain','leaves','fog'].filter(kind=>kind!==g.weatherState.kind);
+   g.weatherState.kind=choices[Math.floor(Math.random()*choices.length)];
+   g.weatherState.remaining=35+Math.random()*155;
+   if(g.weatherState.kind==='rain')notify('O céu escurece: começou a chover em '+(g.region==='bosque'?'Bosque Velado':g.region==='lago'?'Lago Silencioso':'Brumaforte')+'.',2.5);
+   else if(g.weatherState.kind==='fog')notify('Uma névoa fria cobre a região. Os contornos ficam difíceis de ver.',2.5);
   }
- }else visualFX.weather=gameSettings.weatherMode;
+ }else{
+  g.weatherState.kind=gameSettings.weatherMode==='off'?'clear':gameSettings.weatherMode;
+ }
+ visualFX.weather=g.weatherState.kind;
  for(const p of visualFX.particles){
   if(visualFX.weather==='rain'){p.x+=p.drift*dt;p.y+=p.speed*1.55*dt;}
   else if(visualFX.weather==='leaves'){p.x+=(Math.sin(visualFX.worldSeconds*1.7+p.seed)*18+p.drift*.35)*dt;p.y+=p.speed*.28*dt;}
+  else if(visualFX.weather==='fog'){p.x+=p.drift*.22*dt;p.y+=Math.sin(visualFX.worldSeconds+p.seed)*.4*dt;}
   else {p.x+=p.drift*.12*dt;p.y+=p.speed*.04*dt;}
   if(p.y>H+4){p.y=-4;p.x=rand01(p.seed+visualFX.worldSeconds)*W;}
   if(p.x>W+5)p.x=-5;if(p.x<-5)p.x=W+4;
  }
+ visualFX.saveTick=(visualFX.saveTick||0)+dt;
+ if(visualFX.saveTick>18){visualFX.saveTick=0;persistProgress();}
 }
 function drawEnvironmentOverlay(){
- const hour=new Date().getHours(),minute=new Date().getMinutes();
+ const minutes=Math.floor(g.worldClock?.minuteOfDay??480),hour=Math.floor(minutes/60),minute=minutes%60;
  const night=hour>=20||hour<6,twilight=(hour>=18&&hour<20)||(hour>=6&&hour<8);
  if(gameSettings.dynamicLighting){
   if(night){ctx.fillStyle='rgba(11,20,48,.43)';ctx.fillRect(0,0,W,H);}
@@ -320,6 +334,9 @@ function drawEnvironmentOverlay(){
   ctx.strokeStyle='rgba(194,217,235,.53)';ctx.lineWidth=1;
   for(const p of visualFX.particles){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-3,p.y+7);ctx.stroke();}
   if(g.scene==='map'){ctx.fillStyle='rgba(31,51,66,.08)';ctx.fillRect(0,0,W,H);}
+ }else if(gameSettings.effectsEnabled&&visualFX.weather==='fog'){
+  ctx.fillStyle='rgba(190,205,197,.16)';ctx.fillRect(0,0,W,H);
+  for(let i=0;i<5;i++){const y=((visualFX.worldSeconds*13+i*119)%H);const grad=ctx.createLinearGradient(0,y-22,0,y+22);grad.addColorStop(0,'rgba(180,196,194,0)');grad.addColorStop(.5,'rgba(180,196,194,.16)');grad.addColorStop(1,'rgba(180,196,194,0)');ctx.fillStyle=grad;ctx.fillRect(0,y-22,W,44);}
  }else if(gameSettings.effectsEnabled&&visualFX.weather==='leaves'){
   for(const p of visualFX.particles){
    rect(p.x,p.y,p.size+2,p.size, p.seed%3===0?'#d5a45d':p.seed%3===1?'#a86e43':'#7d9c55');
@@ -341,10 +358,11 @@ function drawEnvironmentOverlay(){
  ctx.textAlign='left';ctx.textBaseline='alphabetic';
  if(gameSettings.dynamicLighting){
   const label=night?'NOITE':twilight?'CREPÚSCULO':'DIA';
-  const weather=visualFX.weather==='rain'?'CHUVA':visualFX.weather==='leaves'?'VENTO':'TEMPO LIMPO';
+  const weather={rain:'CHUVA',leaves:'VENTO',fog:'NÉVOA',clear:'TEMPO LIMPO'}[g.weatherState?.kind||visualFX.weather]||'TEMPO LIMPO';
   rect(W-147,140,138,24,'rgba(12,17,14,.72)');
   text(label+' · '+String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0'),W-140,150,8,'#e9e0bd');
   text(weather,W-140,160,7,'#b8cda5');
+  text(gameSettings.weatherMode==='auto'?'MUDA EM '+Math.max(0,Math.ceil(g.weatherState?.remaining||0))+'s':'CLIMA FIXO',W-140,170,6,'#9eb28f');
  }
 }
 function renderWithEffects(){
@@ -862,9 +880,10 @@ function dailyRecord(){return readLocalRecord(slotLocalKey('reinos_ruina_daily')
 function openDailyReward(){
  const record=dailyRecord(),today=localDayKey(),available=record.day!==today;
  const nextStreak=dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
+ const dailyDrop=nextStreak%7===0?'poção + cobres':nextStreak%5===0?'minério de ferro + cobres':nextStreak%3===0?'ervas + cobres':'cobres';
  const copper=8+Math.min(6,Math.max(0,nextStreak-1))*3,bonus=nextStreak%7===0;
  const body='<div class="feature-hero"><div class="feature-icon">🎁</div><div><strong>'+(available?'Presente de Brumaforte':'Presente já resgatado')+'</strong><small>'+(available?'Entre hoje para receber cobre fictício e manter sua sequência.':'Você já recebeu a recompensa de hoje. Volte amanhã para continuar a sequência.')+'</small></div></div>'+
- '<div class="feature-grid"><div class="feature-card"><strong>◈ '+copper+' cobres</strong><p>Recompensa desta entrada. O valor aumenta com a sequência, até o sétimo dia.</p></div><div class="feature-card"><strong>🔥 Dia '+nextStreak+' da sequência</strong><p>'+(bonus?'Bônus extra: uma poção de ervas.':'No 7º dia seguido, você também recebe uma poção.')+'</p></div></div>'+
+ '<div class="feature-grid"><div class="feature-card"><strong>◈ '+copper+' cobres</strong><p>Recompensa desta entrada. O valor aumenta com a sequência, até o sétimo dia.</p></div><div class="feature-card"><strong>🔥 Dia '+nextStreak+' da sequência</strong><p>Próximo prêmio: '+dailyDrop+'. '+(bonus?'Hoje inclui uma poção adicional.':'A cada 7º dia, ganhe uma poção adicional.')+'</p></div></div>'+
  '<div class="menu-note">A sequência e o prêmio ficam salvos neste navegador e neste espaço de salvamento. Não há prêmio sincronizado entre jogadores.</div>';
  showModal('daily','Recompensa diária',body,[{label:available?'Resgatar recompensa':'Já resgatada hoje',action:()=>claimDailyReward(),primary:available},{label:'Fechar',action:()=>closeModal()}]);
  const claim=$('modalFoot').querySelector('button');if(claim&&!available)claim.disabled=true;
@@ -873,11 +892,14 @@ function claimDailyReward(){
  const record=dailyRecord(),today=localDayKey();
  if(record.day===today){closeModal();notify('Sua recompensa diária já foi resgatada.',2.5);return;}
  const streak=dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
- const copper=8+Math.min(6,Math.max(0,streak-1))*3;g.coins+=copper;if(streak%7===0)g.potions++;
+ const copper=8+Math.min(6,Math.max(0,streak-1))*3;g.coins+=copper;
  writeLocalRecord(slotLocalKey('reinos_ruina_daily'),{day:today,streak,claims:(record.claims||0)+1});
+ const dailyData=professionsData();
+ if(streak%7===0)g.potions++;else if(streak%5===0)dailyData.materials.ore++;else if(streak%3===0)dailyData.materials.herb++;
+ if(streak%7!==0&&(streak%5===0||streak%3===0))saveProfessions(dailyData);
  spawnCombatText('+'+copper+' COBRE',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-32:g.actionPlayer.y-48,'#9fe28f');
  playSfx('coin');closeModal();updateUI();persistProgress();
- notify('Recompensa diária: +'+copper+' cobres fictícios'+(streak%7===0?' e +1 poção':'')+'. Sequência de '+streak+' dia(s).',4);
+ notify('Recompensa diária: +'+copper+' cobres fictícios'+(streak%7===0?' e +1 poção':streak%5===0?' e +1 minério':streak%3===0?' e +1 erva':'')+'. Sequência de '+streak+' dia(s).',4);
 }
 function defaultProfessions(){return {mining:{level:1,xp:0,total:0,nextAt:0},herbalism:{level:1,xp:0,total:0,nextAt:0},fishing:{level:1,xp:0,total:0,nextAt:0},materials:{ore:0,herb:0,fish:0},crafted:0};}
 function professionsData(){
