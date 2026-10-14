@@ -309,52 +309,82 @@ function beginCreator(slot,mode){
  renderCreator();
  showView('creator');
 }
-function renderCreator(){
- const c=creatorDraft;
- const controls=$('creatorControls');
- controls.innerHTML=
-  '<div class="form-section"><label class="form-label" for="characterName">'+esc(t('name'))+'</label><input class="name-input" id="characterName" maxlength="16" autocomplete="off" value="'+esc(c.name)+'" placeholder="'+esc(t('namePlaceholder'))+'"><p class="form-help">'+esc(t('nameHelp'))+'</p></div>'+
-  '<div class="form-section"><span class="form-label">'+esc(t('gender'))+'</span><div class="choice-row">'+
-  '<button type="button" class="choice '+(c.gender==='masculino'?'active':'')+'" data-gender="masculino"><span class="choice-emoji">♟</span><span><strong>'+esc(t('male'))+'</strong><small>'+esc(t('maleDesc'))+'</small></span></button>'+
-  '<button type="button" class="choice '+(c.gender==='feminino'?'active':'')+'" data-gender="feminino"><span class="choice-emoji">♙</span><span><strong>'+esc(t('female'))+'</strong><small>'+esc(t('femaleDesc'))+'</small></span></button></div></div>'+
-  '<div class="form-section"><span class="form-label">'+esc(t('clothes'))+'</span><div class="outfit-grid">'+
-  Object.keys(OUTFITS).map(key=>'<button type="button" class="outfit '+(c.outfit===key?'active':'')+'" data-outfit="'+key+'"><span class="outfit-swatch" style="background:'+OUTFITS[key].coat+';box-shadow:inset 0 -8px '+OUTFITS[key].trim+'"></span><span><strong>'+esc(t(OUTFITS[key].label))+'</strong><small>'+esc(t(OUTFITS[key].desc))+'</small></span></button>').join('')+
-  '</div></div>'+
-  '<div class="form-section"><span class="form-label">'+esc(t('cloak'))+'</span><div class="color-grid">'+
-  [['none','#28272a','none'],['red',CLOAKS.red,'red'],['green',CLOAKS.green,'green'],['blue',CLOAKS.blue,'blue'],['ivory',CLOAKS.ivory,'ivory']].map(item=>'<button type="button" class="color-choice '+(c.cloak===item[0]?'active':'')+'" data-cloak="'+item[0]+'"><span class="color-dot" style="background:'+item[1]+'"></span>'+esc(t(item[2]))+'</button>').join('')+
-  '</div></div>'+
-  '<div class="form-section two-selects"><div><label class="form-label" for="hairColor">'+esc(t('hair'))+'</label><select class="select-input" id="hairColor">'+[['brown','brown'],['black','black'],['blond','blond'],['silver','silver']].map(item=>'<option value="'+item[0]+'" '+(c.hair===item[0]?'selected':'')+'>'+esc(t(item[1]))+'</option>').join('')+'</select></div><div><label class="form-label" for="skinTone">'+esc(t('skin'))+'</label><select class="select-input" id="skinTone">'+[['light','light'],['tan','tan'],['dark','dark']].map(item=>'<option value="'+item[0]+'" '+(c.skin===item[0]?'selected':'')+'>'+esc(t(item[1]))+'</option>').join('')+'</select></div></div>'+
-  '<div class="creator-actions"><button type="button" class="slot-button" id="cancelCreator">'+esc(t('cancel'))+'</button><button type="button" class="slot-button primary" id="confirmCreator">'+esc(t(creatorMode==='edit'?'saveAppearance':'newSave'))+'</button></div>';
- const name=$('characterName');
- name.addEventListener('input',()=>{creatorDraft.name=name.value.slice(0,16)||t('empty');drawPreview();});
- controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;renderCreator();}));
- controls.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfit=b.dataset.outfit;renderCreator();}));
- controls.querySelectorAll('[data-cloak]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.cloak=b.dataset.cloak;renderCreator();}));
- $('hairColor').addEventListener('change',e=>{creatorDraft.hair=e.target.value;drawPreview();});
- $('skinTone').addEventListener('change',e=>{creatorDraft.skin=e.target.value;drawPreview();});
- $('cancelCreator').addEventListener('click',()=>{if(creatorMode==='edit')showView('slots');else showView('slots');renderSlots();});
- $('confirmCreator').addEventListener('click',confirmCreator);
- drawPreview();
-}
-function drawPreview(){
- const canvas=$('characterPreview');if(!canvas)return;
- const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;
- const char=creatorDraft;const outfit=OUTFITS[char.outfit]||OUTFITS.traveler;const cloak=CLOAKS[char.cloak];const hair=HAIR[char.hair]||HAIR.brown;const skin=SKIN[char.skin]||SKIN.light;
- const px=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h)};
- ctx.fillStyle='#0008';ctx.fillRect(55,215,96,5);ctx.fillStyle='#d0ae6d22';ctx.fillRect(25,229,155,1);
- if(cloak){px(58,112,22,69,cloak);px(54,129,8,39,cloak);px(76,164,18,15,cloak);}
- px(72,164,19,35,'#40372c');px(111,164,19,35,'#40372c');
- px(68,190,23,7,'#211c19');px(108,190,23,7,'#211c19');
- px(75,111,52,55,outfit.coat);px(68,113,10,42,outfit.trim);px(124,113,9,42,outfit.trim);
- px(75,145,52,7,outfit.trim);px(88,147,25,6,'#292724');px(98,146,5,7,'#dec17e');
- px(78,95,45,23,skin);px(80,82,41,31,skin);px(74,78,49,14,hair);
- if(char.gender==='feminino'){px(73,86,8,38,hair);px(116,86,8,38,hair);px(79,72,43,9,hair);px(78,89,10,12,skin);px(113,89,10,12,skin);}
- else{px(81,72,38,11,hair);px(77,78,8,14,hair);px(116,78,8,13,hair);}
- px(88,94,4,4,'#2a2624');px(109,94,4,4,'#2a2624');px(95,105,9,2,'#8d4f3f');
- px(67,113,12,20,outfit.trim);px(124,113,12,20,outfit.trim);
- px(78,128,44,3,'#ffffff19');
- $('previewName').textContent=char.name||t('empty');$('previewCaption').textContent=t('preview');
-}
+ function renderCreator(){
+  const char=creatorDraft,controls=$('creatorControls');
+  const opts=(items,value)=>items.map(([key,labelKey])=>'<option value="'+key+'" '+(value===key?'selected':'')+'>'+esc(t(labelKey))+'</option>').join('');
+  const select=(id,labelKey,key,items)=>'<div><label class="form-label" for="'+id+'">'+esc(t(labelKey))+'</label><select class="select-input" id="'+id+'">'+opts(items,char[key])+'</select></div>';
+  const hairItems=[['brown','brown'],['black','black'],['blond','blond'],['silver','silver'],['red','redHair'],['blue','blueHair'],['purple','purpleHair'],['pink','pinkHair']];
+  const skinItems=[['pale','pale'],['light','light'],['tan','tan'],['warm','warm'],['olive','olive'],['dark','dark'],['deep','deep']];
+  const hairStyleItems=[['short','shortHair'],['medium','mediumHair'],['long','longHair'],['ponytail','ponytail'],['braids','braids'],['mohawk','mohawk']];
+  const headwearItems=[['none','noneHeadwear'],['hood','hood'],['crown','crown'],['wizardHat','wizardHat'],['helmet','helmet'],['circlet','circlet']];
+  const accessoryItems=[['none','noneAccessory'],['glasses','glasses'],['eyepatch','eyepatch'],['earrings','earrings'],['necklace','necklace']];
+  const weaponItems=[['sword','sword'],['staff','staff'],['bow','bow'],['none','noneWeapon']];
+  controls.innerHTML=
+   '<div class="form-section"><label class="form-label" for="characterName">'+esc(t('name'))+'</label><input class="name-input" id="characterName" maxlength="16" autocomplete="off" value="'+esc(char.name)+'" placeholder="'+esc(t('namePlaceholder'))+'"><p class="form-help">'+esc(t('nameHelp'))+'</p></div>'+
+   '<div class="form-section"><span class="form-label">'+esc(t('gender'))+'</span><div class="choice-row">'+
+   '<button type="button" class="choice '+(char.gender==='masculino'?'active':'')+'" data-gender="masculino"><span class="choice-emoji">♟</span><span><strong>'+esc(t('male'))+'</strong><small>'+esc(t('maleDesc'))+'</small></span></button>'+
+   '<button type="button" class="choice '+(char.gender==='feminino'?'active':'')+'" data-gender="feminino"><span class="choice-emoji">♙</span><span><strong>'+esc(t('female'))+'</strong><small>'+esc(t('femaleDesc'))+'</small></span></button></div></div>'+
+   '<div class="form-section"><span class="form-label">'+esc(t('clothes'))+'</span><div class="outfit-grid">'+
+   Object.keys(OUTFITS).map(key=>'<button type="button" class="outfit '+(char.outfit===key?'active':'')+'" data-outfit="'+key+'"><span class="outfit-swatch" style="background:'+OUTFITS[key].coat+';box-shadow:inset 0 -8px '+OUTFITS[key].trim+'"></span><span><strong>'+esc(t(OUTFITS[key].label))+'</strong><small>'+esc(t(OUTFITS[key].desc))+'</small></span></button>').join('')+
+   '</div></div>'+
+   '<div class="form-section"><span class="form-label">'+esc(t('cloak'))+'</span><div class="color-grid">'+
+   [['none','#28272a','none'],['red',CLOAKS.red,'red'],['green',CLOAKS.green,'green'],['blue',CLOAKS.blue,'blue'],['ivory',CLOAKS.ivory,'ivory']].map(item=>'<button type="button" class="color-choice '+(char.cloak===item[0]?'active':'')+'" data-cloak="'+item[0]+'"><span class="color-dot" style="background:'+item[1]+'"></span>'+esc(t(item[2]))+'</button>').join('')+
+   '</div></div>'+
+   '<div class="form-section two-selects">'+select('hairStyle','hairStyle','hairstyle',hairStyleItems)+select('hairColor','hair','hair',hairItems)+'</div>'+
+   '<div class="form-section two-selects">'+select('headwear','headwear','headwear',headwearItems)+select('accessory','accessory','accessory',accessoryItems)+'</div>'+
+   '<div class="form-section two-selects">'+select('weapon','weapon','weapon',weaponItems)+select('skinTone','skin','skin',skinItems)+'</div>'+
+   '<div class="form-section"><span class="form-label">'+esc(t('outfitColor'))+'</span><div class="color-grid">'+
+   [['default','#4c5361'],['crimson','#87333a'],['emerald','#315c43'],['sapphire','#354e91'],['violet','#644488'],['charcoal','#41434a']].map(item=>'<button type="button" class="color-choice '+(char.outfitColor===item[0]?'active':'')+'" data-outfit-color="'+item[0]+'"><span class="color-dot" style="background:'+item[1]+'"></span>'+esc(t(item[0]==='default'?'defaultColor':item[0]))+'</button>').join('')+
+   '</div></div>'+
+   '<div class="creator-actions"><button type="button" class="slot-button" id="cancelCreator">'+esc(t('cancel'))+'</button><button type="button" class="slot-button primary" id="confirmCreator">'+esc(t(creatorMode==='edit'?'saveAppearance':'newSave'))+'</button></div>';
+  const name=$('characterName');
+  name.addEventListener('input',()=>{creatorDraft.name=name.value.slice(0,16)||t('empty');drawPreview();});
+  controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;renderCreator();}));
+  controls.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfit=b.dataset.outfit;renderCreator();}));
+  controls.querySelectorAll('[data-cloak]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.cloak=b.dataset.cloak;renderCreator();}));
+  controls.querySelectorAll('[data-outfit-color]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfitColor=b.dataset.outfitColor;renderCreator();}));
+  [['hairStyle','hairstyle'],['hairColor','hair'],['headwear','headwear'],['accessory','accessory'],['weapon','weapon'],['skinTone','skin']].forEach(([id,key])=>$(id).addEventListener('change',e=>{creatorDraft[key]=e.target.value;drawPreview();}));
+  $('cancelCreator').addEventListener('click',()=>{renderSlots();showView('slots');});
+  $('confirmCreator').addEventListener('click',confirmCreator);
+  drawPreview();
+ }
+ function drawPreview(){
+  const canvas=$('characterPreview');if(!canvas)return;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;
+  const char=creatorDraft,o=OUTFITS[char.outfit]||OUTFITS.traveler;
+  const outfitPalette={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+  const coat=outfitPalette[char.outfitColor]||o.coat,cloak=CLOAKS[char.cloak],hair=HAIR[char.hair]||HAIR.brown;
+  const skin=Object.assign({},SKIN,SKIN_EXTRA)[char.skin]||SKIN.light;
+  const px=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
+  ctx.fillStyle='#0008';ctx.fillRect(52,216,102,5);ctx.fillStyle='#d0ae6d22';ctx.fillRect(25,229,155,1);
+  // cloak and legs
+  if(cloak){px(57,105,24,73,cloak);px(51,124,9,44,cloak);px(80,162,20,16,cloak);}
+  px(72,163,20,39,'#40372c');px(110,163,20,39,'#40372c');px(68,196,25,7,'#211c19');px(107,196,25,7,'#211c19');
+  // tunic, belt, shoulders
+  px(72,110,58,58,coat);px(65,113,10,43,o.trim);px(128,113,8,43,o.trim);px(72,149,58,7,o.trim);px(90,151,24,6,'#292724');px(100,150,5,8,'#dec17e');px(77,127,48,3,'#ffffff19');
+  // face
+  px(92,99,21,20,skin);px(80,82,45,34,skin);
+  if(char.hairstyle==='short'){px(75,75,54,14,hair);px(78,85,7,10,hair);px(119,84,7,10,hair);}
+  if(char.hairstyle==='medium'){px(75,73,54,15,hair);px(74,83,10,27,hair);px(120,83,10,27,hair);}
+  if(char.hairstyle==='long'){px(74,74,56,14,hair);px(73,83,11,52,hair);px(121,83,10,52,hair);px(74,130,9,8,hair);px(121,129,10,9,hair);}
+  if(char.hairstyle==='ponytail'){px(75,74,54,14,hair);px(120,84,12,9,hair);px(129,90,8,26,hair);px(126,113,9,7,hair);}
+  if(char.hairstyle==='braids'){px(75,74,54,14,hair);px(74,84,8,26,hair);px(121,83,9,27,hair);px(73,107,7,6,hair);px(122,106,8,6,hair);px(74,113,7,7,hair);px(123,112,8,7,hair);px(75,120,7,5,hair);px(124,119,7,5,hair);}
+  if(char.hairstyle==='mohawk'){px(78,80,48,8,hair);px(92,61,18,28,hair);px(95,56,12,8,hair);px(98,51,6,7,hair);}
+  px(88,95,5,4,'#2a2624');px(110,95,5,4,'#2a2624');px(99,107,10,2,'#8d4f3f');
+  if(char.headwear==='hood'){px(70,78,64,13,cloak||'#3a3a43');px(71,85,10,32,cloak||'#3a3a43');px(123,85,10,32,cloak||'#3a3a43');}
+  if(char.headwear==='helmet'){px(75,73,54,19,'#879097');px(79,72,47,5,'#c0c4c2');px(81,87,43,4,'#363b43');px(97,85,8,17,'#b0b4ae');}
+  if(char.headwear==='crown'){px(78,68,48,5,'#e0bd5c');px(80,59,8,10,'#e0bd5c');px(96,53,9,16,'#e0bd5c');px(114,59,8,10,'#e0bd5c');px(84,70,8,3,'#a53535');px(111,70,8,3,'#416aaf');}
+  if(char.headwear==='circlet'){px(77,76,50,4,'#dfbc64');px(98,72,9,6,'#e0c46c');px(100,73,5,3,'#7db4ca');}
+  if(char.headwear==='wizardHat'){px(76,75,52,7,'#453264');px(83,70,39,6,'#594184');px(88,63,27,7,'#594184');px(94,54,15,10,'#594184');px(100,47,5,9,'#594184');px(95,76,12,3,'#e5c36d');}
+  if(char.accessory==='glasses'){ctx.strokeStyle='#d7b96d';ctx.lineWidth=3;ctx.strokeRect(84,92,15,11);ctx.strokeRect(105,92,15,11);ctx.beginPath();ctx.moveTo(99,97);ctx.lineTo(105,97);ctx.stroke();}
+  if(char.accessory==='eyepatch'){px(105,92,15,10,'#241c1a');px(109,91,3,12,'#ddc28a');}
+  if(char.accessory==='earrings'){px(76,101,4,5,'#e9c66a');px(124,101,4,5,'#e9c66a');px(77,106,3,4,'#f5dba0');px(125,106,3,4,'#f5dba0');}
+  if(char.accessory==='necklace'){px(86,119,30,3,'#e3c26f');px(99,120,6,9,'#e6bf6e');px(101,122,2,3,'#a23e3e');}
+  if(char.weapon==='sword'){px(148,128,5,54,'#b7c3c8');px(144,172,13,5,'#e2bf70');px(146,178,8,10,'#6b442a');px(144,186,12,4,'#d4b371');}
+  if(char.weapon==='staff'){px(151,102,5,95,'#765236');px(146,97,15,7,'#b79a62');px(149,88,9,10,'#67a1bf');}
+  if(char.weapon==='bow'){ctx.strokeStyle='#a87542';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(157,106);ctx.quadraticCurveTo(178,143,157,190);ctx.stroke();ctx.strokeStyle='#dacaa4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(157,106);ctx.lineTo(157,190);ctx.stroke();}
+  $('previewName').textContent=char.name||t('empty');$('previewCaption').textContent=t('preview');
+ }
 function confirmCreator(){
  const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
  if(!name){window.alert(t('nameRequired'));input.focus();return;}
