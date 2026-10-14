@@ -82,6 +82,7 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 .story-quote{padding:13px;border-left:3px solid #b88947;background:#b8894710;color:#f0d7a7!important}
 @media(max-width:850px){.hero{display:flex}.hero-art{display:none}.stage{align-items:center}.story-layout{grid-template-columns:1fr}.story-card.wide{grid-column:auto}}
 @media(max-width:540px){.topbar{min-height:58px;padding:0 12px}.stage{padding:25px 14px 31px}.hero-copy{padding:24px 20px 22px;width:min(100%,430px)}h1{font-size:clamp(33px,10vw,48px)}.hero-copy .eyebrow{font-size:8px;letter-spacing:.09em}.lede{font-size:12px}.action{min-height:46px}.page-head{align-items:flex-start;padding:14px;flex-direction:column}.page-head .back-btn{align-self:flex-start}.story-facts{grid-template-columns:1fr}.slot{grid-template-columns:57px 1fr}.slot-actions{grid-template-columns:1fr 1fr}.creator-layout{grid-template-columns:1fr}}
+.exit-card{max-width:600px;margin:0 auto;padding:35px 30px;text-align:center;background:#0a0d14ed;border:4px solid #17130f;outline:2px solid #9c7843;box-shadow:6px 6px 0 #05060a}.exit-card .eyebrow{justify-content:center}.exit-card .eyebrow:before{display:none}.exit-card p{color:#d0c7b8;font:12px/1.8 "Courier New",Consolas,monospace;margin:15px auto 22px}.exit-card .slot-button{display:inline-flex;min-width:180px;justify-content:center}
 </style>
 </head>
 <body>
@@ -111,7 +112,9 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
     <div class="primary-actions">
      <button class="action primary" id="playButton"><span class="action-icon">⚔</span><span class="action-label"><strong id="playLabel">Jogar</strong><small id="playSub">Escolha um espaço de salvamento</small></span><span class="arrow">›</span></button>
      <button class="action" id="languageButton"><span class="action-icon">文</span><span class="action-label"><strong id="languageLabel">Idioma</strong><small id="languageSub">Português (Brasil)</small></span><span class="arrow">›</span></button>
-     <button class="action" id="aboutButton"><span class="action-icon">▤</span><span class="action-label"><strong id="aboutLabel">Sobre</strong><small id="aboutSub">Intenção, universo e história</small></span><span class="arrow">›</span></button>
+     <button class="action" id="aboutButton"><span class="action-icon">▤</span><span class="action-label"><strong id="aboutLabel">Sobre</strong><small id="aboutSub">A intenção do projeto</small></span><span class="arrow">›</span></button>
+     <button class="action" id="historyButton"><span class="action-icon">📜</span><span class="action-label"><strong id="historyLabel">História</strong><small id="historySub">Conheça o reino e a aventura</small></span><span class="arrow">›</span></button>
+     <button class="action" id="exitButton"><span class="action-icon">⇥</span><span class="action-label"><strong id="exitLabel">Sair</strong><small id="exitSub">Encerrar por agora</small></span><span class="arrow">›</span></button>
     </div>
     <p class="form-help" id="homeNote">Até 3 jornadas salvas neste navegador. Moedas de jogo são fictícias.</p>
    </div>
@@ -156,6 +159,13 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
  <section class="view" id="aboutView">
   <div class="page-head"><div><div class="eyebrow" id="aboutEyebrow">O PROPÓSITO DA AVENTURA</div><h2 class="page-title" id="aboutTitle">Sobre Reinos em Ruína</h2><p class="page-subtitle" id="aboutSubtitle">Um RPG medieval onde explorar, lutar e decidir são partes da mesma história.</p></div><button class="back-btn" id="aboutBack">← Voltar</button></div>
   <div class="story-layout" id="aboutContent"></div>
+ </section>
+ <section class="view" id="historyView">
+  <div class="page-head"><div><div class="eyebrow" id="historyEyebrow">AS CRÔNICAS DO REINO</div><h2 class="page-title" id="historyTitle">A história do reino</h2><p class="page-subtitle" id="historySubtitle">Os acontecimentos que dão início à sua aventura.</p></div><button class="back-btn" id="historyBack">← Voltar</button></div>
+  <div class="story-layout" id="historyContent"></div>
+ </section>
+ <section class="view" id="exitView">
+  <div class="exit-card"><div class="eyebrow" id="exitEyebrow">ATÉ A PRÓXIMA JORNADA</div><h2 class="page-title" id="exitPageTitle">O reino continuará aqui.</h2><p id="exitMessage">Obrigado por visitar Reinos em Ruína. Você pode fechar esta aba ou voltar ao menu principal.</p><button type="button" class="slot-button primary" id="exitReturn">Voltar ao menu</button></div>
  </section>
 </main>
 <footer class="footer"><span><b>Reinos em Ruína</b> · <span id="footerLeft">Projeto independente</span></span><span id="footerRight">Protótipo de navegador · salvamentos locais</span></footer>
@@ -236,13 +246,14 @@ function translatePage(){
  document.documentElement.lang=language;
  $('brandSubtitle').textContent=t('subtitle');$('headerStatus').textContent=t('status');$('headerLanguage').textContent=(language==='pt-BR'?'PT':'EN')+' · '+t('language');
  $('homeEyebrow').textContent=t('eyebrow');$('homeLede').textContent=t('lede');$('homeDescription').textContent=t('description');
- $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('aboutLabel').textContent=language==='pt-BR'?'Sobre':'About';$('aboutSub').textContent=language==='pt-BR'?'Intenção, universo e história':'Purpose, world and story';$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
+ $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('aboutLabel').textContent=language==='pt-BR'?'Sobre':'About';$('aboutSub').textContent=language==='pt-BR'?'A intenção do projeto':'The purpose of the project';$('historyLabel').textContent=language==='pt-BR'?'História':'Story';$('historySub').textContent=language==='pt-BR'?'Conheça o reino e a aventura':'Meet the kingdom and its story';$('exitLabel').textContent=language==='pt-BR'?'Sair':'Exit';$('exitSub').textContent=language==='pt-BR'?'Encerrar por agora':'Leave for now';$('historyEyebrow').textContent=language==='pt-BR'?'AS CRÔNICAS DO REINO':'CHRONICLES OF THE KINGDOM';$('historyTitle').textContent=language==='pt-BR'?'A história do reino':'The kingdom’s story';$('historySubtitle').textContent=language==='pt-BR'?'Os acontecimentos que dão início à sua aventura.':'The events that set your adventure in motion.';$('historyBack').textContent='← '+t('back');$('exitEyebrow').textContent=language==='pt-BR'?'ATÉ A PRÓXIMA JORNADA':'UNTIL THE NEXT JOURNEY';$('exitPageTitle').textContent=language==='pt-BR'?'O reino continuará aqui.':'The kingdom will be here.';$('exitMessage').textContent=language==='pt-BR'?'Obrigado por visitar Reinos em Ruína. Você pode fechar esta aba ou voltar ao menu principal.':'Thank you for visiting Realms in Ruin. You can close this tab or return to the main menu.';$('exitReturn').textContent=language==='pt-BR'?'Voltar ao menu':'Return to menu';$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
  $('slotsEyebrow').textContent=t('slotsEyebrow');$('slotsTitle').textContent=t('slotsTitle');$('slotsSubtitle').textContent=t('slotsSubtitle');$('slotsBack').textContent='← '+t('back');$('slotsNote').textContent=t('slotsNote');
  $('creatorEyebrow').textContent=t('creatorEyebrow');$('creatorBack').textContent='← '+t('back');
  $('langEyebrow').textContent=t('languageEyebrow');$('langTitle').textContent=t('languageTitle');$('langSubtitle').textContent=t('languageSubtitle');$('langBack').textContent='← '+t('back');$('languageNote').textContent=t('languageNote');$('aboutEyebrow').textContent=language==='pt-BR'?'O PROPÓSITO DA AVENTURA':'THE PURPOSE OF THE ADVENTURE';$('aboutTitle').textContent=language==='pt-BR'?'Sobre Reinos em Ruína':'About Realms in Ruin';$('aboutSubtitle').textContent=language==='pt-BR'?'Um RPG medieval onde explorar, lutar e decidir são partes da mesma história.':'A medieval RPG where exploration, combat and choices belong to one story.';$('aboutBack').textContent='← '+t('back');
  $('footerLeft').textContent=t('footerLeft');$('footerRight').textContent=t('footerRight');
  renderLanguageCards();
  renderAbout();
+ renderHistory();
 }
 function showView(view){
  currentView=view;
@@ -411,6 +422,22 @@ function startGame(slot,isNew){
  const query='?slot='+slot+(isNew?'&new=1':'')+'&lang='+encodeURIComponent(language);
  window.location.href='jogar.html'+query;
 }
+ function renderHistory(){
+ const pt=language==='pt-BR';
+ const cards=pt?[
+  {k:'PRÓLOGO',h:'Um reino sob pressão',p1:'Durante gerações, estradas e mercados conectaram vilas, minas e castelos. Agora, rotas enfraquecidas, recursos escassos e registros pouco confiáveis tornam a vida mais difícil. Pequenas decisões começam a produzir grandes consequências.',p2:'A ruína não chegou em uma única noite. Ela cresceu quando avisos foram ignorados, contas não foram conferidas e promessas pareceram mais fáceis do que a verdade.',wide:true},
+  {k:'CAPÍTULO I',h:'A Moeda Partida',p1:'Em Brumaforte, os carregamentos de grãos desaparecem e os preços mudam sem explicação. Famílias temem a escassez, comerciantes desconfiam uns dos outros e ninguém sabe se o problema é azar, má gestão ou fraude.',p2:'Mara, a guardiã da vila, pede ajuda a um aventureiro. A investigação começa na estrada, entre criaturas que ameaçam os viajantes, e segue até as ruínas onde está escondido o livro-razão da mina.',wide:false},
+  {k:'A PRIMEIRA REVELAÇÃO',h:'As contas não fecham',p1:'O livro-razão revela entradas duplicadas e diferenças nos registros. Há sinais de que parte dos carregamentos foi desviada. A vila tem agora provas, mas ainda precisa escolher como responder à crise.',p2:'Investigar é apenas o começo. O próximo desafio é decidir o que fazer com recursos limitados e compreender quem será afetado por cada política.',wide:false},
+  {k:'O CAMINHO ADIANTE',h:'O futuro não está escrito',p1:'O Conselho terá de escolher entre investir na estrada comercial, tomar um empréstimo da guilda ou congelar os preços. Nenhuma solução é gratuita: cada uma cria benefícios e riscos diferentes.',p2:'As escolhas do jogador ajudarão a definir se Brumaforte recuperará a confiança, ficará presa às dívidas ou verá o comércio enfraquecer ainda mais. Esta é apenas a primeira crônica de um reino maior.',wide:true}
+ ]:[
+  {k:'PROLOGUE',h:'A kingdom under pressure',p1:'For generations, roads and markets connected villages, mines, and castles. Now weakened trade routes, scarce resources, and unreliable records make life harder. Small decisions are beginning to have major consequences.',p2:'The ruin did not arrive in one night. It grew as warnings were ignored, accounts went unchecked, and promises seemed easier than the truth.',wide:true},
+  {k:'CHAPTER I',h:'The Broken Coin',p1:'In Brumaforte, grain shipments disappear and prices change without explanation. Families fear a shortage, merchants distrust each other, and no one knows whether the cause is bad luck, poor management, or fraud.',p2:'Mara, the village warden, asks an adventurer for help. The investigation begins on the road, among creatures threatening travelers, and continues into the ruins where the mine ledger is hidden.',wide:false},
+  {k:'THE FIRST REVELATION',h:'The accounts do not add up',p1:'The ledger reveals duplicate entries and discrepancies. There are signs that part of the shipments was diverted. The village now has evidence, but must still decide how to respond to the crisis.',p2:'Investigation is only the beginning. The next challenge is to decide what to do with limited resources and understand who will be affected by each policy.',wide:false},
+  {k:'THE ROAD AHEAD',h:'The future is unwritten',p1:'The council must choose between investing in the trade road, borrowing from the guild, or freezing prices. No solution is free: each one creates different benefits and risks.',p2:'The player’s choices will help determine whether Brumaforte rebuilds trust, becomes trapped in debt, or sees trade weaken further. This is only the first chronicle of a larger kingdom.',wide:true}
+ ];
+ $('historyContent').innerHTML=cards.map(x=>'<article class="story-card'+(x.wide?' wide':'')+'"><div class="story-kicker">'+esc(x.k)+'</div><h3>'+esc(x.h)+'</h3><p>'+esc(x.p1)+'</p><p>'+esc(x.p2)+'</p></article>').join('');
+}
+
 function renderAbout(){
  const pt=language==='pt-BR';
  const cards=pt?[
@@ -446,11 +473,15 @@ function openSlots(){renderSlots();showView('slots');}
 $('playButton').addEventListener('click',openSlots);
 $('languageButton').addEventListener('click',()=>showView('language'));
 $('aboutButton').addEventListener('click',()=>{renderAbout();showView('about')});
+$('historyButton').addEventListener('click',()=>{renderHistory();showView('history')});
+$('exitButton').addEventListener('click',()=>showView('exit'));
 $('headerLanguage').addEventListener('click',()=>showView('language'));
 $('slotsBack').addEventListener('click',()=>showView('home'));
 $('creatorBack').addEventListener('click',()=>{renderSlots();showView('slots');});
 $('langBack').addEventListener('click',()=>showView('home'));
 $('aboutBack').addEventListener('click',()=>showView('home'));
+$('historyBack').addEventListener('click',()=>showView('home'));
+$('exitReturn').addEventListener('click',()=>showView('home'));
 $('brandHome').addEventListener('click',e=>{e.preventDefault();showView('home');});
 try{language=localStorage.getItem(LANG_KEY)==='en-US'?'en-US':'pt-BR';}catch(e){}
 importLegacyIfNeeded();
