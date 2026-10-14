@@ -516,7 +516,12 @@ function showSideQuestProgress(quest){
 function talkToren(){showSideQuestProgress(SIDE_QUESTS.toren);}
 function talkElira(){showSideQuestProgress(SIDE_QUESTS.elira);}
 function talkBrann(){showSideQuestProgress(SIDE_QUESTS.brann);}
-function talkTorenShop(){if(g.sideQuests.toren==='complete')openBlacksmithShop();else talkToren();}
+function talkTorenShop(){
+ const state=g.sideQuests.toren,data=professionsData();
+ if(state==='complete'){openBlacksmithShop();return;}
+ if(state==='active'&&!questMaterialsReady(SIDE_QUESTS.toren,data)){openBlacksmithShop();return;}
+ talkToren();
+}
 function openBlacksmithShop(){
  const oreCost=6,herbCost=5,fishCost=4;
  const body='<div class="menu-intro">Toren vende materiais e repara ferramentas. Tudo é pago com cobre fictício do jogo.</div>'+
@@ -794,7 +799,7 @@ function openGameMenu(){
         <div class="control-list">
           <div class="control-row"><kbd>W A S D</kbd><span><strong>Mover</strong><small>Anda pelo mapa; nas ruínas, A/D movem para os lados.</small></span></div>
           <div class="control-row"><kbd>← ↑ → ↓</kbd><span><strong>Movimento alternativo</strong><small>Setas para explorar. ↑ também salta nas ruínas.</small></span></div>
-          <div class="control-row"><kbd>E / Enter</kbd><span><strong>Interagir</strong><small>Conversa com Mara, abre o mercador perto dele e atravessa o portão.</small></span></div>
+          <div class="control-row"><kbd>E / Enter</kbd><span><strong>Interagir</strong><small>Conversa com os moradores, abre lojas e serviços, aceita missões e atravessa o portão.</small></span></div>
           <div class="control-row"><kbd>J</kbd><span><strong>Atacar</strong><small>Golpeia uma criatura próxima. Aproxime-se antes de atacar.</small></span></div>\n          <div class="control-row"><kbd>Cartas</kbd><span><strong>Combate tático</strong><small>Use o botão Cartas táticas perto de uma criatura. Você recebe 3 energias por turno.</small></span></div>\n          <div class="control-row"><kbd>Atividade</kbd><span><strong>Treino / trabalho</strong><small>Defina uma atividade para o tempo longe do jogo; recompensas locais têm limite de 8 horas.</small></span></div>
           <div class="control-row"><kbd>H</kbd><span><strong>Usar poção</strong><small>Recupera até 35 pontos de vida, se tiver uma na bolsa.</small></span></div>
           <div class="control-row"><kbd>M / N</kbd><span><strong>Caderno financeiro</strong><small>M abre a lição; N avança para a próxima lição.</small></span></div>
@@ -1475,7 +1480,7 @@ function drawMap(){
     drawNPCName('TOREN',747,279,g.sideQuests.toren);
     drawNPCName('ELIRA',455,422,g.sideQuests.elira);
     drawNPCName('BRANN',248,418,g.sideQuests.brann);
-    text('SABELA',565,279,8,'#fff0c5','center');
+    text('SABELA',565,279,8,'#fff0c5','center');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
     text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
