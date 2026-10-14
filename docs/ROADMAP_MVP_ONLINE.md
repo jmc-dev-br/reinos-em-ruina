@@ -108,7 +108,7 @@ Os estados das missões secundárias são incluídos em salvamentos novos e migr
 Esses sistemas são locais ao navegador e ao save do jogador. Uma futura guilda com edifícios, mercado entre jogadores, eventos globais e reputação pública precisará de validação no servidor; estes novos NPCs não representam jogadores online.
 
 
-## Reboot 1.0 — implementação no cliente
+## Histórico: Reboot 1.0 — implementação no cliente (mecânicas substituídas pelo Reboot 2.0)
 
 ### Regiões, mapa e chefes
 - A região padrão é Brumaforte. **Bosque Velado** pode abrir a partir do nível 2 ou com a investigação avançada; **Lago Silencioso** abre a partir do nível 4 ou após concluir o capítulo I.
