@@ -102,3 +102,18 @@ Brumaforte agora tem quatro moradores adicionais com aparência, nome e função
 - **Sabela**, dona da Estalagem da Folha Dourada: vende um caldo que recupera vida e compartilha rumores sobre a investigação.
 
 Também foi desenhada uma estalagem de telhado vermelho, uma cabana de madeira, caminhos de acesso, placas e colisões para as construções. Os estados das três missões secundárias são gravados no save local e retrocompatíveis com jornadas anteriores. Os materiais das profissões continuam no armazenamento local do espaço de salvamento; estes sistemas ainda não são sincronizados entre jogadores.
+
+
+## Reboot 1.0 — mundo, evolução e histórias
+
+O cliente recebeu uma grande atualização local:
+- **Duas regiões novas:** Bosque Velado e Lago Silencioso, cada uma com cenário, caminhos, água, segredos e moradores próprios. O mapa do mundo abre com o botão **Regiões** ou pela tecla **G**; o progresso do personagem libera o acesso.
+- **Chefes com fases:** Lobo da Névoa e Leviatã de Vidro têm barras de resistência e ficam mais perigosos abaixo de 45% da vida. O Guardião Oco também recebe uma barra de chefe nas ruínas.
+- **NPCs com o sistema visual do protagonista:** roupas, capa, cabelo, pele, acessórios e poses específicas. As conversas apresentam retrato, personalidade e passado do personagem.
+- **Novas histórias:** Liora e a voz da névoa, Arven e a trilha segura, Yara e a bússola temporal, Neris e os arquivos dos naufrágios; há também descobertas nos altares e no casco naufragado.
+- **Evolução jogável:** cada nível concede um ponto de atributo e um ponto de talento. Força melhora dano, Defesa reduz dano tático, Vitalidade eleva vida máxima e Sabedoria melhora cura. Os talentos ofensivo, defensivo e médico têm três níveis.
+- **Relógio do mundo:** começa às 08:00 e avança em tempo de jogo (4 segundos reais = 1 minuto do mundo). Luz e rótulos usam esse relógio, que é gravado no save.
+- **Clima de duração variável:** céu limpo, chuva, folhas e névoa se alternam em intervalos aleatórios de 35–190 segundos quando o clima dinâmico está ativado.
+- **Calendário diário de 7 dias:** cobre fictício, ervas no dia 3, minério no dia 5 e poção no dia 7; sequência e resgates permanecem locais ao espaço de salvamento no navegador.
+
+O jogo antigo não é apagado: os dados de personagem e progresso são migrados com valores padrão para os campos novos. O estado das regiões e das missões é gravado no save local. Esta ainda é uma experiência individual no navegador, não um mundo multiplayer compartilhado.
