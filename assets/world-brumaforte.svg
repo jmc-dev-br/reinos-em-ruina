@@ -16,8 +16,9 @@
 <!-- winding village paths -->
 <path d="M-20 303C105 287 198 307 315 297S518 303 631 300S820 280 990 293" fill="none" stroke="#806b4c" stroke-width="91" opacity=".65"/>
 <path d="M-20 294C106 280 195 299 315 289S518 294 631 291S820 272 990 284" fill="none" stroke="url(#road)" stroke-width="82"/>
-<path d="M379 127C366 193 387 240 381 300S394 390 386 540" fill="none" stroke="#8b7654" stroke-width="65" opacity=".52"/>
-<path d="M379 127C366 193 387 240 381 300S394 390 386 540" fill="none" stroke="#d3be91" stroke-width="57"/>
+<!-- South footpath connects the square to the gardens without cutting through the houses. -->
+<path d="M386 304C381 358 397 426 386 540" fill="none" stroke="#8b7654" stroke-width="49" opacity=".5"/>
+<path d="M386 304C381 358 397 426 386 540" fill="none" stroke="#d3be91" stroke-width="41"/>
 <path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#bba179" stroke-width="41"/>
 <path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#dfc99a" stroke-width="34"/>
 <path d="M452 294C500 282 557 286 604 301" fill="none" stroke="#b9a177" stroke-width="27"/><path d="M452 294C500 282 557 286 604 301" fill="none" stroke="#dfc99a" stroke-width="21"/>
