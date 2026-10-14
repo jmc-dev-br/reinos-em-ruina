@@ -508,12 +508,55 @@ const CLASS_DEFS={
  arcanist:{name:"Arcanista",icon:"✦",short:"Arcanista",hpBonus:-10,basicDamage:13,heavyDamage:21,powerDamage:44,powerName:"Explosão Arcana",powerIcon:"✦",powerType:"arcane",powerRange:175,cooldown:8,defenseBonus:0,desc:"Canaliza magia em golpes fortes; a explosão também atinge criaturas próximas.",passive:"Eco arcano: a explosão causa dano em área.",style:"Magia e dano em área"},
  guardian:{name:"Guardião",icon:"⬟",short:"Guardião",hpBonus:35,basicDamage:14,heavyDamage:23,powerDamage:0,powerName:"Muralha Viva",powerIcon:"⬟",powerType:"shield",powerShield:34,powerRange:0,cooldown:9,defenseBonus:3,desc:"Protege o grupo e converte preparação em sobrevivência.",passive:"Baluarte: recebe vida adicional e reduz dano.",style:"Defesa e proteção"}
 };
+const CREATURE_SPECIES={
+ folhote:{name:'Folhote',type:'folha',icon:'🌱',baseHp:42,starter:true,desc:'Um broto curioso que fica mais forte quando encontra sol.',moves:['bump','leafcut','seedshot']},
+ braseco:{name:'Braseco',type:'fogo',icon:'🔥',baseHp:38,starter:true,desc:'Pequeno e corajoso; a chama na cauda muda conforme seu humor.',moves:['bump','ember','quickflame']},
+ gotil:{name:'Gotil',type:'agua',icon:'💧',baseHp:46,starter:true,desc:'Uma criatura brincalhona que protege os amigos com bolhas d’água.',moves:['bump','bubble','waterjet']},
+ musguito:{name:'Musguito',type:'folha',icon:'🍃',baseHp:30,moves:['bump','seedshot']},
+ casquim:{name:'Casquim',type:'terra',icon:'🪲',baseHp:34,moves:['bump','shellbash']},
+ vesperto:{name:'Vesperto',type:'vento',icon:'🦇',baseHp:29,moves:['bump','gust']},
+ ossoeco:{name:'Ossoeco',type:'sombra',icon:'💀',baseHp:36,moves:['bump','shadehit']},
+ guardito:{name:'Guardito',type:'metal',icon:'🛡️',baseHp:48,moves:['bump','shellbash']},
+ brumilobo:{name:'Brumilobo',type:'nevoa',icon:'🐺',baseHp:72,boss:true,moves:['bump','mistbite']},
+ prismare:{name:'Prismaré',type:'agua',icon:'🐉',baseHp:88,boss:true,moves:['bump','waterjet']}
+};
+const CREATURE_MOVES={
+ bump:{name:'Trombada',power:9,desc:'Um avanço simples e confiável.'},
+ leafcut:{name:'Folha Cortante',power:13,desc:'Uma lâmina de folha rápida.'},
+ seedshot:{name:'Chuva de Sementes',power:11,desc:'Sementes duras voam contra o alvo.'},
+ ember:{name:'Faísca Quente',power:12,desc:'Uma pequena labareda.'},
+ quickflame:{name:'Chama Veloz',power:15,desc:'Uma chama curta, mas forte.'},
+ bubble:{name:'Bolha Saltitante',power:12,desc:'Bolhas atingem o alvo em sequência.'},
+ waterjet:{name:'Jato d’Água',power:15,desc:'Um jato direto de água.'},
+ shellbash:{name:'Casco Forte',power:13,desc:'Uma investida protegida.'},
+ gust:{name:'Rajada',power:12,desc:'Uma lufada rápida de vento.'},
+ shadehit:{name:'Susto Sombrio',power:14,desc:'Um golpe de energia escura.'},
+ mistbite:{name:'Mordida Nebulosa',power:16,desc:'Uma mordida cercada de névoa.'},
+ rest:{name:'Descanso',power:0,heal:14,desc:'Recupera vida do parceiro.'}
+};
+function makeCreature(speciesId,level=5){
+ const species=CREATURE_SPECIES[speciesId]||CREATURE_SPECIES.folhote,lv=Math.max(1,Math.floor(Number(level)||1)),maxHp=species.baseHp+(lv-1)*3;
+ return {species:speciesId,nickname:species.name,level:lv,xp:0,hp:maxHp,maxHp,moves:[...(species.moves||['bump'])]};
+}
+function activeCreature(){
+ if(!Array.isArray(g.team)||!g.team.length)return null;
+ const index=Math.max(0,Math.min(g.team.length-1,Number(g.activeCreature)||0));return g.team[index]||g.team[0]||null;
+}
+function creatureXpNext(creature){return Math.max(20,(creature?.level||1)*24);}
+function addCreatureXP(creature,amount){
+ if(!creature)return;creature.xp=(Number(creature.xp)||0)+Math.max(0,Math.floor(amount));let levels=0;
+ while(creature.xp>=creatureXpNext(creature)){creature.xp-=creatureXpNext(creature);creature.level=(creature.level||1)+1;creature.maxHp+=3;creature.hp=Math.min(creature.maxHp,creature.hp+6);levels++;}
+ if(levels)notify(creature.nickname+' subiu para o nível '+creature.level+'!',3);
+}
+function speciesForMob(mob){
+ if(mob.type==='mistwolf')return 'brumilobo';if(mob.type==='leviathan')return 'prismare';if(mob.type==='knight')return 'guardito';if(mob.type==='skeleton')return 'ossoeco';if(mob.type==='bat')return 'vesperto';if(mob.name&&mob.name.includes('Besouro'))return 'casquim';return 'musguito';
+}
 const DIFFICULTY_DEFS={
  easy:{name:"Aventureiro",short:"Fácil",incoming:.65,outgoing:1.15,desc:"Inimigos causam menos dano e seus ataques ficam 15% mais fortes.",tone:"Ideal para explorar a história."},
  normal:{name:"Sobrevivente",short:"Normal",incoming:1,outgoing:1,desc:"Dano padrão e combates equilibrados.",tone:"Experiência recomendada."},
  hard:{name:"Lenda Sombria",short:"Difícil",incoming:1.4,outgoing:.9,desc:"Inimigos causam 40% mais dano e seus ataques causam 10% menos.",tone:"Para quem já domina esquiva, defesa e poderes."}
 };
-const originalState=()=>({character:defaultAppearance(),classId:"warrior",classHpBonusApplied:20,difficulty:"normal",powerShield:0,powerCooldown:0,scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:120,maxHp:120,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0,eagleEye:0,arcaneMastery:0,bulwark:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:820,y:350,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false,shrineRead:false,wreckRead:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',arven:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),team:[],starterChosen:false,activeCreature:0,captureOrbs:3,encountersWon:0,classId:"warrior",classHpBonusApplied:20,difficulty:"normal",powerShield:0,powerCooldown:0,scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:120,maxHp:120,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0,eagleEye:0,arcaneMastery:0,bulwark:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:820,y:350,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false,shrineRead:false,wreckRead:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',arven:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:380,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:300,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:240,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:405,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:310,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -1322,7 +1365,7 @@ function usePotion(){
  if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
  g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
 }
-function saveData(){return {character:normalizeAppearance(g.character),classId:g.classId,classHpBonusApplied:g.classHpBonusApplied,difficulty:g.difficulty,powerShield:g.powerShield||0,scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function saveData(){return {character:normalizeAppearance(g.character),team:g.team,starterChosen:g.starterChosen,activeCreature:g.activeCreature,captureOrbs:g.captureOrbs,encountersWon:g.encountersWon,classId:g.classId,classHpBonusApplied:g.classHpBonusApplied,difficulty:g.difficulty,powerShield:g.powerShield||0,scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
  try{
   const data=saveData();
@@ -1347,6 +1390,11 @@ function normalizeSave(d){
  const defaults=originalState();
  const merged=Object.assign(defaults,d);
  merged.character=normalizeAppearance(d.character||defaults.character);
+ if(Array.isArray(d.team)){merged.team=d.team.filter(c=>c&&CREATURE_SPECIES[c.species]).map(c=>({...makeCreature(c.species,c.level),...c}));merged.starterChosen=!!d.starterChosen;}
+ else if(d.starterChosen===false){merged.team=[];merged.starterChosen=false;}
+ else {merged.team=[makeCreature('folhote',5)];merged.starterChosen=true;}
+ merged.activeCreature=Math.max(0,Math.min(Math.max(0,merged.team.length-1),Number(d.activeCreature)||0));
+ merged.captureOrbs=Math.max(0,Number.isFinite(Number(d.captureOrbs))?Number(d.captureOrbs):3);merged.encountersWon=Math.max(0,Number(d.encountersWon)||0);
  merged.classId=CLASS_DEFS[d.classId]?d.classId:'warrior';
  merged.difficulty=DIFFICULTY_DEFS[d.difficulty]?d.difficulty:'normal';
  if(typeof d.classHpBonusApplied!=='number'){
