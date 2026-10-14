@@ -1641,7 +1641,7 @@ const NPC_APPEARANCES={
  ivo:{name:'Ivo',gender:'masculino',outfit:'noble',cloak:'red',hair:'brown',skin:'warm',hairstyle:'medium',headwear:'none',accessory:'necklace',weapon:'none',outfitColor:'crimson',faceShape:'round',eyeColor:'brown',facialHair:'mustache'},
  toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'none',accessory:'none',weapon:'none',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
  elira:{name:'Elira',gender:'feminino',outfit:'ranger',cloak:'green',hair:'red',skin:'pale',hairstyle:'braids',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'emerald',faceShape:'oval',eyeColor:'green',facialHair:'none'},
- brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'blue',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hood',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
+ brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'blue',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hat',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
  sabela:{name:'Sabela',gender:'feminino',outfit:'noble',cloak:'red',hair:'black',skin:'warm',hairstyle:'long',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'crimson',faceShape:'oval',eyeColor:'brown',facialHair:'none'},
  liora:{name:'Liora',gender:'feminino',outfit:'ranger',cloak:'green',hair:'silver',skin:'olive',hairstyle:'ponytail',headwear:'hood',accessory:'earrings',weapon:'bow',outfitColor:'emerald',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
  arven:{name:'Arven',gender:'masculino',outfit:'guard',cloak:'green',hair:'blond',skin:'light',hairstyle:'short',headwear:'helmet',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'blue',facialHair:'goatee'},
@@ -1720,14 +1720,14 @@ function drawNPCActor(id,x,y,prop='none'){
  drawHandheldCharacter(x,y+Math.sin(time*1.35+phase)*.3,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
  ctx.save();
  if(id==='mara'){line(x-5,y-31,x+5,y-26,'#e5c66e',2);circle(x+1,y-29,2,'#f1d88a');}
- else if(id==='ivo'){rect(x-8,y-35,16,3,'#8b6a42');rect(x-6,y-37,12,3,'#b89a63');}
+ else if(id==='ivo'){rect(x-8,y-30,16,2,'#8b6a42');rect(x-6,y-33,12,3,'#b89a63');}
  else if(id==='toren'){rect(x-7,y-29,14,8,'#353b3a');rect(x-6,y-28,12,2,'#b38b51');}
- else if(id==='elira'){circle(x-4,y-38,2,'#e7d27a');circle(x,y-40,2,'#d88972');circle(x+4,y-38,2,'#99c56a');}
- else if(id==='brann'){poly([[x-9,y-33],[x-6,y-38],[x+6,y-38],[x+9,y-33]],'#675239');rect(x-10,y-34,20,2,'#bda06c');}
- else if(id==='sabela'){rect(x-7,y-34,14,3,'#a94948');circle(x-7,y-22,1,'#eed080');circle(x+7,y-22,1,'#eed080');}
- else if(id==='liora'){poly([[x-9,y-33],[x-7,y-39],[x-3,y-41],[x+5,y-40],[x+9,y-34],[x+5,y-35],[x-5,y-36]],'#264a36');}
+ else if(id==='elira'){circle(x-4,y-31,2,'#e7d27a');circle(x,y-33,2,'#d88972');circle(x+4,y-31,2,'#99c56a');}
+ else if(id==='brann'){poly([[x-9,y-27],[x-6,y-32],[x+6,y-32],[x+9,y-27]],'#675239');rect(x-10,y-28,20,2,'#bda06c');}
+ else if(id==='sabela'){rect(x-7,y-31,14,3,'#a94948');circle(x-7,y-22,1,'#eed080');circle(x+7,y-22,1,'#eed080');}
+ else if(id==='liora'){poly([[x-9,y-24],[x-7,y-30],[x-3,y-32],[x+5,y-31],[x+9,y-25],[x+5,y-26],[x-5,y-27]],'#264a36');}
  else if(id==='arven'){rect(x-11,y-27,5,9,'#a9b7a4');rect(x-10,y-26,3,7,'#d1c7a8');}
- else if(id==='yara'){poly([[x-7,y-33],[x,y-37],[x+7,y-33],[x+4,y-29],[x-4,y-29]],'#3d78a0');circle(x+2,y-30,2,'#b7e0de');}
+ else if(id==='yara'){poly([[x-7,y-27],[x,y-31],[x+7,y-27],[x+4,y-23],[x-4,y-23]],'#3d78a0');circle(x+2,y-24,2,'#b7e0de');}
  else if(id==='neris'){rect(x-6,y-30,12,7,'#5b4634');rect(x-4,y-29,8,5,'#d3c18f');}
  if(prop==='hammer'){
   const swing=Math.sin(time*3.4+phase)*.18;ctx.translate(x+8,y-24);ctx.rotate(swing);
