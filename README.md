@@ -13,7 +13,7 @@ Aventura medieval em que as decisões econômicas mudam o reino.
 
 Reinos em Ruína is not a finance quiz. Players explore the kingdom from a top-down perspective, enter side-view combat in ruined locations, meet characters, complete quests, collect fictional copper, and learn from the results of their decisions.
 
-The opening chapter, **The Broken Coin / A Moeda Partida**, puts the village of Brumaforte under pressure after food shipments disappear. The player convenes a council and chooses between three imperfect policies:
+The opening chapter, **The Broken Coin / A Moeda Partida**, puts the village of Brumaforte under pressure after food shipments disappear. The player investigates the attacks on the road, finds a ledger in the ruins, brings evidence back to the guard Mara, and only then unlocks the council's three imperfect policy choices:
 
 1. **Repair the trade road** — spend treasury now to improve food supplies, lower price pressure, and raise public trust.
 2. **Borrow from the guild** — obtain resources immediately but take on a larger repayment obligation.
@@ -25,7 +25,9 @@ The decision changes the kingdom dashboard and the merchant's prices. The player
 
 - Top-down map exploration and NPC interaction.
 - Side-view action/combat in the ruins.
-- Quest progression, XP/levels, health, potions, inventory economy, save/load.
+- A sequenced first-chapter quest: investigate road attacks, find unique ledger evidence, report to Mara, and complete the council decision.
+- Quest rewards cannot be repeatedly claimed from the same ledger; important story milestones autosave locally.
+- Quest progression, XP/levels, health, potions, inventory economy, manual/automatic save/load.
 - Fictional kingdom economy: treasury, debt, public trust, food reserves, and price index.
 - Dynamic merchant prices connected to the simulated price index.
 - In-game codex with plain-language topics: budgeting, inflation, interest, scams, and crypto risks.
