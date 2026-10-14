@@ -17,9 +17,9 @@ A medieval RPG where players learn how money works by exploring a kingdom, fight
 - Browser save/load and an in-game finance codex covering budgeting, inflation, interest, scams, and crypto risks.
 
 ## What Arc is for
-The optional **ReinosChronicle** contract is designed to anchor a timestamped chapter receipt on Arc Mainnet. The client hashes a canonical snapshot of the selected policy and its simulated outcomes; the contract records the hash and the key fictional-economy metrics. This creates a public, tamper-evident reference for a player's campaign choice without transferring game currency or asking the contract to custody funds.
+The optional **ReinosChronicle** contract is designed to anchor a timestamped chapter receipt on Arc Mainnet. The client submits only the selected policy ID. The contract independently calculates the chapter's canonical fictional-economy outcome (treasury, debt, public trust, price index, and food reserves), hashes that result with keccak256, and emits a public receipt. This creates a tamper-evident reference for a player's campaign choice without transferring game currency or custodying user funds.
 
-The receipt is an integrity/timestamp record, not proof that a player completed the game honestly. The snapshot is submitted by the wallet owner and must be described that way.
+The receipt proves that a wallet submitted a policy and records the result computed by the contract. It does not prove that the player completed the off-chain exploration and combat honestly.
 
 ## Public links
 - Game: https://jmc-dev-br.github.io/reinos-em-ruina/jogar.html
