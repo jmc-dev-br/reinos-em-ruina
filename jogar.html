@@ -241,7 +241,7 @@ const lessons=[
 ];
 let modalType=null;
 function notify(text,duration=3.2){const t=$('toast');t.textContent=text;t.classList.add('show');g.toastTimer=duration;}
-function setScene(scene){g.scene=scene;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(80,Math.min(880,g.mapPlayer.x)):128; $('sceneTitle').textContent='BRUMAFORTE · VILA INICIAL';$('sceneSub').textContent='Explore, converse e descubra o caminho para as ruínas.';$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4); updateUI();}
+function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(80,Math.min(880,g.mapPlayer.x)):128; $('sceneTitle').textContent='BRUMAFORTE · VILA INICIAL';$('sceneSub').textContent='Explore, converse e descubra o caminho para as ruínas.';$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4); updateUI();}
 function xpToNext(){return g.level*100;}
 function addXP(n){g.xp+=n;let leveled=false;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);leveled=true;}if(leveled)notify(`NÍVEL ${g.level}! Vida máxima aumentou e você recuperou um pouco de vida.`,4);}
 function allMobs(){return g.scene==='map'?g.slimes:g.ruinMobs;}
@@ -573,7 +573,7 @@ function buildAnimatedPlayerFrame(sprite,a,dir,step,moving){
    if(a.hairstyle==='long'||a.hairstyle==='braids'){rect(16,15,3,8,hair);rect(28,15,3,8,hair);}
    if(a.headwear==='helmet'){poly([[16,12],[17,7],[20,5],[26,5],[29,8],[30,13],[27,14],[27,11],[19,11],[19,14]],'#888d90');rect(18,10,11,2,'#c0b8a9');}
    else if(a.headwear==='hood'){poly([[15,13],[16,8],[19,5],[26,5],[30,9],[31,15],[28,17],[27,10],[23,8],[19,10],[18,17]],'#34343c');}
- }else if(dir==='right'){
+ }else if(dir==='right'||dir==='left'){
    c.clearRect(17,10,13,13);
    poly([[18,10],[26,10],[29,13],[28,17],[25,21],[21,21],[18,18]],outline);
    poly([[19,11],[26,11],[27,14],[26,17],[24,20],[21,20],[19,17]],skin);
