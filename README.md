@@ -91,3 +91,14 @@ The browser prototype now includes:
 These progression systems are stored in local browser storage and organized by save slot where applicable. They are not synchronized between browsers or users. Daily rewards and offline activity are conveniences for this prototype, not security-sensitive server-authoritative game systems.
 
 The online plan remains in [docs/ROADMAP_MVP_ONLINE.md](docs/ROADMAP_MVP_ONLINE.md). Global events every three hours, an auction house shared between users, co-op dungeons, guild structures and public achievements need authenticated server APIs and database transactions. They are roadmap items—not live multiplayer features.
+
+
+## Vila expandida: NPCs, missões secundárias e lojas
+
+Brumaforte agora tem quatro moradores adicionais com aparência, nome e função próprios:
+- **Toren**, o ferreiro: missão para reunir três minérios; após aceitar a tarefa, a ferraria vende minério, ervas e peixe por cobre fictício.
+- **Elira**, cuidadora do jardim: pede quatro ervas para preparar remédios e recompensa o jogador com XP, cobre e uma poção.
+- **Brann**, pescador: pede três peixes para abastecer a estalagem e paga pela entrega.
+- **Sabela**, dona da Estalagem da Folha Dourada: vende um caldo que recupera vida e compartilha rumores sobre a investigação.
+
+Também foi desenhada uma estalagem de telhado vermelho, uma cabana de madeira, caminhos de acesso, placas e colisões para as construções. Os estados das três missões secundárias são gravados no save local e retrocompatíveis com jornadas anteriores. Os materiais das profissões continuam no armazenamento local do espaço de salvamento; estes sistemas ainda não são sincronizados entre jogadores.
