@@ -64,6 +64,49 @@ html,body{background:radial-gradient(ellipse at 45% 0%,#25242a 0,#111216 38%,#08
 .footer{font-family:Georgia,"Times New Roman",serif;color:#948674}.footer strong{color:#d6ba86}
 @media(max-width:760px){.brand h1{font-size:15px}.panel{padding:14px}}
 
+
+/* Immersive game layout: the world fills the browser window; interface stays on top of it. */
+html,body{width:100%;height:100%;min-height:0;margin:0;overflow:hidden;overscroll-behavior:none}
+body{position:fixed;inset:0}
+.shell{position:relative;width:100vw;height:100vh;height:100dvh;max-width:none;margin:0;padding:0;overflow:hidden}
+.top{position:absolute;z-index:30;top:0;left:0;right:0;min-height:54px;margin:0;padding:7px 14px;display:flex;align-items:center;gap:12px;flex-wrap:nowrap;border-bottom:1px solid #8e6d42;background:linear-gradient(180deg,#0b0d10f5,#101216d9);backdrop-filter:blur(8px)}
+.brand{min-width:0;gap:9px}.brand .mark{width:34px;height:34px;flex:0 0 34px;font-size:15px}.brand h1{font-size:15px;white-space:nowrap}.brand p{margin-top:3px;font-size:8px;letter-spacing:.12em;white-space:nowrap}
+.top>div[style]{margin-left:auto;flex:0 0 auto!important}.top .buildtag{padding:6px 9px;font-size:9px;white-space:nowrap}
+.stats{position:absolute;z-index:30;top:60px;left:12px;right:12px;max-width:930px;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0}
+.stat{padding:6px 8px;min-width:0;background:#111319e8;backdrop-filter:blur(5px)}.stat .label{font-size:8px;letter-spacing:.08em}.stat .value{font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis}.xpbar{height:3px;margin-top:4px}
+.gamecard{position:absolute;z-index:1;inset:0;width:100%;height:100%;min-height:0;border:0;border-radius:0;box-shadow:none;overflow:hidden;background:#101317;display:block}
+.stagewrap{position:absolute;inset:0;width:100%;height:100%;min-height:0;overflow:hidden}
+.stage{display:block;width:100%;height:100%;max-width:none;aspect-ratio:auto;object-fit:fill;image-rendering:pixelated;outline:none}
+.canvashead{position:absolute;z-index:10;top:113px;left:12px;right:12px;min-height:34px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:#111318cb;border:1px solid #725838;border-radius:2px;backdrop-filter:blur(4px);pointer-events:none}
+.location{font-size:11px}.subhead{font-size:10px}
+.actionrow{position:absolute;z-index:32;left:12px;right:12px;bottom:8px;display:flex;gap:5px;flex-wrap:wrap;padding:7px;background:#101116df;border:1px solid #5e4932;backdrop-filter:blur(8px);max-height:112px;overflow:auto}
+.actionrow .btn{min-height:30px;padding:6px 9px;font-size:10px;gap:4px}
+.mobilehelp{position:absolute;z-index:32;bottom:119px;left:12px;right:12px;display:none;gap:5px;flex-wrap:wrap;padding:5px;background:#101116cf;border:1px solid #57442f;backdrop-filter:blur(6px)}
+.mobilehelp .btn{min-width:38px;height:34px;min-height:34px;padding:5px 9px}
+.toast{z-index:40;bottom:162px;max-width:min(92%,720px)}
+.below,.footer{display:none!important}
+.modalback{z-index:100}
+@media(max-width:760px){
+  .top{min-height:46px;padding:5px 8px;gap:6px}.brand{gap:6px}.brand .mark{width:28px;height:28px;flex-basis:28px;font-size:13px}
+  .brand h1{font-size:12px;letter-spacing:.04em}.brand p{font-size:7px;letter-spacing:.05em}
+  .top>div[style] .buildtag:not(a){display:none}.top .buildtag{padding:5px 6px;font-size:8px}
+  .stats{top:51px;left:7px;right:7px;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+  .stat{padding:5px 6px}.stat .label{font-size:7px}.stat .value{font-size:11px;white-space:nowrap}.xpbar{margin-top:3px}
+  .canvashead{top:139px;left:7px;right:7px;min-height:30px;padding:5px 7px;gap:4px;flex-wrap:nowrap}
+  .location{font-size:9px;letter-spacing:.02em}.subhead{max-width:46%;font-size:8px;text-align:right;line-height:1.2}
+  .actionrow{left:6px;right:6px;bottom:5px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:5px;max-height:107px;overflow-y:auto;overflow-x:hidden}
+  .actionrow .btn{min-width:0;width:100%;min-height:28px;padding:4px 3px;font-size:9px;line-height:1.1;white-space:normal;text-align:center}
+  .actionrow .kbd{font-size:7px;min-width:12px;padding:1px 2px}
+  .mobilehelp{display:flex;left:6px;right:6px;bottom:118px;gap:3px;padding:4px}
+  .mobilehelp .btn{flex:1 1 auto;min-width:32px;height:30px;min-height:30px;padding:4px 7px;font-size:10px}
+  .toast{bottom:157px;padding:7px 9px;font-size:11px}
+}
+@media(max-height:620px) and (min-width:761px){
+  .top{min-height:43px;padding:4px 10px}.brand .mark{width:28px;height:28px;flex-basis:28px}
+  .stats{top:47px}.canvashead{top:99px;padding:5px 8px}
+  .actionrow{bottom:4px;max-height:82px;padding:4px}.actionrow .btn{min-height:25px;padding:4px 7px}
+  .toast{bottom:115px}
+}
 </style>
 </head>
 <body>
@@ -647,29 +690,160 @@ function drawPlayer(x,y,rawAppearance){
  ctx.drawImage(sprite,Math.round(x-width/2),Math.round(y-height),Math.round(width),height);ctx.restore();
 }
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
-function drawMap(){rect(0,0,W,H,'#303c2b');for(let x=0;x<W;x+=24)for(let y=0;y<H;y+=24){let k=((x/24+y/24)%2===0);rect(x,y,24,24,k?'#3b472f':'#343f2b');if((x*7+y*3)%11===0)rect(x+5,y+6,2,2,'#626e45');}
-// shaded forest edge
-for(let x=0;x<W;x+=37){drawTree(x+11,82,1.05);drawTree(x+18,493,.95);}drawTree(52,202,1);drawTree(94,235,.9);drawTree(800,180,1);drawTree(858,215,1.05);drawTree(920,182,1);drawTree(775,443,.94);drawTree(901,438,1);
-// road
-poly([[0,407],[0,463],[345,393],[508,322],[498,290],[330,354]],'#76634a');poly([[376,540],[452,540],[524,337],[478,323]],'#76634a');line(0,421,334,364,'#a58a60',2);line(383,539,490,343,'#a58a60',2);
-// pond
-rect(40,260,95,43,'#2c3e2e');rect(46,265,82,32,'#344d50');rect(55,273,52,4,'#728982');
-// large inn
-rect(290,139,288,177,'#2b382c');rect(309,162,250,136,'#8b8062');rect(281,133,306,32,'#252d24');poly([[278,139],[328,104],[540,104],[590,139]],'#302a25');poly([[289,132],[331,111],[538,111],[577,132]],'#55473a');for(let i=0;i<10;i++)line(305,141+i*2,565,141+i*2,'#2b382c',2);rect(387,238,43,60,'#50392b');rect(394,246,10,20,'#a78651');rect(452,188,33,33,'#2a3c3b');rect(456,192,25,25,'#6e8077');rect(324,188,33,33,'#2a3c3b');rect(328,192,25,25,'#6e8077');rect(331,177,19,4,'#2b382c');rect(459,177,19,4,'#2b382c');
-// market stall and fence
-rect(121,333,75,49,'#483528');poly([[111,338],[158,306],[205,338]],'#713738');rect(120,337,77,5,'#b4844a');rect(127,348,12,26,'#aa854e');rect(150,348,12,26,'#bfa46a');rect(174,348,12,26,'#85503a');
-for(let x=600;x<750;x+=23){rect(x,331,16,11,'#3b3228');rect(x+2,325,5,24,'#684f35');rect(x+10,325,5,24,'#684f35');}rect(591,327,177,5,'#765e3f');
-// sign and gate
-rect(810,295,9,67,'#443329');rect(785,283,60,25,'#372a23');rect(791,288,48,14,'#b59a65');text('RUÍNAS',815,298,9,'#3d3627','center');rect(860,291,58,69,'#1c2729');rect(867,298,44,62,'#554334');rect(874,305,30,55,'#171d1e');for(let x=876;x<906;x+=9)rect(x,306,3,53,'#8f7048');
-// flowers and stones
-for(const [x,y] of [[237,412],[258,427],[545,414],[560,405],[714,350],[746,367],[204,272]]){circle(x,y,4,'#cfc070');circle(x+4,y+2,2,'#e6d8a0');rect(x-1,y+4,2,6,'#4e803b');}
-// mobs, NPCs, players
-for(const m of g.slimes)if(m.alive){drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*2,m.name.includes('Besouro')?'#8d9161':'#5c9e6e',m.name.includes('Besouro')?1.05:1);}
-drawHuman(230,333,true);drawHuman(350,333,false);circle(230,306,5,'#f1d171');text('MARA',230,291,10,'#fff1c8','center');text('MERCADOR',350,291,9,'#fff1c8','center');
-// player marker
-const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character);text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),p.x,p.y-65,8,'#f7e7bf','center');rect(p.x-12,p.y-60,24,4,'#1b211e');rect(p.x-10,p.y-59,20,2,'#c6a15a');
-text('BRUMAFORTE',18,111,15,'#f4e6b7');text('Vila dos carregamentos perdidos',18,129,10,'#e0d2a0');text('E: conversar / entrar · J: atacar · M: aprender',18,521,11,'#fff0c4');
+function drawMap(){
+  // Brumaforte: vila medieval no vale, com relevo, bosques e caminho de pedra.
+  rect(0,0,W,H,'#2d422e');
+  for(let x=0;x<W;x+=16){
+    for(let y=0;y<H;y+=16){
+      const n=(Math.abs(Math.sin(x*12.9898+y*78.233)*43758.5453)%1);
+      const c=n>.78?'#3b5035':n>.43?'#34492f':n>.2?'#31452d':'#2d402b';
+      rect(x,y,16,16,c);
+      if(n>.91){
+        rect(x+3,y+5,2,5,'#71804a');
+        rect(x+6,y+8,2,2,'#9b9859');
+      }else if(n<.06){
+        rect(x+5,y+5,5,3,'#3f4938');
+      }
+    }
+  }
+
+  // Hazy hills behind the northern tree line.
+  poly([[0,102],[82,48],[150,82],[218,35],[302,91],[380,52],[461,91],[545,47],[629,94],[718,43],[814,94],[899,48],[960,75],[960,142],[0,142]],'#344732');
+  poly([[0,116],[104,73],[177,105],[264,65],[348,115],[443,71],[528,113],[634,72],[726,111],[823,69],[917,107],[960,94],[960,151],[0,151]],'#3b5036');
+
+  // Pond with a mossy shore, reflections, and small stepping stones.
+  ctx.save();
+  ctx.fillStyle='#1e3228';ctx.beginPath();ctx.ellipse(84,273,57,27,-.12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#385b59';ctx.beginPath();ctx.ellipse(83,270,51,21,-.12,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#4f7970';ctx.beginPath();ctx.ellipse(74,265,31,9,-.12,0,Math.PI*2);ctx.fill();
+  line(53,269,78,267,'#82a69a',1.4);line(86,277,113,273,'#73998e',1.1);line(61,279,74,278,'#5e8880',1);
+  for(const [x,y] of [[35,269],[42,291],[104,294],[129,269],[118,250],[53,249]]){circle(x,y,3,'#777d65');circle(x+1,y-1,1,'#a6a187');}
+  ctx.restore();
+
+  // Dense woodland frames the playable valley without hiding the village.
+  for(let x=-8;x<W+25;x+=38){
+    drawTree(x+6,72,.82+(x%3)*.025);
+    drawTree(x+21,508,.78);
+  }
+  for(const [x,y,z] of [[26,164,.78],[63,204,.67],[140,185,.72],[191,238,.7],[716,151,.68],[754,193,.78],[813,168,.75],[941,210,.83],[738,428,.78],[812,456,.83],[907,433,.76],[68,451,.77],[214,482,.72]]) drawTree(x,y,z);
+
+  // Stone road: dark edge, packed earth, worn middle strip.
+  function roadLayer(color,width){
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();
+    ctx.moveTo(-25,432);ctx.quadraticCurveTo(130,424,279,399);ctx.quadraticCurveTo(403,379,468,330);
+    ctx.quadraticCurveTo(517,294,592,314);ctx.quadraticCurveTo(704,341,827,331);ctx.quadraticCurveTo(895,324,988,346);
+    ctx.stroke();ctx.restore();
+  }
+  roadLayer('#282a25',72);roadLayer('#62503b',66);roadLayer('#887052',57);
+  roadLayer('#927b59',2);
+  ctx.save();ctx.strokeStyle='#b29a72';ctx.lineWidth=1;ctx.setLineDash([3,11]);ctx.beginPath();
+  ctx.moveTo(-20,431);ctx.quadraticCurveTo(130,422,279,398);ctx.quadraticCurveTo(403,378,468,330);
+  ctx.quadraticCurveTo(517,294,592,314);ctx.quadraticCurveTo(704,341,827,331);ctx.quadraticCurveTo(895,324,988,346);
+  ctx.stroke();ctx.setLineDash([]);ctx.restore();
+
+  // Worn cobbles around the inn entrance and crossroads.
+  poly([[330,294],[552,294],[583,320],[558,350],[369,359],[323,331]],'#76654e');
+  poly([[337,298],[550,298],[572,319],[550,343],[372,350],[334,328]],'#8b785a');
+  for(let y=303;y<344;y+=10){
+    for(let x=345+(Math.floor(y/10)%2)*8;x<558;x+=22){
+      line(x,y,x+12,y,'#a48d69',1);
+      line(x+12,y,x+15,y+5,'#6f6049',1);
+    }
+  }
+
+  // The inn, with a layered shingle roof, timber framing and warm windows.
+  poly([[273,148],[295,130],[572,130],[596,149],[589,305],[286,305]],'#202b23');
+  rect(300,157,267,143,'#5f6049');rect(307,163,253,133,'#8d8060');
+  rect(307,163,253,9,'#aa946d');rect(307,292,253,8,'#504638');
+  // Roof shadow and roof planes.
+  poly([[264,150],[324,108],[538,108],[603,149],[582,157],[324,136]],'#191d1b');
+  poly([[277,143],[327,112],[535,112],[588,143],[565,148],[328,128]],'#49372d');
+  poly([[286,139],[330,116],[533,116],[577,139],[558,143],[331,124]],'#65483a');
+  for(let y=121;y<141;y+=5){
+    line(322,y,554,y+7,'#89634a',2);
+    line(347,y-2,574,y+5,'#392d28',1);
+  }
+  // Chimney and smoke wisps.
+  rect(508,88,20,34,'#4b3d32');rect(511,92,13,27,'#82614a');rect(505,87,26,5,'#292725');
+  circle(520,78,5,'#73736a');circle(527,68,4,'#5b6259');circle(525,58,3,'#62685f');
+  // Timber crossbeams.
+  rect(309,177,251,5,'#4b3b2c');rect(309,235,251,4,'#4b3b2c');
+  rect(319,173,5,121,'#55402e');rect(550,173,5,121,'#55402e');
+  line(324,178,351,231,'#55402e',4);line(545,178,519,231,'#55402e',4);
+  // Glowing windows.
+  for(const x of [333,466]){
+    rect(x-4,184,37,43,'#3c3027');rect(x,188,29,34,'#263c3d');
+    rect(x+3,191,23,28,'#9a956b');rect(x+6,194,17,22,'#d4b879');
+    rect(x+14,191,4,28,'#514633');rect(x+3,203,23,4,'#514633');
+    rect(x-5,182,39,4,'#4a3629');rect(x-4,223,37,4,'#4a3629');
+    rect(x+7,197,3,5,'#f1d99b');rect(x+19,208,3,4,'#f1d99b');
+  }
+  // Entrance, stone steps, hanging sign and lantern.
+  rect(388,237,43,62,'#382b23');rect(393,242,33,57,'#6b4a31');
+  rect(398,247,23,52,'#34271f');rect(414,267,3,3,'#e2be72');
+  rect(382,296,55,5,'#5e5040');rect(378,301,63,4,'#b4a078');
+  rect(438,244,8,17,'#352b22');circle(442,264,5,'#e5a854');circle(442,264,2,'#ffe2a0');
+  // Small cottage on the western side of the pond.
+  poly([[155,235],[178,208],[249,208],[273,235]],'#292721');
+  poly([[162,232],[181,212],[246,212],[265,232]],'#793d36');
+  for(let y=218;y<232;y+=4)line(176,y,250,y+2,'#a35a48',1.4);
+  rect(166,233,96,55,'#6b6048');rect(173,238,82,46,'#aa966e');
+  rect(181,247,17,18,'#314044');rect(184,250,11,12,'#d3b978');
+  rect(223,247,17,18,'#314044');rect(226,250,11,12,'#d3b978');
+  rect(204,260,19,28,'#4a3328');rect(218,272,2,3,'#e3bc71');
+  rect(163,285,102,5,'#534434');
+  // Forge hut on the eastern edge with a blue slate roof.
+  poly([[621,246],[647,218],[711,218],[739,246]],'#202624');
+  poly([[627,242],[650,222],[708,222],[733,242]],'#3f4e54');
+  poly([[635,239],[652,226],[706,226],[725,239]],'#647176');
+  rect(632,244,96,63,'#76664d');rect(638,249,84,56,'#a08b67');
+  rect(645,258,20,23,'#283b3c');rect(648,261,14,17,'#d2b875');rect(684,265,23,40,'#4a3329');
+  rect(680,260,30,5,'#534338');circle(694,282,3,'#f2a24c');circle(694,282,1.5,'#ffe09b');
+  rect(627,304,108,5,'#504133');
+  // Market awning and crates, kept near its original interaction point.
+  rect(115,344,82,36,'#493426');rect(121,349,71,27,'#78523b');
+  poly([[105,350],[155,313],[205,350]],'#432b27');poly([[111,345],[155,318],[199,345]],'#963e3a');
+  for(let x=117;x<197;x+=16){line(x,342,x+1,350,'#d1a05b',2);}
+  rect(110,349,91,5,'#d6ad66');rect(118,354,6,23,'#bd955b');rect(145,354,6,23,'#d1b477');rect(172,354,6,23,'#9c6b45');
+  rect(128,381,20,11,'#60452f');rect(151,381,20,11,'#725238');rect(174,381,17,11,'#4a3529');
+  // Fences, field plots and a roadside sign.
+  for(let x=584;x<758;x+=17){rect(x,338,3,20,'#64462f');rect(x+1,339,2,18,'#9b7046');}
+  rect(580,341,185,3,'#6a5037');rect(580,352,185,3,'#6a5037');
+  for(let row=0;row<3;row++)for(let x=775;x<830;x+=11){
+    rect(x,410+row*10,7,3,row%2?'#8c9b58':'#a3a05d');
+    rect(x+2,405+row*10,2,5,'#4d713d');
+  }
+  rect(814,283,7,66,'#49372a');rect(783,278,69,27,'#3a2a22');
+  poly([[784,278],[795,269],[843,269],[853,278]],'#272724');
+  rect(788,281,61,19,'#d1b678');text('RUÍNAS',818,294,10,'#44382b','center');
+  // A fortified gate and the road beyond the village.
+  rect(865,278,58,79,'#222a25');rect(870,285,48,72,'#73563a');rect(876,291,36,66,'#202725');
+  rect(868,278,52,7,'#342e27');rect(870,279,48,3,'#9e8051');
+  for(let x=877;x<913;x+=9){rect(x,292,3,64,'#a58a5b');rect(x+1,292,1,64,'#4e402e');}
+  rect(856,274,9,88,'#3a3027');rect(921,274,9,88,'#3a3027');
+  // Stones, grass clumps, mushrooms and flowers placed deterministically.
+  for(const [x,y] of [[243,420],[263,431],[284,412],[557,405],[575,398],[606,419],[748,377],[769,385],[217,282],[284,291],[600,284],[753,238],[775,254],[815,389],[862,404],[348,430],[390,416]]){
+    circle(x,y,3,'#7d8060');circle(x-1,y-1,1.5,'#b0a47c');
+  }
+  for(const [x,y] of [[213,414],[236,426],[286,425],[556,397],[574,406],[608,418],[744,371],[755,385],[360,435],[394,411],[817,402]]){
+    line(x,y+3,x-1,y+9,'#4b733c',1.5);circle(x,y,2.6,'#d8bd75');circle(x+2,y-1,1.6,'#f0d89b');
+  }
+  // A few loose boulders and weathered standing stones.
+  for(const [x,y] of [[271,275],[291,281],[604,374],[775,302],[837,240],[690,390]]){
+    poly([[x-7,y+2],[x-5,y-3],[x+1,y-5],[x+7,y-1],[x+8,y+3],[x,y+5]],'#465047');
+    line(x-3,y-1,x+2,y-3,'#7d866f',1);
+  }
+
+  // Villagers and monsters are drawn last, so they remain readable.
+  for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*2,m.name.includes('Besouro')?'#8d9161':'#5c9e70',m.name.includes('Besouro')?1.05:1);
+  drawHuman(230,333,true);drawHuman(350,333,false);
+  circle(230,306,5,'#f1d171');text('MARA',230,291,10,'#fff1c8','center');
+  text('MERCADOR',350,291,9,'#fff1c8','center');
+  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character);
+  text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),p.x,p.y-65,8,'#f7e7bf','center');
+  rect(p.x-12,p.y-60,24,4,'#1b211e');rect(p.x-10,p.y-59,20,2,'#c6a15a');
 }
+
 function drawKnight(x,y,camera){const sx=x-camera;rect(sx-9,y-32,18,23,'#414b4d');rect(sx-8,y-37,16,8,'#9ca3a0');rect(sx-6,y-33,12,6,'#20292b');rect(sx-10,y-7,7,15,'#343a3c');rect(sx+3,y-7,7,15,'#343a3c');rect(sx-11,y-25,5,15,'#9d9b88');rect(sx+6,y-26,5,8,'#b8b6a5');rect(sx-3,y-30,3,2,'#e7a66b');}
 function drawAction(){const camera=Math.max(0,Math.min(1900-W,g.actionPlayer.x-330));const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#15242a');grad.addColorStop(.65,'#1d2224');grad.addColorStop(1,'#362d2a');rect(0,0,W,H,'#172126');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
 // distant ruined silhouettes
