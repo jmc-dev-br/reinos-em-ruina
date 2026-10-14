@@ -215,7 +215,7 @@ body{position:fixed;inset:0}
 .region-card{border-radius:2px!important;border-color:#4c4031!important;background:linear-gradient(120deg,#1b1b20,#111318)!important}.region-card:hover:not(:disabled){border-color:#d0ab66!important;transform:translateY(-1px)}.region-card.current{box-shadow:inset 0 0 0 1px #d0ab6655;border-color:#bb965b!important}
 .region-art{border:1px solid #8d714b!important;box-shadow:inset 0 0 20px #0007}.region-art.region-brumaforte{background:linear-gradient(135deg,#6b884e,#c6b178,#4a7046)!important}.region-art.region-bosque{background:linear-gradient(135deg,#172a20,#496b43,#89905d)!important}.region-art.region-lago{background:linear-gradient(135deg,#17383e,#477c83,#c0b48d)!important}
 .battle-card[data-card="classpower"]{border-color:#b89556;background:linear-gradient(145deg,#30271f,#1c1b1e)}
-@media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.class-grid{grid-template-columns:1fr;gap:7px}.class-card{grid-template-columns:34px 1fr;padding:9px;gap:8px}.class-icon{width:33px;height:36px;font-size:19px}.difficulty-grid{grid-template-columns:1fr;gap:6px}.difficulty-card{padding:9px}.class-stat .value{font-size:10px!important}}
+@media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.class-grid{grid-template-columns:1fr;gap:7px}.class-card{grid-template-columns:34px 1fr;padding:9px;gap:8px}.class-icon{width:33px;height:36px;font-size:19px}.difficulty-grid{grid-template-columns:1fr;gap:6px}.difficulty-card{padding:9px}.class-stat .value{font-size:10px!important}.canvashead{top:158px}}
 </style>
 </head>
 <body>
@@ -952,6 +952,7 @@ function renderTacticalBattle(){
  if(!tacticalBattle||tacticalBattle.finished)return;
  const b=tacticalBattle;
  const cls=classProfile();
+ const guardValue=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4+(g.classId==='guardian'?Math.max(0,g.skillRanks?.bulwark||0)*6:0);
  const enemy=escapeHtml(b.mob.name||'Criatura desconhecida');
  const ep=Math.max(0,Math.min(100,b.enemyHp/b.enemyMax*100));
  const pp=Math.max(0,Math.min(100,g.hp/g.maxHp*100));
@@ -970,9 +971,9 @@ function renderTacticalBattle(){
   '<div class="battle-section-title">SUA MÃO · ESCOLHA UMA CARTA</div><div class="card-grid">'+
    '<button class="battle-card" data-card="quick" '+(b.energy<1?'disabled':'')+'><strong>⚔ Golpe preciso</strong><small>Causa '+playerDamage('basic')+' de dano fixo.</small><span class="card-cost">1 ENERGIA</span></button>'+
    '<button class="battle-card" data-card="heavy" '+(b.energy<2?'disabled':'')+'><strong>🗡 Estocada pesada</strong><small>Causa '+playerDamage('heavy')+' de dano fixo.</small><span class="card-cost">2 ENERGIA</span></button>'+
-   '<button class="battle-card" data-card="guard" '+(b.energy<2?'disabled':'')+'><strong>🛡 Guarda de pedra</strong><small>Bloqueia até 15 pontos do próximo ataque.</small><span class="card-cost">2 ENERGIA</span></button>'+
+   '<button class="battle-card" data-card="guard" '+(b.energy<2?'disabled':'')+'><strong>🛡 Guarda de pedra</strong><small>Bloqueia até '+guardValue+' pontos do próximo ataque.</small><span class="card-cost">2 ENERGIA</span></button>'+
    '<button class="battle-card" data-card="potion" '+(b.energy<1||g.potions<1||g.hp>=g.maxHp?'disabled':'')+'><strong>✚ Poção de ervas</strong><small>Recupera 30 de vida. Você tem '+g.potions+' poção(ões).</small><span class="card-cost">1 ENERGIA</span></button>'+
-  '<button class="battle-card" data-card="classpower" '+(b.energy<2?'disabled':'')+'><strong>'+cls.powerIcon+' '+escapeHtml(cls.powerName)+'</strong><small>'+(cls.powerType==='shield'?'Gera escudo para o próximo ataque.':'Causa '+playerDamage('power')+' de dano fixo.')+'</small><span class="card-cost">2 ENERGIA</span></button>'+
+  '<button class="battle-card" data-card="classpower" '+(b.energy<2||g.level<2?'disabled':'')+'><strong>'+cls.powerIcon+' '+escapeHtml(cls.powerName)+'</strong><small>'+(cls.powerType==='shield'?'Gera escudo para o próximo ataque.':'Causa '+playerDamage('power')+' de dano fixo.')+'</small><span class="card-cost">2 ENERGIA</span></button>'+
   '</div><div class="battle-log"><strong>Registro de combate:</strong> '+escapeHtml(b.log)+'</div>'+
   '<div class="battle-disclaimer">Recursos e recompensas são fictícios. Este é um combate local; PvP e mundo compartilhado ainda exigem um servidor.</div>';
  showModal('tactical','Combate tático · Cartas',body,[
@@ -985,11 +986,12 @@ function playTacticalCard(id){
  const b=tacticalBattle;if(!b||b.finished)return;
  const cards={quick:{cost:1},heavy:{cost:2},guard:{cost:2},potion:{cost:1},classpower:{cost:2}};
  const card=cards[id];if(!card||b.energy<card.cost)return;
+ if(id==='classpower'&&g.level<2){notify('Seu poder de classe desperta no nível 2.',2.5);return;}
  if(id==='potion'&&(g.potions<1||g.hp>=g.maxHp)){notify(g.potions<1?'Você não tem poções.':'Sua vida já está cheia.',2);renderTacticalBattle();return;}
  b.energy-=card.cost;
  if(id==='quick'){const damage=playerDamage('basic');b.enemyHp-=damage;b.log='Golpe preciso: '+damage+' de dano fixo por 1 energia.';spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#ffb27e');playSfx('hit');triggerScreenShake(2.4,.12);}
  else if(id==='heavy'){const damage=playerDamage('heavy');b.enemyHp-=damage;b.log='Estocada pesada: '+damage+' de dano fixo por 2 energias.';spawnCombatText('-'+damage+'!',b.mob.x,b.mob.y-30,'#ffd06d');playSfx('hit');triggerScreenShake(5,.2);}
- else if(id==='guard'){const guard=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4;b.block+=guard;b.log='Guarda de pedra: até '+guard+' pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
+ else if(id==='guard'){const guard=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4+(g.classId==='guardian'?Math.max(0,g.skillRanks?.bulwark||0)*6:0);b.block+=guard;b.log='Guarda de pedra: até '+guard+' pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
  else if(id==='potion'){g.potions--;const healed=Math.min(30+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4,g.maxHp-g.hp);g.hp+=healed;spawnCombatText('+'+healed+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-40,'#7ee59d');playSfx('heal');b.log='Poção: você recuperou '+healed+' pontos de vida.';}
  else if(id==='classpower'){const c=classProfile();if(c.powerType==='shield'){const shield=c.powerShield+Math.max(0,g.skillRanks?.bulwark||0)*6+Math.max(0,g.skillRanks?.stoneGuard||0)*4;b.block+=shield;b.log=c.powerName+': '+shield+' pontos de bloqueio.';playSfx('magic');}else{const damage=playerDamage('power');b.enemyHp-=damage;b.log=c.powerName+': '+damage+' de dano fixo.';spawnCombatText('-'+damage,b.mob.x,b.mob.y-30,'#c7a6ff');playSfx('magic');triggerScreenShake(4,.18);}}
  b.mob.hp=Math.max(0,b.enemyHp);
@@ -2235,6 +2237,7 @@ function updateEnemyCombat(dt){
 function update(dt){
  updateAmbient(dt);
  g.attackCD=Math.max(0,g.attackCD-dt);g.invuln=Math.max(0,g.invuln-dt);g.powerCooldown=Math.max(0,(g.powerCooldown||0)-dt);
+ const powerHudTick=Math.ceil(g.powerCooldown*4);if(g._powerHudTick!==powerHudTick){g._powerHudTick=powerHudTick;const cp=classProfile();$('powerBtn').innerHTML=(cp.powerIcon||'✦')+' '+(g.powerCooldown>0?g.powerCooldown.toFixed(1)+'s':'Poder')+' <span class="kbd">Q</span>';$('powerBtn').title=cp.powerName+' · '+(g.level<2?'desbloqueia no nível 2':g.powerCooldown>0?'recarrega em '+g.powerCooldown.toFixed(1)+'s':'pronto para usar');$('powerfill').style.width=(g.level<2?0:Math.max(0,100-(g.powerCooldown/cp.cooldown*100)))+'%';}
  g.toastTimer=Math.max(0,g.toastTimer-dt);playerMotion.idleTime+=dt;
  if(g.toastTimer===0)$('toast').classList.remove('show');
  if(modalType){playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;if(g.actionPlayer)g.actionPlayer.vx=0;render();return;}
