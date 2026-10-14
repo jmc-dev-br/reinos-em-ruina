@@ -33,7 +33,7 @@ h1{margin:23px 0 19px;font-size:clamp(43px,6.5vw,82px);line-height:.91;letter-sp
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 /* Centered, pixel-art kingdom menu */
 body{font-family:"Courier New",Consolas,monospace;background:#080b13}
-.backdrop{background:#0d1421 url("assets/kingdom-menu.webp") center center/cover no-repeat}
+.backdrop{background:#0d1421 url("assets/kingdom-menu.svg") center center/cover no-repeat}
 .backdrop:after{background:linear-gradient(90deg,#060a11a8 0%,#060a1170 28%,#060a1140 70%,#060a1180 100%),linear-gradient(0deg,#05080fca 0%,transparent 40%,#05080f36 100%)}
 .backdrop svg{display:none}
 .backdrop .fog{opacity:.45}
@@ -114,7 +114,7 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 @media(max-width:540px){.topbar{padding:10px 12px;min-height:48px}.topright{gap:4px}#headerLanguage{font-size:9px;padding:7px 9px}.stage{padding:52px 12px 48px}#homeView .hero-copy{width:min(420px,98vw)}#homeView h1{font-size:clamp(37px,11vw,52px);margin-bottom:21px}#homeView .primary-actions{width:min(330px,94vw);padding:9px;gap:7px}#homeView .action{min-height:44px}#homeView #homeNote{font-size:9px;margin-top:23px;padding:10px 8px}.footer{padding:8px 12px;font-size:8px}}
 
 /* --- Final art-directed menu: match the supplied reference --- */
-.backdrop{background:#0d1421 url("assets/kingdom-menu.webp") center center/cover no-repeat}
+.backdrop{background:#0d1421 url("assets/kingdom-menu.svg") center center/cover no-repeat}
 .backdrop:after{background:linear-gradient(0deg,#05080f30 0%,transparent 38%);opacity:1}
 .backdrop .stars,.backdrop .fog,.backdrop svg{display:none!important}
 .topbar{position:absolute;top:0;left:0;right:0;height:78px;min-height:0;padding:14px 18px;background:linear-gradient(180deg,#090b13a6,transparent);border:0;box-shadow:none;z-index:5}
@@ -207,7 +207,7 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 
 
 /* Correct final menu: no duplicate HTML artwork, no artificial sharpening, preserve 16:9 proportions. */
-body:has(#homeView.active) .backdrop{background:#07090f url("assets/kingdom-menu.webp") center center/contain no-repeat!important;image-rendering:auto;filter:none}
+body:has(#homeView.active) .backdrop{background:#07090f url("assets/kingdom-menu.svg") center center/contain no-repeat!important;image-rendering:auto;filter:none}
 body:has(#homeView.active) .backdrop:after,body:has(#homeView.active) .backdrop .stars,body:has(#homeView.active) .backdrop .fog,body:has(#homeView.active) .backdrop svg{display:none!important}
 body:has(#homeView.active) .topbar,body:has(#homeView.active) .footer{display:none!important}
 body:has(#homeView.active) .stage{position:relative;z-index:1;min-height:100vh;height:100vh;width:100%;padding:0!important;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -231,6 +231,117 @@ body:has(#homeView.active) .stage{position:relative;z-index:1;min-height:100vh;h
  body:has(#homeView.active) .backdrop{background-size:contain!important}
  .menu-hotspots{width:min(100vw,177.7778vh);height:min(56.25vw,100vh)}
 }
+
+/* Final simple background: use the real HTML menu, not text baked into an image. */
+body:has(#homeView.active) .backdrop{
+ background:#151b2b url("assets/kingdom-menu.svg") center center/cover no-repeat!important;
+ image-rendering:auto!important;filter:none!important;
+}
+body:has(#homeView.active) .backdrop:after,
+body:has(#homeView.active) .backdrop .stars,
+body:has(#homeView.active) .backdrop .fog,
+body:has(#homeView.active) .backdrop svg{display:none!important}
+body:has(#homeView.active) .topbar{
+ display:flex!important;position:absolute!important;top:0;left:0;right:0;
+ height:auto!important;min-height:70px!important;padding:12px clamp(16px,4vw,52px)!important;
+ align-items:center!important;justify-content:space-between!important;
+ background:linear-gradient(180deg,#0b1122c7,transparent)!important;
+ border:0!important;box-shadow:none!important;backdrop-filter:none!important;z-index:20!important;
+}
+body:has(#homeView.active) .topbar .brand{display:flex!important}
+body:has(#homeView.active) .footer{
+ display:flex!important;position:absolute!important;bottom:0;left:0;right:0;
+ align-items:center;justify-content:space-between;padding:10px 22px;
+ background:linear-gradient(0deg,#101727a8,transparent)!important;
+ border:0!important;box-shadow:none!important;z-index:10!important;
+}
+body:has(#homeView.active) .stage{
+ position:relative;z-index:1;width:100%;max-width:none;min-height:100vh;height:100vh;
+ display:flex;align-items:center;justify-content:center;
+ padding:76px 18px 54px!important;margin:0;box-sizing:border-box;
+}
+body:has(#homeView.active) #homeView{
+ display:flex!important;align-items:center;justify-content:center;
+ width:100%;min-height:0;max-width:none;
+}
+body:has(#homeView.active) #homeView .hero{
+ display:flex!important;width:100%;align-items:center;justify-content:center;
+}
+body:has(#homeView.active) #homeView .hero-copy{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ width:min(460px,94vw);max-width:460px;padding:20px 24px 18px;
+ position:relative;transform:none!important;text-align:center;
+ background:rgba(10,15,27,.72)!important;
+ border:1px solid rgba(226,185,112,.38)!important;
+ border-radius:12px!important;outline:none!important;
+ box-shadow:0 18px 48px rgba(0,0,0,.38)!important;
+ backdrop-filter:blur(4px);
+}
+body:has(#homeView.active) #homeView .hero-copy>.eyebrow{
+ display:block!important;color:#e4c486!important;font-size:10px!important;
+ letter-spacing:.16em!important;margin:0 auto 10px!important;
+}
+body:has(#homeView.active) #homeView h1{
+ display:block!important;font-size:clamp(42px,5vw,64px)!important;line-height:.94!important;
+ margin:0 auto 16px!important;letter-spacing:-.04em!important;
+}
+body:has(#homeView.active) #homeView h1:before{font-size:28px!important;margin-bottom:5px!important}
+body:has(#homeView.active) #homeView .lede{
+ display:block!important;color:#e7ddca!important;font-size:13px!important;
+ line-height:1.5!important;margin:0 auto 12px!important;max-width:390px;
+}
+body:has(#homeView.active) #homeView .description,
+body:has(#homeView.active) #homeView .ornament,
+body:has(#homeView.active) #homeView .hero-art{display:none!important}
+body:has(#homeView.active) #homeView .primary-actions{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:8px!important;width:min(340px,100%)!important;max-width:none!important;
+ margin:0 auto!important;padding:0!important;background:transparent!important;
+ border:0!important;outline:0!important;box-shadow:none!important;
+}
+body:has(#homeView.active) #homeView .primary-actions:before,
+body:has(#homeView.active) #homeView .primary-actions:after{display:none!important}
+body:has(#homeView.active) #homeView .action{
+ display:flex!important;visibility:visible!important;opacity:1!important;
+ min-height:49px!important;padding:7px 14px!important;border:1px solid #806943!important;
+ border-radius:7px!important;outline:none!important;
+ background:linear-gradient(180deg,rgba(40,45,56,.96),rgba(23,28,39,.96))!important;
+ box-shadow:0 3px 0 rgba(0,0,0,.35)!important;
+ color:#f5e9d1!important;transform:none!important;
+}
+body:has(#homeView.active) #homeView .action.primary{
+ min-height:54px!important;background:linear-gradient(180deg,#85413c,#57272d)!important;
+ border-color:#d1a65e!important;
+}
+body:has(#homeView.active) #homeView .action-label strong{
+ display:block!important;font-size:14px!important;letter-spacing:.09em!important;
+}
+body:has(#homeView.active) #homeView .action-label small{
+ display:block!important;color:#c7bba7!important;font-size:10px!important;margin-top:2px;
+}
+body:has(#homeView.active) #homeView .action-icon{font-size:21px!important;left:17px!important}
+body:has(#homeView.active) #homeView .action .arrow{font-size:22px!important;right:14px!important}
+body:has(#homeView.active) #homeView #homeNote{
+ display:block!important;box-sizing:border-box;width:min(420px,100%)!important;
+ margin:15px auto 0!important;padding:10px 12px!important;
+ background:rgba(6,10,18,.58)!important;border:1px solid rgba(226,185,112,.26)!important;
+ outline:none!important;box-shadow:none!important;border-radius:7px!important;
+ color:#e4d2ae!important;font:12px/1.6 Georgia,"Times New Roman",serif!important;
+ white-space:pre-line!important;
+}
+body:has(#homeView.active) .menu-hotspots{display:none!important}
+@media(max-width:600px){
+ body:has(#homeView.active) .topbar{min-height:54px!important;padding:8px 12px!important}
+ body:has(#homeView.active) .topbar .brand{max-width:55vw}
+ body:has(#homeView.active) .stage{padding:64px 10px 44px!important}
+ body:has(#homeView.active) #homeView .hero-copy{width:min(420px,96vw);padding:16px 13px 13px}
+ body:has(#homeView.active) #homeView h1{font-size:clamp(39px,10vw,54px)!important}
+ body:has(#homeView.active) #homeView .lede{font-size:12px!important}
+ body:has(#homeView.active) #homeView .action{min-height:45px!important}
+ body:has(#homeView.active) #homeView .action.primary{min-height:49px!important}
+ body:has(#homeView.active) #homeView #homeNote{font-size:11px!important;margin-top:11px!important}
+}
+
 </style>
 </head>
 <body>
