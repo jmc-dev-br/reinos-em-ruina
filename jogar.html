@@ -1301,6 +1301,17 @@ function drawNPCActor(id,x,y,prop='none'){
  const time=performance.now()/1000,phase={mara:.2,ivo:1.1,toren:2.3,elira:3.2,brann:4.1,sabela:5,liora:2.8,arven:1.7,yara:4.7,neris:.8}[id]||0;
  drawPlayer(x,y+Math.sin(time*1.35+phase)*.65,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
  ctx.save();
+ // Readable role silhouettes: accents remain visible at normal game zoom.
+ if(id==='mara'){line(x-7,y-38,x+5,y-25,'#ddc777',3);circle(x+1,y-31,3,'#f0d995');}
+ else if(id==='ivo'){rect(x-15,y-27,8,12,'#754728');rect(x-14,y-29,6,3,'#d9b35d');circle(x+1,y-34,3,'#e5c46b');}
+ else if(id==='toren'){poly([[x-6,y-43],[x+6,y-43],[x+5,y-22],[x-5,y-22]],'#292d2b');line(x-4,y-37,x+4,y-37,'#a07c48',1);rect(x-2,y-31,4,3,'#d1a65d');}
+ else if(id==='elira'){circle(x-5,y-63,3,'#e3c96e');circle(x+1,y-66,3,'#d88972');circle(x+6,y-62,3,'#d8d57b');line(x-5,y-37,x+5,y-27,'#91b96a',3);}
+ else if(id==='brann'){poly([[x-12,y-59],[x-9,y-65],[x+7,y-65],[x+12,y-59]],'#6b5637');rect(x-14,y-59,28,3,'#b69861');}
+ else if(id==='sabela'){rect(x-8,y-61,16,4,'#9c3e3c');circle(x-7,y-29,2,'#e1b65e');circle(x+7,y-29,2,'#e1b65e');}
+ else if(id==='liora'){poly([[x-12,y-54],[x-10,y-64],[x-5,y-69],[x+6,y-68],[x+12,y-58],[x+8,y-53],[x+4,y-61],[x-5,y-62]],'#243c31');line(x-9,y-38,x-3,y-28,'#7aa05c',3);}
+ else if(id==='arven'){rect(x-14,y-42,7,15,'#8a9a92');rect(x-12,y-40,3,11,'#d0c5a5');line(x+11,y-42,x+16,y-24,'#b9c3bc',2);}
+ else if(id==='yara'){poly([[x-10,y-40],[x,y-45],[x+10,y-40],[x+6,y-33],[x-6,y-33]],'#315f86');circle(x+2,y-34,3,'#b3ebea');}
+ else if(id==='neris'){rect(x-7,y-36,14,8,'#5c4632');rect(x-5,y-34,10,4,'#d2bd8a');line(x-5,y-57,x-1,y-57,'#d8dfd0',1);line(x+1,y-57,x+5,y-57,'#d8dfd0',1);}
  if(prop==='hammer'){
   const swing=Math.sin(time*3.4+phase)*.24;ctx.translate(x+13,y-25);ctx.rotate(swing);
   rect(-1,0,3,13,'#6f4c31');rect(-5,-5,11,5,'#a7ada7');rect(-4,-7,9,2,'#d5d4c5');
@@ -1320,6 +1331,11 @@ function drawNPCActor(id,x,y,prop='none'){
   line(x+15,y-8,x+18,y-43,'#775536',3);circle(x+18,y-46,5,'#86c5cc');circle(x+18,y-46,2,'#dbf4d4');
  }else if(prop==='bow'){
   ctx.strokeStyle='#98663c';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+13,y-20,11,-Math.PI*.6,Math.PI*.6);ctx.stroke();line(x+19,y-29,x+19,y-11,'#e1d5ad',1);
+ }else if(prop==='book'){
+  poly([[x+8,y-20],[x+15,y-22],[x+20,y-18],[x+20,y-7],[x+14,y-10],[x+8,y-7]],'#382d25');
+  poly([[x+9,y-19],[x+14,y-20],[x+14,y-11],[x+9,y-9]],'#cfbc8a');poly([[x+15,y-20],[x+19,y-18],[x+19,y-9],[x+15,y-11]],'#e2d6ad');
+ }else if(prop==='sword'){
+  line(x+13,y-12,x+22,y-36,'#aeb8b4',3);line(x+10,y-17,x+16,y-15,'#9f7448',3);line(x+19,y-35,x+24,y-37,'#e6e9df',1);
  }
  ctx.restore();
 }
@@ -1337,11 +1353,23 @@ function npcPortraitData(id){
  try{return sprite?sprite.toDataURL():'';}catch(err){return '';}
 }
 
+function drawNameplate(name,x,y,color='#f5edc5',size=9){
+ if(!gameSettings.showLabels||!name)return 0;
+ const label=String(name).toUpperCase().slice(0,30);
+ ctx.save();ctx.font=`bold ${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;ctx.textAlign='center';ctx.textBaseline='alphabetic';
+ const width=Math.ceil(ctx.measureText(label).width),left=x-width/2-5,top=y-size-5;
+ ctx.fillStyle='rgba(8,13,12,.94)';ctx.fillRect(left,top,width+10,size+10);
+ ctx.strokeStyle='rgba(194,210,165,.8)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left+2,top+1);ctx.lineTo(left+width+8,top+1);ctx.stroke();
+ ctx.lineWidth=2.5;ctx.strokeStyle='#111510';ctx.strokeText(label,x,y);
+ ctx.fillStyle=color;ctx.fillText(label,x,y);
+ ctx.strokeStyle=color;ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x-width/2,y+2);ctx.lineTo(x+width/2,y+2);ctx.stroke();
+ ctx.restore();return width;
+}
 function drawNPCName(name,x,y,status){
  if(!gameSettings.showLabels)return;
  const color=status==='complete'?'#b6e68a':status==='active'?'#ffd06b':'#f5edc5';
- text(name,x,y,8,color,'center');
- if(status&&status!=='none')text(status==='complete'?'✓':status==='active'?'!':'?',x+27,y-1,9,color,'center');
+ const width=drawNameplate(name,x,y-17,color,8.5);
+ if(status&&status!=='none')drawNameplate(status==='complete'?'✓':status==='active'?'!':'?',x+width/2+9,y-17,color,8.5);
 }
 
 function buildAnimatedPlayerFrame(sprite,a,dir,step,moving){
@@ -1750,7 +1778,7 @@ function drawBrumaforteMap(){
 
   // Creatures, NPCs and player remain on their original interaction coordinates.
   for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);}
-  drawNPCActor('mara',230,333,'none');drawNPCActor('ivo',350,333,'tray');
+  drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
   drawNPCActor('toren',747,315,'hammer');
   drawNPCActor('elira',455,456,'basket');
   drawNPCActor('brann',248,452,'rod');
@@ -1758,12 +1786,12 @@ function drawBrumaforteMap(){
   if(gameSettings.showLabels){
     text('BRUMAFORTE',18,166,12,'#eaf2c8');
     text('MERCADO',136,286,8,'#f5f4cc','center');text('ESTALAGEM',362,285,8,'#f5f4cc','center');text('FERREIRO',758,285,8,'#f5f4cc','center');
-    text('MARA',230,269,9,'#f7f0be','center');text('IVO · MERCADO',350,269,7,'#f7f0be','center');
-    drawNPCName('TOREN',747,252,g.sideQuests.toren);
-    drawNPCName('ELIRA',455,393,g.sideQuests.elira);
-    drawNPCName('BRANN',248,389,g.sideQuests.brann);
-    text('SABELA',565,252,8,'#fff0c5','center');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
-    text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
+    drawNPCName('MARA · GUARDIÃ',230,269,'none');drawNPCName('IVO · MERCADOR',350,269,'none');
+    drawNPCName('TOREN · FERREIRO',747,252,g.sideQuests.toren);
+    drawNPCName('ELIRA · HERBORISTA',455,393,g.sideQuests.elira);
+    drawNPCName('BRANN · PESCADOR',248,389,g.sideQuests.brann);
+    drawNPCName('SABELA · ESTALAJADEIRA',565,252,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
+    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-83,'#f4d49a',9);
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
@@ -1856,10 +1884,10 @@ function drawForestMap(){
  for(let i=0;i<25;i++){const x=24+rand01(i+7)*900,y=130+rand01(i+79)*365;rect(x,y,3,2,i%3===0?'#9cae65':'#789c58');}
  for(let i=0;i<5;i++){const fx=128+i*164+Math.sin(visualFX.worldSeconds+i)*7,fy=176+Math.sin(visualFX.worldSeconds*1.4+i*2)*22;circle(fx,fy,2,'#e7dc86');}
  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*3+m.x)*2,'#779c66',1.15);}
- drawNPCActor('liora',180,366,'none');drawNPCActor('arven',315,455,'none');
+ drawNPCActor('liora',180,366,'bow');drawNPCActor('arven',315,455,'sword');
  if(gameSettings.showLabels){
   text('BOSQUE VELADO',18,164,12,'#f0e8bd');
-  drawNPCName('LIORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN',315,393,g.sideQuests.arven);
+  drawNPCName('LIORA · RASTREADORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN · VIGIA',315,393,g.sideQuests.arven);
   text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
  }
@@ -1890,9 +1918,9 @@ function drawLakeMap(){
  for(const [x,y] of [[526,300],[540,286],[560,275],[578,259],[595,241]]){circle(x,y,3,'#a1a586');circle(x-1,y-1,1,'#d1cc9c');}
  rect(483,330,48,8,'#6e5135');rect(486,326,3,4,'#c4ad79');rect(521,326,3,4,'#c4ad79');
  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*2.8+m.x)*1.8,'#7b9d75',1.15);}
- drawNPCActor('yara',270,419,'none');drawNPCActor('neris',457,388,'none');
+ drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'book');
  if(gameSettings.showLabels){
-  text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA',270,357,g.sideQuests.yara);text('NERIS',457,326,8,'#f7f1c9','center');
+  text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,357,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,326,'none');
   text('ATRACADOURO',622,318,8,'#f8e8b7','center');const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
  }
  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
@@ -1970,7 +1998,7 @@ const plats=[{x:460,y:350,w:150},{x:760,y:295,w:125},{x:1115,y:365,w:160},{x:145
 const portalX=80-camera;rect(portalX-20,335,40,112,'#10191b');rect(portalX-14,342,28,105,'#5c4935');rect(portalX-8,350,16,97,'#253c37');circle(portalX,361,4,'#b3c99c');
 const relicX=1780-camera;if(relicX>-60&&relicX<W+60){rect(relicX-26,420,52,22,'#66533b');rect(relicX-20,392,40,31,'#8b744f');rect(relicX-15,385,30,7,'#c5a96c');rect(relicX-2,389,4,23,'#292823');}
 for(const m of g.ruinMobs)if(m.alive){const x=m.x-camera,y=m.y+Math.sin(performance.now()/250+m.x)*1.2;if(x<-60||x>W+60)continue;if(m.type==='slime')drawSlime(x,y,'#679173',1.05);else if(m.type==='skeleton'){rect(x-10,y-31,20,27,'#b3aa8e');rect(x-9,y-41,18,12,'#c6c0aa');rect(x-5,y-37,3,3,'#282b2a');rect(x+3,y-37,3,3,'#282b2a');rect(x-10,y-4,6,13,'#9b9177');rect(x+4,y-4,6,13,'#9b9177');rect(x-15,y-20,5,17,'#9b9177');rect(x+10,y-22,5,19,'#9b9177');}else if(m.type==='bat'){circle(x,y-17,8,'#8b7683');poly([[x-5,y-19],[x-25,y-31],[x-19,y-9],[x-6,y-12]],'#58465d');poly([[x+5,y-19],[x+25,y-31],[x+19,y-9],[x+6,y-12]],'#58465d');rect(x-3,y-19,2,2,'#efb26b');rect(x+2,y-19,2,2,'#efb26b');}else drawKnight(x,y,camera);if(m.boss)drawBossBar(m,x,y-50,120);}
-const p=g.actionPlayer;const px=p.x-camera;const py=p.y;drawPlayer(px,py,g.character,{...playerMotion,dir:p.face<0?'left':'right',moving:playerMotion.moving||!p.onGround});text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),px,py-65,8,'#f2d49a','center');rect(px-12,py-60,24,4,'#202a31');rect(px-10,py-59,20,2,'#d3b66f');if(g.attackCD>.12){line(px+11*p.face,py-22,px+48*p.face,py-34,'#e6e0c9',4);line(px+12*p.face,py-23,px+46*p.face,py-35,'#f9f2db',1);}
+const p=g.actionPlayer;const px=p.x-camera;const py=p.y;drawPlayer(px,py,g.character,{...playerMotion,dir:p.face<0?'left':'right',moving:playerMotion.moving||!p.onGround});drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),px,py-83,'#f2d49a',9);rect(px-12,py-60,24,4,'#202a31');rect(px-10,py-59,20,2,'#d3b66f');if(g.attackCD>.12){line(px+11*p.face,py-22,px+48*p.face,py-34,'#e6e0c9',4);line(px+12*p.face,py-23,px+46*p.face,py-35,'#f9f2db',1);}
 text('RUÍNAS DA MOEDA PARTIDA',18,109,14,'#e2d2ae');text('A · D andar   ESPAÇO pular   J atacar',18,521,11,'#e7d5b8');
 // minimap and health-boss hint
 rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.max(3,(g.actionPlayer.x/1900)*126),5,'#dda762');text('MAPA DAS RUÍNAS',801,98,9,'#c2c5b9');circle(801+(g.actionPlayer.x/1900)*126,105,3,'#fff0be');
@@ -1990,6 +2018,39 @@ function mapBlocked(x,y){
  return boxes.some(([bx,by,bw,bh])=>x>bx-13&&x<bx+bw+13&&y>by-5&&y<by+bh+12);
 }
 function approach(current,target,rate,dt){return current+(target-current)*Math.min(1,rate*dt);}
+function updateEnemyCombat(dt){
+ const mobs=allMobs().filter(m=>m.alive),p=g.scene==='map'?g.mapPlayer:g.actionPlayer;
+ for(const mob of mobs){
+  mob.attackCooldown=Math.max(-1,(typeof mob.attackCooldown==='number'?mob.attackCooldown:.65)-dt);
+  let dx=p.x-mob.x,dy=(g.scene==='map'?p.y-mob.y:0),distance=Math.hypot(dx,dy);
+  const boss=!!mob.boss,aggro=g.scene==='map'?(boss?190:135):275;
+  if(distance<aggro&&distance>1){
+   const speed=boss?24:mob.type==='bat'?34:mob.type==='mistwolf'?31:23;
+   if(g.scene==='map'){
+    const step=Math.min(distance-(boss?37:25),speed*dt);
+    if(step>0){mob.x=Math.max(18,Math.min(942,mob.x+dx/distance*step));mob.y=Math.max(137,Math.min(522,mob.y+dy/distance*step));}
+   }else if(Math.abs(dx)>22){mob.x=Math.max(28,Math.min(1865,mob.x+Math.sign(dx)*speed*dt));}
+  }
+  dx=p.x-mob.x;dy=g.scene==='map'?p.y-mob.y:Math.abs(p.y-mob.y)*.6;distance=Math.hypot(dx,dy);
+  const reach=g.scene==='map'?(boss?43:29):(boss?38:29);
+  const close=g.scene==='map'?distance<reach:(Math.abs(dx)<reach&&Math.abs(p.y-mob.y)<58);
+  if(!close||mob.attackCooldown>0||g.invuln>0)continue;
+  const ranges=mob.type==='leviathan'?[18,26]:mob.type==='mistwolf'?[15,23]:mob.type==='knight'?[12,18]:mob.type==='skeleton'?[9,15]:mob.type==='bat'?[7,12]:mob.name&&mob.name.includes('Besouro')?[9,14]:[6,11];
+  const raw=ranges[0]+Math.floor(Math.random()*(ranges[1]-ranges[0]+1));
+  const armor=Math.max(0,(g.attributes?.defense||1)-1);
+  const damage=Math.max(1,raw-armor);g.hp=Math.max(0,g.hp-damage);g.invuln=1.05;mob.attackCooldown=1.4+Math.random()*.3;
+  spawnCombatText('-'+damage,p.x,p.y-48,'#ff716c');playSfx('hit');triggerScreenShake(3.2,.16);updateUI();
+  notify((mob.name||'A criatura')+' acertou você: -'+damage+' de vida.',1.5);
+  if(g.hp<=0){
+   g.coins=Math.max(0,g.coins-3);g.hp=Math.max(25,Math.ceil(g.maxHp*.4));g.invuln=1.8;
+   if(g.scene==='map'){
+    const spots={brumaforte:[128,334],bosque:[78,446],lago:[88,450]},spot=spots[g.region]||spots.brumaforte;g.mapPlayer.x=spot[0];g.mapPlayer.y=spot[1];
+   }else{g.actionPlayer.x=70;g.actionPlayer.y=430;g.actionPlayer.vy=0;g.actionPlayer.onGround=true;}
+   playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;notify('Você caiu em batalha e voltou ao último refúgio. Recuperou parte da vida e perdeu 3 cobres.',3.8);persistProgress();updateUI();return;
+  }
+  persistProgress();
+ }
+}
 function update(dt){
  updateAmbient(dt);
  g.attackCD=Math.max(0,g.attackCD-dt);g.invuln=Math.max(0,g.invuln-dt);
@@ -2030,6 +2091,7 @@ function update(dt){
    playerMotion.moving=Math.abs(p.vx)>12||!p.onGround;
    if(playerMotion.moving)playerMotion.phase+=dt*8.5;
  }
+ updateEnemyCombat(dt);
  if(!playerMotion.moving)playerMotion.phase=0;
  render();
 }
