@@ -207,7 +207,7 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 
 
 /* Final correction: show the complete supplied menu image once; buttons are invisible hit targets. */
-body:has(#homeView.active) .backdrop{background:#0a0c12 url("assets/kingdom-menu-sharp.svg") center center/100% 100% no-repeat!important}
+body:has(#homeView.active) .backdrop{background:#0a0c12 url("assets/kingdom-menu-sharp.svg") center center/100% 100% no-repeat!important;image-rendering:crisp-edges;filter:contrast(1.04) saturate(1.05)}
 body:has(#homeView.active) .backdrop:after,body:has(#homeView.active) .backdrop .stars,body:has(#homeView.active) .backdrop .fog,body:has(#homeView.active) .backdrop svg{display:none!important}
 body:has(#homeView.active) .topbar,body:has(#homeView.active) .footer{display:none!important}
 body:has(#homeView.active) .stage{position:relative;z-index:1;min-height:100vh;height:100vh;width:100%;padding:0!important;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
