@@ -203,6 +203,14 @@ body{position:fixed;inset:0}
 .class-power-icon{flex:0 0 44px;height:44px;display:grid;place-items:center;border:1px solid #b28d50;color:#f1cc83;font-size:23px;background:#19161a}
 .class-power-summary strong{display:block;color:#f0d8a6;font-size:14px}.class-power-summary small{display:block;color:#b9b2a4;font-size:11px;line-height:1.5;margin-top:3px}
 .worldmap-intro{border:1px solid #65513a;background:linear-gradient(120deg,#231f1d,#121419);padding:14px;margin-bottom:12px}
+.atlas-schematic{position:relative;height:126px;margin:8px 0 13px;border:1px solid #584731;background:radial-gradient(ellipse at 30% 20%,#293425,#13151a 70%);overflow:hidden}
+.atlas-schematic:before,.atlas-schematic:after{content:'';position:absolute;border:1px solid #6b7652;border-radius:50%;opacity:.16;transform:rotate(-21deg)}
+.atlas-schematic:before{width:330px;height:85px;left:-22px;top:23px}.atlas-schematic:after{width:260px;height:105px;right:-80px;top:-34px}
+.atlas-route{position:absolute;left:14%;top:58%;width:72%;height:27%;border-top:2px dashed #d6ba7a;transform:rotate(-10deg);opacity:.86}
+.atlas-node{position:absolute;z-index:1;display:grid;justify-items:center;gap:2px;min-width:82px;text-align:center;padding:5px 6px;background:#121318eb;border:1px solid #79613c;box-shadow:0 3px 12px #0008}
+.atlas-node b{font:20px Georgia,serif;color:#e4c17a}.atlas-node strong{font:700 8px Georgia,serif;letter-spacing:.05em;color:#eee0c0}.atlas-node small{font:8px system-ui,sans-serif;color:#b3b49b}
+.atlas-node.village{left:3%;top:11%}.atlas-node.forest{left:39%;top:43%}.atlas-node.lake{right:3%;top:7%}
+@media(max-width:480px){.atlas-schematic{height:118px}.atlas-node{min-width:70px;padding:4px 3px}.atlas-node strong{font-size:7px}.atlas-node small{font-size:7px}.atlas-node.forest{left:36%;top:43%}}
 .worldmap-intro strong{display:block;color:#ecd19a;font:700 15px Georgia,serif;margin-bottom:5px}.worldmap-intro p{margin:0;color:#c4b8a3;font-size:11px;line-height:1.55}
 .region-card{border-radius:2px!important;border-color:#4c4031!important;background:linear-gradient(120deg,#1b1b20,#111318)!important}.region-card:hover:not(:disabled){border-color:#d0ab66!important;transform:translateY(-1px)}.region-card.current{box-shadow:inset 0 0 0 1px #d0ab6655;border-color:#bb965b!important}
 .region-art{border:1px solid #8d714b!important;box-shadow:inset 0 0 20px #0007}.region-art.region-brumaforte{background:linear-gradient(135deg,#6b884e,#c6b178,#4a7046)!important}.region-art.region-bosque{background:linear-gradient(135deg,#172a20,#496b43,#89905d)!important}.region-art.region-lago{background:linear-gradient(135deg,#17383e,#477c83,#c0b48d)!important}
@@ -574,7 +582,7 @@ function useClassPower(){
  }
  if(!target){notify('Nenhum alvo ao alcance de '+c.powerName+'.',2.5);return;}
  g.powerCooldown=c.cooldown;damageMob(target,playerDamage('power'),'poder');
- if(g.classId==='arcanist'&&target.alive===false){
+ if(g.classId==='arcanist'){
   for(const other of allMobs()){
    if(other===target||!other.alive)continue;
    const d=g.scene==='map'?Math.hypot(other.x-target.x,other.y-target.y):Math.abs(other.x-target.x);
@@ -1166,7 +1174,7 @@ function openClassMenu(){
  const current=classProfile();
  const cards=Object.entries(CLASS_DEFS).map(([id,c])=>{
   const isCurrent=g.classId===id;
-  return '<button class="class-card '+(isCurrent?'current':'')+'" data-class="'+id+'"><span class="class-icon">'+c.icon+'</span><span><strong>'+c.name+(isCurrent?' · ATUAL':'')+'</strong><small>'+c.desc+'</small><span class="class-badges"><i class="class-badge">Vida '+(c.hpBonus>=0?'+':'')+c.hpBonus+'</i><i class="class-badge">'+c.style+'</i></span><em>'+c.powerIcon+' '+c.powerName+' · '+c.cooldown+'s de recarga</em></span></button>';
+  return '<button class="class-card '+(isCurrent?'current':'')+'" data-class="'+id+'"><span class="class-icon">'+c.icon+'</span><span><strong>'+c.name+(isCurrent?' · ATUAL':'')+'</strong><small>'+c.desc+'</small><span class="class-badges"><i class="class-badge">Vida '+(c.hpBonus>=0?'+':'')+c.hpBonus+'</i><i class="class-badge">Golpe '+c.basicDamage+'</i><i class="class-badge">Pesado '+c.heavyDamage+'</i><i class="class-badge">'+(c.powerType==='shield'?'Escudo '+c.powerShield:'Poder '+c.powerDamage)+'</i></span><em>'+c.powerIcon+' '+c.powerName+' · '+c.cooldown+'s de recarga</em></span></button>';
  }).join('');
  const body='<div class="worldmap-intro"><strong>Escolha como quer enfrentar o reino</strong><p>A classe altera a vida máxima, o dano fixo, a defesa e o poder especial. A aparência cosmética do personagem continua editável. Suas missões e conquistas permanecem.</p></div>'+
  '<div class="class-power-summary"><span class="class-power-icon">'+current.powerIcon+'</span><span><strong>'+current.powerName+'</strong><small>'+current.passive+' · O poder desperta no nível 2. Use Q fora dos combates por cartas.</small></span></div>'+
@@ -2097,6 +2105,7 @@ function enterRegion(id){
 }
 function openWorldMap(){
  const body='<div class="worldmap-intro"><strong>Atlas das Terras Partidas</strong><p>Explore regiões com perigos, personagens e histórias próprios. Aventureiro: nível '+g.level+' · '+escapeHtml(classProfile().name)+' · dificuldade '+escapeHtml(difficultyProfile().name)+'.</p></div>'+
+  '<div class="atlas-schematic"><div class="atlas-route"></div><div class="atlas-node village"><b>⌂</b><strong>BRUMAFORTE</strong><small>Vila · Capítulo I</small></div><div class="atlas-node forest"><b>♧</b><strong>BOSQUE VELADO</strong><small>Trilha · Nível 2</small></div><div class="atlas-node lake"><b>≈</b><strong>LAGO SILENCIOSO</strong><small>Maré · Nível 4</small></div></div>'+
  Object.entries(REGION_META).map(([id,z])=>{
   const unlocked=isRegionUnlocked(id),current=g.region===id;
   const danger=id==='brumaforte'?'Perigo I · Patrulhas leves':id==='bosque'?'Perigo II · Chefe da névoa':'Perigo III · Leviatã'; return '<button class="region-card '+(current?'current':'')+'" data-region="'+id+'" '+(!unlocked?'disabled':'')+'><span class="region-art region-'+id+'"><span>'+(id==='brumaforte'?'⌂':id==='bosque'?'♧':'≈')+'</span></span><span class="region-copy"><strong>'+escapeHtml(z.name)+(current?' · LOCAL':'')+'</strong><small>'+escapeHtml(z.description)+'</small><em>'+danger+' · '+(current?'Você está aqui':unlocked?'Explorar região':'Bloqueado · '+escapeHtml(z.unlock))+'</em></span><span class="region-arrow">'+(unlocked?'→':'🔒')+'</span></button>';
