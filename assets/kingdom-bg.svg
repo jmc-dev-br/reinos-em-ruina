@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" shape-rendering="crispEdges">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#111b30"/><stop offset=".48" stop-color="#5a3b4c"/><stop offset=".73" stop-color="#d37a51"/><stop offset="1" stop-color="#1c2530"/></linearGradient>
+ <linearGradient id="water" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#314e62"/><stop offset="1" stop-color="#0d1b29"/></linearGradient>
+ <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#55515a"/><stop offset="1" stop-color="#202630"/></linearGradient>
+ <pattern id="stars" width="97" height="71" patternUnits="userSpaceOnUse"><rect x="11" y="13" width="3" height="3" fill="#f5dab0" opacity=".65"/><rect x="68" y="40" width="2" height="2" fill="#f5dab0" opacity=".35"/><rect x="42" y="59" width="2" height="2" fill="#f5dab0" opacity=".48"/></pattern>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/><rect width="1600" height="485" fill="url(#stars)"/>
+<circle cx="1250" cy="255" r="115" fill="#f6b56c" opacity=".11"/><circle cx="1250" cy="255" r="68" fill="#f3c17d"/>
+<path d="M0 470 105 380 185 421 280 300 365 411 470 339 562 421 680 318 765 421 880 350 984 418 1102 301 1190 391 1310 276 1408 378 1507 302 1600 362V900H0Z" fill="#293245"/>
+<path d="M0 558 112 460 210 516 342 405 454 515 567 433 690 548 820 426 934 519 1054 423 1160 516 1265 410 1380 513 1494 414 1600 481V900H0Z" fill="#202a37"/>
+<path d="M0 650 128 550 247 616 390 520 512 623 640 533 770 622 918 512 1050 626 1190 520 1325 620 1450 518 1600 600V900H0Z" fill="#151f2b"/>
+<!-- distant settlement -->
+<g fill="#28313d" stroke="#6f594b" stroke-width="3">
+ <path d="M0 611V520l25-30 24 30v91Z"/><path d="M52 611V548l25-22 28 22v63Z"/><path d="M112 616V502l35-33 36 33v114Z"/><path d="M194 617V550l30-25 29 25v67Z"/><path d="M266 626V517l39-32 40 32v109Z"/><path d="M354 631V562l27-24 28 24v69Z"/><path d="M430 628V510l38-30 39 30v118Z"/><path d="M520 631V557l32-25 33 25v74Z"/><path d="M600 641V506l35-32 37 32v135Z"/><path d="M686 640V565l29-23 31 23v75Z"/>
+</g>
+<!-- castle cliff -->
+<path d="M900 626 955 566 1028 552 1080 520 1148 496 1200 463 1274 483 1328 427 1393 450 1460 394 1515 434 1600 405V900H900Z" fill="#252b35"/>
+<g stroke="#101721" stroke-width="8" fill="url(#stone)">
+ <path d="M1030 535V343h90v192Z"/><path d="M1128 506V258h104v248Z"/><path d="M1244 469V200h102v269Z"/><path d="M1360 447V252h83v195Z"/><path d="M1451 430V300h80v130Z"/><path d="M1073 558V415h86v143Z"/><path d="M1179 545V350h86v195Z"/><path d="M1283 532V305h94v227Z"/><path d="M1385 508V345h86v163Z"/>
+</g>
+<!-- towers -->
+<g fill="#3c3942" stroke="#171b25" stroke-width="7">
+ <path d="M1119 260V125h28v-25h38v25h27v135Z"/><path d="M1233 201V71h30V44h38v27h31v130Z"/><path d="M1350 254V120h25V91h37v29h26v134Z"/><path d="M1441 302V188h23v-25h32v25h24v114Z"/>
+</g>
+<g fill="#0d1720">
+ <path d="M1112 127 1166 54 1220 127Z"/><path d="M1223 73 1282 5 1340 73Z"/><path d="M1344 120 1393 57 1443 120Z"/><path d="M1434 188 1481 131 1529 188Z"/>
+</g>
+<g fill="#efb86d">
+ <path d="M1141 154h12v22h-12zM1180 154h12v22h-12zM1255 103h12v22h-12zM1300 103h12v22h-12zM1372 155h11v21h-11zM1410 155h11v21h-11zM1460 218h11v18h-11zM1494 218h11v18h-11z"/>
+ <path d="M1062 385h15v28h-15zM1100 385h15v28h-15zM1205 292h15v27h-15zM1244 292h15v27h-15zM1303 389h15v27h-15zM1344 389h15v27h-15zM1402 361h13v24h-13zM1440 361h13v24h-13z"/>
+</g>
+<!-- cliff waterfall and cascades -->
+<path d="M1513 442h23l-10 132 18 23-22 8-17-25Z" fill="#7ca6b5"/><path d="M1517 459h6l-9 108 9 20-8 3-10-22Z" fill="#c0d0c9" opacity=".7"/>
+<path d="M960 587 1058 589 1148 641 1140 662 1052 624 966 615Z" fill="#151e2a"/>
+<!-- river and city walls -->
+<path d="M0 701 185 675 350 710 500 686 630 726 770 694 930 748 1090 717 1235 765 1390 718 1600 751V900H0Z" fill="url(#water)"/>
+<path d="M0 734 184 702 350 738 500 715 630 753 770 721 930 778 1090 747 1235 795 1390 746 1600 785" fill="none" stroke="#6c96a2" stroke-width="5" opacity=".55"/>
+<path d="M0 787 150 763 330 794 490 774 670 815 830 785 1000 829 1185 802 1400 844 1600 819" fill="none" stroke="#e3b476" stroke-width="4" opacity=".35"/>
+<!-- bridge -->
+<path d="M820 666H1515v24H820Z" fill="#55505a"/><path d="M850 690v67h20v-67M935 690v67h20v-67M1020 690v67h20v-67M1105 690v67h20v-67M1190 690v67h20v-67M1275 690v67h20v-67M1360 690v67h20v-67M1445 690v67h20v-67" fill="#282f39"/>
+<path d="M820 666H1515" stroke="#9c8064" stroke-width="7"/><path d="M820 686Q865 755 895 686M905 686Q950 755 980 686M990 686Q1035 755 1065 686M1075 686Q1120 755 1150 686M1160 686Q1205 755 1235 686M1245 686Q1290 755 1320 686M1330 686Q1375 755 1405 686M1415 686Q1460 755 1490 686" fill="none" stroke="#8f806f" stroke-width="6"/>
+<!-- foreground rooftops / village -->
+<g fill="#202a34" stroke="#0c131d" stroke-width="7">
+ <path d="M50 790V688l72-56 74 56v102Z"/><path d="M161 818V710l69-46 72 46v108Z"/><path d="M290 826V730l61-44 65 44v96Z"/><path d="M405 837V706l79-57 81 57v131Z"/><path d="M550 848V749l61-43 65 43v99Z"/><path d="M1040 864V750l70-50 71 50v114Z"/><path d="M1190 878V764l67-47 70 47v114Z"/><path d="M1340 882V752l82-58 84 58v130Z"/>
+</g>
+<g fill="#f1b96c">
+ <path d="M88 725h14v24H88zM131 725h14v24h-14zM198 746h13v22h-13zM244 746h13v22h-13zM436 739h16v29h-16zM477 739h16v29h-16zM575 774h12v20h-12zM620 774h12v20h-12zM1080 777h15v25h-15zM1121 777h15v25h-15zM1226 790h14v24h-14zM1265 790h14v24h-14zM1390 773h16v28h-16zM1439 773h16v28h-16z"/>
+</g>
+<!-- left foreground tree, banner and ruins -->
+<g fill="#111923">
+ <path d="M80 0H0V390h62l24-104-14-69 24-76Z"/><path d="M24 75 0 38V0h45l31 48-12 57Z"/><path d="M82 67 49 26 62 0h60l16 48Z"/><path d="M37 177 0 134v-51l48 25 18 44Z"/><path d="M70 235 20 211 0 174v90Z"/>
+</g>
+<path d="M47 174 143 194 133 412 47 432Z" fill="#792f35" stroke="#171b22" stroke-width="10"/><path d="M58 202 125 215 118 390 57 405Z" fill="#9c4240"/><path d="M90 235 106 266 90 295 74 266Z" fill="#c49b5e"/><path d="M90 254 108 277 90 312 72 277Z" fill="#c49b5e"/>
+<path d="M0 856 110 808 210 839 307 797 400 846 520 814 615 859 720 839 825 875H0Z" fill="#0b1118"/>
+<g fill="#252b34"><path d="M0 652 110 615 190 648 255 607 322 661 270 692 200 679 120 705 25 688Z"/><path d="M0 746 83 710 155 745 212 708 269 753 232 790 147 770 81 798 0 781Z"/></g>
+<g fill="#d18e4e" opacity=".8"><rect x="95" y="502" width="7" height="13"/><rect x="132" y="530" width="5" height="10"/><rect x="473" y="642" width="7" height="15"/><rect x="516" y="663" width="5" height="11"/><rect x="812" y="635" width="6" height="14"/><rect x="1047" y="648" width="8" height="17"/><rect x="1476" y="620" width="7" height="13"/></g>
+</svg>
