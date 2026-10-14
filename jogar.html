@@ -120,7 +120,7 @@ const SLOT_PREFIX='reinos_ruina_slot_';
 const gameParams=new URLSearchParams(window.location.search);
 const activeSlotNumber=[1,2,3].includes(Number(gameParams.get('slot')))?Number(gameParams.get('slot')):0;
 const slotStorageKey=slot=>SLOT_PREFIX+slot;
-function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light',hairstyle:'short',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'default'};}
+function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'red',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'stubble'};}
 function normalizeAppearance(value){
  const d=defaultAppearance(),v=value&&typeof value==='object'?value:{};
  return {name:String(v.name||d.name).trim().slice(0,16)||d.name,
@@ -133,7 +133,10 @@ function normalizeAppearance(value){
   headwear:['none','hood','crown','wizardHat','helmet','circlet'].includes(v.headwear)?v.headwear:d.headwear,
   accessory:['none','glasses','eyepatch','earrings','necklace'].includes(v.accessory)?v.accessory:d.accessory,
   weapon:['sword','staff','bow','none'].includes(v.weapon)?v.weapon:d.weapon,
-  outfitColor:['default','crimson','emerald','sapphire','violet','charcoal'].includes(v.outfitColor)?v.outfitColor:d.outfitColor};
+  outfitColor:['default','crimson','emerald','sapphire','violet','charcoal'].includes(v.outfitColor)?v.outfitColor:d.outfitColor,
+  faceShape:['oval','angular','round'].includes(v.faceShape)?v.faceShape:d.faceShape,
+  eyeColor:['brown','blue','green','gray'].includes(v.eyeColor)?v.eyeColor:d.eyeColor,
+  facialHair:['none','stubble','shortBeard','mustache','goatee'].includes(v.facialHair)?v.facialHair:d.facialHair};
 }
 
 function readActiveSlot(){
@@ -497,12 +500,22 @@ function drawPlayer(x,y,rawAppearance){
    r(17,39,12,3,'#3b2a20');r(18,39,10,1,'#936b3d');r(22,39,3,3,'#d2b16e');r(23,40,1,1,'#4a3721');
    p([[16,41],[21,42],[20,49],[16,47]],'#343039');p([[25,42],[29,41],[29,47],[26,49]],'#292a30');
   }
+  // Draw both arms in front of the chest so they remain clearly connected to the shoulders.
+  p([[14,24],[11,25],[9,29],[9,34],[11,38],[15,39],[17,35],[16,29]],outline);
+  p([[14,26],[12,27],[11,30],[11,34],[13,36],[15,33],[15,29]],coat);
+  p([[12,31],[15,30],[16,34],[14,37],[11,36]],'#555c60');
+  ln(12,31,14,34,'#c0b7a7',1);ln(12,35,14,36,'#262b31',1);
+  p([[30,24],[33,25],[36,29],[37,34],[35,38],[31,39],[29,35],[29,29]],outline);
+  p([[31,26],[33,27],[35,30],[35,34],[33,36],[31,34],[30,30]],coat);
+  p([[31,30],[34,30],[36,34],[34,38],[31,36]],'#747774');
+  ln(32,31,34,34,'#d0c3a9',1);ln(32,35,34,36,'#292c31',1);
+  r(10,37,4,3,'#352d29');r(32,37,4,3,'#352d29');
   // Face, chunky hair, eyebrows and small facial details.
   r(20,18,7,6,skin);r(21,19,5,4,'#d7a17c');
   p([[17,9],[19,6],[26,6],[30,10],[30,18],[27,23],[20,22],[16,18]],outline);
-  p([[18,10],[20,8],[26,8],[28,11],[28,18],[25,21],[21,20],[18,17]],skin);
+  if(a.faceShape==='round')p([[18,10],[20,8],[26,8],[28,11],[29,16],[27,20],[24,21],[20,21],[17,18],[17,13]],skin);else if(a.faceShape==='oval')p([[19,9],[25,9],[28,12],[27,18],[24,22],[21,21],[18,18],[17,12]],skin);else p([[18,10],[20,8],[26,8],[28,11],[28,17],[25,21],[22,22],[19,19],[17,15]],skin);
   r(17,14,2,4,skin);r(28,14,2,4,skin);
-  r(20,14,2,1,'#29201c');r(25,14,2,1,'#29201c');r(21,15,1,1,'#f2d7b6');r(26,15,1,1,'#f2d7b6');
+  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[a.eyeColor]||'#5a3828';r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
   r(23,15,2,3,'#9a6246');r(22,18,4,1,'#683d31');
   p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
   p([[17,12],[18,9],[20,7],[25,7],[28,9],[29,12],[27,11],[25,9],[23,11],[21,10],[19,12],[18,15],[17,15]],hair);
@@ -511,7 +524,7 @@ function drawPlayer(x,y,rawAppearance){
   if(a.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
   if(a.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
   if(a.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
-  if(a.gender==='masculino'){p([[20,18],[22,19],[25,18],[27,18],[26,21],[23,22],[20,20]],'#493029');r(22,20,3,1,'#9a6348');}
+  if(a.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(a.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(a.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(a.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
   // Burgundy neck scarf.
   p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');
   // Headwear and accessories are layered over the base portrait.
