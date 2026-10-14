@@ -4,100 +4,341 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090a0d">
-<meta name="description" content="Reinos em Ruína: RPG medieval sobre dinheiro, suas oportunidades e seus perigos.">
+<meta name="description" content="Reinos em Ruína — RPG medieval de aventura, escolhas e consequências.">
 <title>Reinos em Ruína — Menu principal</title>
 <style>
-:root{--bg:#08090c;--gold:#e3bc78;--gold2:#a9773b;--orange:#d76e34;--ink:#f4efe6;--muted:#b7b0a6;--green:#a5b97c}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif}body{min-height:100vh;overflow-x:hidden}button,a{font:inherit}button{cursor:pointer}a{color:inherit}
-.scene{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(ellipse at 68% 35%,#a85f3024,transparent 32%),linear-gradient(180deg,#0a0e15 0%,#15161a 54%,#08090c 100%)}
-.scene:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#08090cf5 0%,#08090ce8 31%,#08090c8a 56%,#08090c20 100%),linear-gradient(0deg,#08090cff 0%,transparent 35%,#05060832 100%);z-index:2}
-.scene svg{height:100%;width:100%;position:absolute;inset:0}.stars{position:absolute;inset:0;opacity:.55;background-image:radial-gradient(#e9d2a6 1px,transparent 1.5px),radial-gradient(#e9d2a6 1px,transparent 1.4px);background-size:91px 83px,137px 119px;background-position:4px 12px,53px 66px;mask-image:linear-gradient(180deg,#000,transparent 75%)}
-.fog{position:absolute;left:-10%;right:-10%;bottom:9%;height:130px;background:linear-gradient(90deg,transparent,#a9a7a025,transparent);filter:blur(19px);animation:fog 18s ease-in-out infinite alternate}@keyframes fog{from{transform:translateX(-4%)}to{transform:translateX(5%)}}
-header{position:relative;z-index:3;height:76px;padding:0 clamp(18px,4vw,58px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e1bc7b26;background:#07080c6e;backdrop-filter:blur(9px)}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:700 12px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase}.crest{height:39px;width:39px;display:grid;place-items:center;border:1px solid var(--gold);color:var(--gold);clip-path:polygon(50% 0,90% 17%,85% 72%,50% 100%,15% 72%,10% 17%);font:700 18px Georgia,serif;background:#0d0d10}
-.head-right{display:flex;align-items:center;gap:18px;color:#b7afa3;font:10px Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}.head-dot{width:6px;height:6px;background:var(--green);border-radius:50%;box-shadow:0 0 12px #a5b97c}
-main{position:relative;z-index:3;min-height:calc(100vh - 125px);display:grid;grid-template-columns:minmax(330px,525px) minmax(0,1fr);align-items:center;gap:clamp(25px,6vw,100px);padding:44px clamp(18px,7vw,105px) 52px}
-.left{max-width:530px}.eyebrow{font:10px Arial,sans-serif;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:12px}.eyebrow:before{content:"";display:block;width:30px;height:1px;background:var(--gold)}
-h1{font-size:clamp(44px,7.2vw,88px);line-height:.9;letter-spacing:.035em;text-transform:uppercase;margin:23px 0 18px;font-weight:700;text-shadow:0 4px 32px #000}h1 span{display:block;color:var(--gold);margin-top:9px}
-.tagline{font-size:clamp(17px,2vw,22px);line-height:1.45;color:#e9dece;margin:0 0 14px;max-width:475px}.intro{font:13px/1.8 Arial,sans-serif;color:#b7b0a8;max-width:410px;margin:0 0 25px}
-.rule{height:1px;width:100%;max-width:365px;background:linear-gradient(90deg,#d5ad69a8,transparent);margin:24px 0 18px}
-.menu{display:grid;gap:5px;width:min(100%,365px)}.menu-btn{position:relative;display:flex;align-items:center;gap:15px;width:100%;min-height:48px;padding:8px 15px;border:1px solid transparent;background:linear-gradient(90deg,#14151aa8,#14151a24);color:#d9d1c4;text-align:left;text-decoration:none;transition:background .16s,border-color .16s,transform .16s}
-.menu-btn:hover:not(:disabled),.menu-btn:focus-visible{outline:none;border-color:#9f7b4b99;background:linear-gradient(90deg,#72502c7a,#17171cb3);transform:translateX(3px)}.menu-btn:disabled{opacity:.42;cursor:not-allowed}
-.menu-btn .icon{width:24px;text-align:center;font-size:19px;color:var(--gold);flex:0 0 24px}.menu-btn .labels{display:flex;flex-direction:column;gap:3px}.menu-btn strong{font:700 12px Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase}.menu-btn small{font:10px Arial,sans-serif;letter-spacing:.02em;color:#9e9a94}.menu-btn .arrow{margin-left:auto;color:var(--gold);font:18px Arial,sans-serif}
-.menu-btn.primary{border-color:#bd935b;background:linear-gradient(90deg,#b18a4a2e,#39291d55)}.menu-btn.primary strong{color:#f0d39a}.save-note{font:10px/1.5 Arial,sans-serif;color:#999188;max-width:355px;margin:12px 0 0 40px;min-height:15px}
-.art{position:relative;min-height:470px;height:min(67vh,630px);display:flex;align-items:center;justify-content:center;pointer-events:none}.art:before{content:"";position:absolute;width:min(39vw,510px);height:min(39vw,510px);max-height:510px;max-width:510px;border:1px solid #d0a56620;border-radius:50%;box-shadow:0 0 0 22px #d0a56607,0 0 0 64px #d0a56605,0 0 85px #b9783330}.art:after{content:"";position:absolute;width:76%;height:1px;bottom:18%;background:linear-gradient(90deg,transparent,#d7ae7155,transparent)}.art svg{position:relative;width:100%;max-width:680px;max-height:100%;filter:drop-shadow(0 24px 40px #000a)}.art-note{position:absolute;right:0;bottom:12%;font:9px Arial,sans-serif;color:#b7a48c;letter-spacing:.22em;text-transform:uppercase;text-align:right;line-height:1.8}
-.footer{position:relative;z-index:3;min-height:49px;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px clamp(18px,4vw,58px);border-top:1px solid #e1bc7b1b;color:#8b8379;font:9px Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;background:#0506099c}.footer b{color:#b4a185;font-weight:400}
-.modalback{position:fixed;z-index:20;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:#030405d9;backdrop-filter:blur(8px)}.modalback.open{display:flex}.modal{width:min(610px,100%);max-height:88vh;overflow:auto;border:1px solid #6e5940;background:linear-gradient(145deg,#191a1f,#0d0e12);box-shadow:0 25px 100px #000c}.modalhead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 21px;border-bottom:1px solid #ffffff18}.modalhead h2{margin:0;color:var(--gold);font:700 12px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}.close{border:1px solid #5b5146;background:#17171a;color:#eee2d1;width:32px;height:32px}.modalbody{padding:23px 22px}.lesson-tag{color:var(--gold);font:10px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase}.modalbody h3{font-size:28px;line-height:1.12;margin:10px 0 13px}.modalbody p{font:13px/1.8 Arial,sans-serif;color:#c3bcb2}.tip{margin-top:17px;padding:13px 15px;border-left:2px solid var(--gold);background:#bb8e4210;color:#e3d2b6;font:12px/1.65 Arial,sans-serif}.modalfoot{padding:14px 21px;border-top:1px solid #ffffff18;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.flat-btn{border:1px solid #62513a;color:#e7dccb;background:#201d19;padding:10px 14px;font:700 10px Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}.flat-btn:hover{background:#342819;border-color:var(--gold)}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 0;border-bottom:1px solid #ffffff13;font:12px Arial,sans-serif;color:#e1d9cc}.setting-row small{display:block;margin-top:5px;color:#a5a097;line-height:1.5}.setting-row input{accent-color:#cf9d58;width:18px;height:18px}.credits{padding:14px;border:1px solid #51432e;background:#201a12;color:#d9c8ac;font:12px/1.7 Arial,sans-serif}
-body.no-effects .fog,body.no-effects .head-dot{animation:none!important;box-shadow:none}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
-@media(max-width:850px){main{grid-template-columns:1fr;gap:0;padding-top:42px}.art{position:absolute;z-index:-1;right:-20%;top:5%;width:75%;height:75vh;min-height:0;opacity:.45}.art-note{display:none}.left{max-width:520px}.menu{width:min(100%,400px)}.scene:before{background:linear-gradient(90deg,#08090cf8 0%,#08090cdc 64%,#08090c7a 100%),linear-gradient(0deg,#08090cff 0%,transparent 40%,#0506084d 100%)}}
-@media(max-width:520px){header{height:63px;padding:0 16px}.brand{font-size:10px;letter-spacing:.12em;gap:8px}.crest{width:32px;height:32px}.head-right{gap:8px;font-size:8px;letter-spacing:.1em}main{padding:42px 18px 40px;min-height:calc(100vh - 111px)}h1{font-size:clamp(44px,13vw,66px)}.tagline{font-size:17px}.intro{font-size:12px}.menu-btn{min-height:46px}.footer{align-items:flex-start;flex-direction:column;gap:6px;padding:12px 16px}.art{width:100%;right:-29%;top:0;opacity:.27}.modalbody{padding:18px}.modalfoot{padding:12px 18px}}
+:root{color-scheme:dark;--bg:#090a0d;--panel:#14161b;--panel2:#1a1c22;--line:#34363c;--gold:#e6c17e;--gold2:#a77940;--paper:#f4efe6;--muted:#a8a39b;--green:#9db68a;--danger:#d87968}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--paper);font-family:Georgia,"Times New Roman",serif}body{min-height:100vh;overflow-x:hidden}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.backdrop{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(ellipse at 74% 42%,#a75a2428,transparent 29%),linear-gradient(180deg,#111722 0%,#1d1b1b 55%,#08090c 100%)}
+.backdrop:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#08090cf2 0%,#08090cc9 47%,#08090c59 100%),linear-gradient(0deg,#08090cff 0%,transparent 37%,#05060853 100%)}
+.backdrop svg{position:absolute;width:100%;height:100%;inset:0;opacity:.88}.stars{position:absolute;inset:0;opacity:.45;background-image:radial-gradient(#e9d2a6 1px,transparent 1.5px),radial-gradient(#e9d2a6 1px,transparent 1.5px);background-size:91px 83px,137px 119px;background-position:4px 12px,53px 66px}.fog{position:absolute;left:-10%;right:-10%;bottom:10%;height:130px;background:linear-gradient(90deg,transparent,#a9a7a023,transparent);filter:blur(20px);animation:fog 18s ease-in-out infinite alternate}@keyframes fog{from{transform:translateX(-4%)}to{transform:translateX(5%)}}
+.topbar{position:relative;z-index:2;min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(18px,4vw,58px);border-bottom:1px solid #e1bc7b24;background:#07080c75;backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}.crest{width:40px;height:43px;display:grid;place-items:center;clip-path:polygon(50% 0,91% 17%,84% 72%,50% 100%,16% 72%,9% 17%);border:0;background:linear-gradient(145deg,#e4c27f,#8d602d);color:#15110b;font-weight:900;font-size:19px}.brandname{display:block;font:700 12px/1.3 Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase}.brandsub{display:block;margin-top:4px;color:#a7a096;font:9px/1.4 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+.topright{display:flex;align-items:center;gap:10px}.network{display:flex;align-items:center;gap:8px;color:#9f9c93;font:9px Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase}.dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 10px #9db68a88}
+.stage{position:relative;z-index:1;width:min(1280px,100%);min-height:calc(100vh - 125px);margin:0 auto;padding:34px clamp(17px,5vw,70px) 54px;display:flex;align-items:center}
+.view{width:100%;display:none;animation:appear .22s ease-out}.view.active{display:block}@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.hero{display:grid;grid-template-columns:minmax(300px,470px) minmax(280px,1fr);align-items:center;gap:clamp(25px,5vw,76px);width:100%}.hero-copy{max-width:480px}.eyebrow{display:flex;align-items:center;gap:11px;color:var(--gold);font:10px Arial,sans-serif;letter-spacing:.24em;text-transform:uppercase}.eyebrow:before{content:"";height:1px;width:27px;background:var(--gold)}
+h1{margin:23px 0 19px;font-size:clamp(43px,6.5vw,82px);line-height:.91;letter-spacing:.025em;text-transform:uppercase;text-shadow:0 4px 36px #000}.title-line{display:block}.title-line.gold{color:var(--gold);margin-top:8px}
+.lede{max-width:430px;margin:0 0 16px;color:#e6ddcf;font-size:clamp(16px,1.7vw,21px);line-height:1.5}.description{max-width:405px;color:#a8a39b;font:12px/1.85 Arial,sans-serif}.ornament{height:1px;width:min(100%,350px);margin:24px 0 19px;background:linear-gradient(90deg,#d5ad69aa,transparent)}
+.primary-actions{display:grid;gap:8px;width:min(100%,350px)}.action{display:flex;align-items:center;gap:14px;min-height:56px;padding:11px 16px;border:1px solid #655139;background:linear-gradient(90deg,#2c241aeb,#15161bdb);color:var(--paper);text-align:left;transition:transform .16s,border-color .16s,background .16s}.action:hover{transform:translateX(4px);border-color:var(--gold);background:linear-gradient(90deg,#4b3823eb,#1a1b20eb)}.action.primary{background:linear-gradient(90deg,#7d5527a8,#261f19e8);border-color:#ad844d}.action-icon{flex:0 0 26px;color:var(--gold);font-size:21px;text-align:center}.action-label{display:flex;flex:1;flex-direction:column;gap:4px}.action-label strong{font:700 12px Arial,sans-serif;letter-spacing:.17em;text-transform:uppercase}.action-label small{color:#a8a096;font:10px Arial,sans-serif}.arrow{color:var(--gold);font:20px Arial,sans-serif}
+.hero-art{position:relative;display:flex;align-items:center;justify-content:center;min-height:440px;pointer-events:none}.hero-art:before{content:"";position:absolute;aspect-ratio:1;width:min(38vw,470px);border:1px solid #d0a56620;border-radius:50%;box-shadow:0 0 0 22px #d0a56607,0 0 0 60px #d0a56605,0 0 90px #b9783320}.hero-art svg{position:relative;width:100%;max-width:600px;max-height:570px;filter:drop-shadow(0 24px 40px #000a)}.art-note{position:absolute;right:0;bottom:10%;color:#b6a48d;font:9px/1.9 Arial,sans-serif;letter-spacing:.2em;text-align:right;text-transform:uppercase}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:0 auto 24px;max-width:1020px}.page-title{margin:10px 0 8px;font-size:clamp(28px,4vw,43px);line-height:1.05;color:#f1e8d9}.page-subtitle{max-width:610px;margin:0;color:#aaa49a;font:12px/1.7 Arial,sans-serif}.back-btn,.subtle-btn{border:1px solid #4b463c;background:#141519c9;color:#ddd4c4;padding:10px 13px;font:700 10px Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}.back-btn:hover,.subtle-btn:hover{border-color:var(--gold);color:var(--gold)}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;max-width:1020px;margin:auto}.slot{position:relative;display:flex;flex-direction:column;min-height:325px;padding:17px;background:linear-gradient(145deg,#191a20ee,#0d0e12ed);border:1px solid #494238;box-shadow:0 18px 45px #0004}.slot:before{content:"";position:absolute;top:0;left:16px;right:16px;height:2px;background:linear-gradient(90deg,transparent,#a77940,transparent)}.slot-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#aca59a;font:9px Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase}.slot-no{color:var(--gold)}.slot-mark{display:grid;place-items:center;width:58px;height:66px;margin:25px 0 16px;border:1px solid #6d5436;background:#201b14;color:#c8a66a;font-size:26px;clip-path:polygon(50% 0,92% 14%,85% 75%,50% 100%,15% 75%,8% 14%)}.slot.empty .slot-mark{border-color:#45413a;background:#131418;color:#5e5a52}.slot-name{font-size:20px;line-height:1.25;margin:0 0 8px;overflow-wrap:anywhere}.slot-desc{color:#a8a39a;font:11px/1.65 Arial,sans-serif;min-height:42px;margin:0 0 14px}.slot-stats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:15px}.pill{display:inline-flex;align-items:center;gap:5px;border:1px solid #464137;padding:5px 7px;color:#cfc5b3;font:9px Arial,sans-serif;letter-spacing:.03em}.pill.gold{color:var(--gold);border-color:#705739}.slot-actions{display:grid;gap:7px;margin-top:auto}.slot-button{display:flex;justify-content:center;align-items:center;gap:7px;padding:10px;border:1px solid #514b3f;background:#201f1c;color:#e8dfcf;font:700 10px Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase}.slot-button:hover{border-color:var(--gold);color:var(--gold)}.slot-button.primary{border-color:#a8814a;background:#4a351e;color:#f2d89f}.slot-button.danger{border-color:#523c38;background:#251918;color:#d9a096}.slot-button.danger:hover{border-color:var(--danger);color:#ffb8a8}.no-slots-note{max-width:1020px;margin:17px auto 0;color:#8f8a80;font:10px/1.7 Arial,sans-serif}
+.creator-layout{display:grid;grid-template-columns:minmax(245px,.85fr) minmax(350px,1.25fr);gap:18px;max-width:1020px;margin:auto}.preview-card,.creator-card,.language-card{background:linear-gradient(145deg,#191a20f2,#0d0e12f2);border:1px solid #494238;box-shadow:0 18px 45px #0004}.preview-card{padding:18px;display:flex;flex-direction:column;align-items:center}.preview-stage{width:100%;min-height:270px;display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(ellipse at center,#5a462623,transparent 66%);border-bottom:1px solid #40382c}.preview-stage:before{content:"";position:absolute;bottom:24px;width:145px;height:1px;background:linear-gradient(90deg,transparent,#ab874e88,transparent)}#characterPreview{width:205px;height:250px;max-width:100%;image-rendering:pixelated}.preview-name{color:#f2dfb4;font-size:20px;margin-top:12px}.preview-caption{margin-top:5px;color:#979187;font:9px Arial,sans-serif;letter-spacing:.15em;text-transform:uppercase}
+.creator-card{padding:20px;min-width:0}.form-section{margin:0 0 20px}.form-label{display:block;margin-bottom:9px;color:#c9bdab;font:700 10px Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase}.name-input,.select-input{width:100%;border:1px solid #49453e;background:#0f1014;color:#f1e8d9;padding:12px 13px;font:13px Arial,sans-serif}.form-help{color:#89857d;font:10px/1.6 Arial,sans-serif;margin:7px 0 0}.choice-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.choice{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #484239;background:#111216;color:#e4dbcd;text-align:left;min-width:0}.choice.active{border-color:var(--gold);background:#3c2d1a}.choice-emoji{font-size:21px}.choice strong{display:block;font:700 11px Arial,sans-serif;letter-spacing:.04em}.choice small{display:block;margin-top:4px;color:#a29a8b;font:10px Arial,sans-serif}.outfit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.outfit{display:flex;align-items:center;gap:10px;text-align:left;background:#111216;border:1px solid #464137;padding:10px;color:#e2d8c8}.outfit.active{border-color:var(--gold);background:#302719}.outfit-swatch{width:29px;height:37px;flex:0 0 29px;border:1px solid #ffffff30;clip-path:polygon(22% 0,78% 0,100% 24%,82% 100%,18% 100%,0 24%)}.outfit strong{display:block;font:700 10px Arial,sans-serif}.outfit small{display:block;margin-top:4px;color:#a29b90;font:9px Arial,sans-serif}.color-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.color-choice{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 3px;border:1px solid #494238;background:#101115;color:#a9a297;font:9px Arial,sans-serif}.color-choice.active{border-color:var(--gold);color:#f0d59d;background:#2b2418}.color-dot{width:23px;height:23px;border:1px solid #ffffff42;border-radius:50%}.two-selects{display:grid;grid-template-columns:1fr 1fr;gap:10px}.creator-actions{display:flex;justify-content:space-between;gap:9px;flex-wrap:wrap;padding-top:16px;border-top:1px solid #3a362e}.creator-actions .slot-button{flex:1;min-width:130px}
+.language-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:780px;margin:0 auto}.language-card{display:flex;align-items:center;gap:14px;padding:22px;color:#e6dccb;text-align:left}.language-card.active{border-color:var(--gold);background:linear-gradient(145deg,#342819,#141519)}.language-flag{display:grid;place-items:center;width:54px;height:54px;border:1px solid #6d5436;background:#211c15;font:700 17px Arial,sans-serif;color:var(--gold)}.language-card strong{display:block;font:700 13px Arial,sans-serif;letter-spacing:.06em}.language-card small{display:block;margin-top:5px;color:#a5a094;font:10px Arial,sans-serif;line-height:1.5}.language-note{max-width:780px;margin:17px auto 0;color:#9a9489;font:11px/1.7 Arial,sans-serif}
+.footer{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px clamp(18px,4vw,58px);border-top:1px solid #e1bc7b1b;color:#8a847a;background:#050609c4;font:9px Arial,sans-serif;letter-spacing:.09em;text-transform:uppercase}.footer b{font-weight:400;color:#c0a980}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.hero-art{position:absolute;right:0;top:12%;width:55%;min-height:0;height:65vh;opacity:.29;z-index:-1}.art-note{display:none}.hero-copy{position:relative}.stage{align-items:flex-start;padding-top:48px}.slots{grid-template-columns:1fr;max-width:540px}.slot{min-height:unset;display:grid;grid-template-columns:75px 1fr;column-gap:12px;padding:17px}.slot-top{grid-column:1/-1}.slot-mark{grid-column:1;grid-row:2/5;margin:20px 0 10px}.slot-name,.slot-desc,.slot-stats,.slot-actions{grid-column:2}.slot-name{align-self:end}.slot-desc{min-height:0}.slot-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.creator-layout{grid-template-columns:1fr;max-width:600px}.preview-card{display:grid;grid-template-columns:150px 1fr;column-gap:15px;align-items:center}.preview-stage{grid-row:span 2;min-height:210px}.preview-stage:before{bottom:16px}.preview-name{align-self:end}.preview-caption{align-self:start}}
+@media(max-width:540px){.topbar{min-height:65px;padding:0 15px}.brandname{font-size:10px;letter-spacing:.12em}.brandsub,.network{display:none}.crest{width:33px;height:36px}.stage{padding:32px 15px 40px;min-height:calc(100vh - 114px)}h1{font-size:clamp(43px,14vw,66px)}.lede{font-size:17px}.description{font-size:11px}.hero-art{right:-23%;width:88%;top:6%;opacity:.22}.page-head{align-items:flex-start}.page-title{font-size:31px}.back-btn{padding:9px;font-size:9px;white-space:nowrap}.slot{grid-template-columns:58px 1fr;padding:14px}.slot-mark{width:49px;height:56px}.slot-actions{grid-template-columns:1fr 1fr}.slot-button{padding:9px 6px;font-size:9px}.creator-card{padding:15px}.preview-card{grid-template-columns:115px 1fr;padding:12px}.preview-stage{min-height:185px}#characterPreview{height:205px;width:150px}.color-grid{gap:4px}.color-choice{font-size:8px}.color-dot{width:20px;height:20px}.language-list{grid-template-columns:1fr}.language-card{padding:15px}.footer{align-items:flex-start;flex-direction:column;gap:6px;padding:12px 15px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="scene" aria-hidden="true">
-<div class="stars"></div><div class="fog"></div>
-<svg viewBox="0 0 1500 950" preserveAspectRatio="xMidYMid slice">
-<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#18202b"/><stop offset=".55" stop-color="#362521"/><stop offset="1" stop-color="#0c0d10"/></linearGradient><linearGradient id="moon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2d6a0"/><stop offset="1" stop-color="#9e7950"/></linearGradient><linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#313139"/><stop offset="1" stop-color="#101116"/></linearGradient></defs>
-<rect width="1500" height="950" fill="url(#sky)"/><circle cx="1090" cy="235" r="92" fill="#d8b87e" opacity=".1"/><circle cx="1090" cy="235" r="58" fill="url(#moon)" opacity=".74"/><circle cx="1110" cy="216" r="55" fill="#1c1d25" opacity=".68"/>
-<path d="M0 540 L130 390 230 455 370 317 500 460 655 342 805 473 938 366 1060 452 1200 332 1335 420 1500 350 V950 H0Z" fill="#20232a"/><path d="M0 615 L170 465 280 545 450 406 600 556 745 444 900 553 1080 415 1235 560 1400 440 1500 500 V950 H0Z" fill="url(#mount)"/>
-<g fill="#0c0d11" stroke="#65503b" stroke-opacity=".42" stroke-width="3"><path d="M785 626 V370 L808 340 833 370 V626Z"/><path d="M797 340 V303 L809 282 821 303 V340Z"/><path d="M835 626 V430 L861 399 889 430 V626Z"/><path d="M851 399 V357 L862 339 878 357 V399Z"/><path d="M885 626 V347 L914 310 940 347 V626Z"/><path d="M902 310 V267 L913 244 926 267 V310Z"/><path d="M943 626 V423 L970 393 995 423 V626Z"/><path d="M958 393 V356 L970 336 981 356 V393Z"/><path d="M1000 626 V474 L1024 447 1051 474 V626Z"/><path d="M730 626 L730 565 753 565 753 626 M1050 626 L1050 544 1078 544 1078 626" fill="#14151a"/><path d="M710 626 Q865 556 1100 626 L1250 950 H610Z" fill="#111217" stroke="none"/></g>
-<path d="M0 730 L200 652 333 697 482 631 610 697 762 628 900 696 1070 636 1210 702 1375 636 1500 682 V950 H0Z" fill="#0c0d11"/><g stroke="#9c7041" stroke-width="2" stroke-opacity=".38" fill="none"><path d="M700 625 L738 600 752 569 780 558"/><path d="M1090 623 L1128 596 1142 562"/><path d="M0 818 Q360 762 700 820 T1500 796"/><path d="M0 858 Q380 820 760 865 T1500 845"/></g><g fill="#d48a48" opacity=".6"><circle cx="730" cy="690" r="3"/><circle cx="1085" cy="730" r="2"/><circle cx="890" cy="755" r="2.5"/><circle cx="1200" cy="680" r="2"/></g><rect y="900" width="1500" height="50" fill="#08090c"/>
-</svg>
+<div class="backdrop" aria-hidden="true">
+ <div class="stars"></div><div class="fog"></div>
+ <svg viewBox="0 0 1500 950" preserveAspectRatio="xMidYMid slice">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#19212d"/><stop offset=".54" stop-color="#382622"/><stop offset="1" stop-color="#0b0c10"/></linearGradient><linearGradient id="moon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f2d6a0"/><stop offset="1" stop-color="#9e7950"/></linearGradient><linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#34333a"/><stop offset="1" stop-color="#101116"/></linearGradient></defs>
+  <rect width="1500" height="950" fill="url(#sky)"/><circle cx="1090" cy="235" r="94" fill="#d8b87e" opacity=".1"/><circle cx="1090" cy="235" r="58" fill="url(#moon)" opacity=".7"/><circle cx="1110" cy="216" r="55" fill="#1c1d25" opacity=".7"/>
+  <path d="M0 540 L130 390 230 455 370 317 500 460 655 342 805 473 938 366 1060 452 1200 332 1335 420 1500 350 V950 H0Z" fill="#20232a"/><path d="M0 615 L170 465 280 545 450 406 600 556 745 444 900 553 1080 415 1235 560 1400 440 1500 500 V950 H0Z" fill="url(#mount)"/>
+  <g fill="#0c0d11" stroke="#8c6a44" stroke-opacity=".42" stroke-width="3"><path d="M785 626 V370 L808 340 833 370 V626Z"/><path d="M797 340 V303 L809 282 821 303 V340Z"/><path d="M835 626 V430 L861 399 889 430 V626Z"/><path d="M851 399 V357 L862 339 878 357 V399Z"/><path d="M885 626 V347 L914 310 940 347 V626Z"/><path d="M902 310 V267 L913 244 926 267 V310Z"/><path d="M943 626 V423 L970 393 995 423 V626Z"/><path d="M958 393 V356 L970 336 981 356 V393Z"/><path d="M1000 626 V474 L1024 447 1051 474 V626Z"/><path d="M710 626 Q865 556 1100 626 L1250 950 H610Z" fill="#111217" stroke="none"/></g>
+  <path d="M0 730 L200 652 333 697 482 631 610 697 762 628 900 696 1070 636 1210 702 1375 636 1500 682 V950 H0Z" fill="#0c0d11"/><g stroke="#9c7041" stroke-width="2" stroke-opacity=".38" fill="none"><path d="M700 625 L738 600 752 569 780 558"/><path d="M1090 623 L1128 596 1142 562"/><path d="M0 818 Q360 762 700 820 T1500 796"/><path d="M0 858 Q380 820 760 865 T1500 845"/></g>
+ </svg>
 </div>
-<header><a class="brand" href="index.html" aria-label="Reinos em Ruína, menu principal"><span class="crest">R</span><span>Reinos em Ruína</span></a><div class="head-right"><span class="head-dot"></span><span>Projeto independente</span><span style="color:#71665a">|</span><span>Menu principal</span></div></header>
-<main>
-<section class="left" aria-labelledby="gameTitle">
-<div class="eyebrow">RPG medieval · escolhas e consequências</div>
-<h1 id="gameTitle">Reinos <span>em Ruína</span></h1>
-<p class="tagline">O dinheiro constrói reinos. A ignorância pode destruí-los.</p>
-<p class="intro">Explore terras esquecidas, enfrente criaturas e aprenda a reconhecer os perigos da dívida, da inflação, dos golpes e das promessas de riqueza fácil.</p>
-<div class="rule"></div>
-<nav class="menu" aria-label="Menu principal do jogo">
-<button class="menu-btn primary" id="newGameBtn"><span class="icon">⚔</span><span class="labels"><strong>Nova jornada</strong><small>Comece uma aventura do início</small></span><span class="arrow">›</span></button>
-<button class="menu-btn" id="continueBtn"><span class="icon">↻</span><span class="labels"><strong>Continuar</strong><small id="continueDesc">Nenhum progresso salvo neste navegador</small></span><span class="arrow">›</span></button>
-<button class="menu-btn" id="codexBtn"><span class="icon">◈</span><span class="labels"><strong>Caderno financeiro</strong><small>Dinheiro, dívidas, fraudes e criptoativos</small></span><span class="arrow">›</span></button>
-<button class="menu-btn" id="settingsBtn"><span class="icon">⚙</span><span class="labels"><strong>Configurações</strong><small>Ajuste os efeitos visuais</small></span><span class="arrow">›</span></button>
-<button class="menu-btn" id="creditsBtn"><span class="icon">✦</span><span class="labels"><strong>Sobre o projeto</strong><small>Conheça a proposta e os créditos</small></span><span class="arrow">›</span></button>
-</nav>
-<p class="save-note" id="saveNote">A aventura é local neste protótipo. As moedas são fictícias.</p>
-</section>
-<aside class="art" aria-label="Ilustração de um castelo medieval em ruínas">
-<svg viewBox="0 0 700 610" role="img" aria-hidden="true">
-<defs><linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#39353a"/><stop offset=".55" stop-color="#1d1d24"/><stop offset="1" stop-color="#101116"/></linearGradient></defs>
-<ellipse cx="360" cy="560" rx="280" ry="22" fill="#000" opacity=".45"/><path d="M72 548 L90 456 135 432 158 332 199 312 219 230 264 201 283 265 306 284 328 177 367 142 402 185 421 285 458 307 477 236 519 218 543 310 570 347 605 548Z" fill="#14151a" stroke="#5e4a35" stroke-opacity=".45" stroke-width="2"/>
-<path d="M142 548V352L171 325V285L196 264 218 285V325L245 352V548Z" fill="url(#stone)" stroke="#6b5841" stroke-opacity=".65" stroke-width="2"/><path d="M176 285V239L195 208 215 239V285Z" fill="#2c2a30" stroke="#6b5841" stroke-width="2"/><path d="M163 239L195 204 228 239Z" fill="#17181e" stroke="#94724a" stroke-opacity=".65" stroke-width="2"/>
-<path d="M260 548V315L286 292 307 314V548Z" fill="url(#stone)" stroke="#6b5841" stroke-opacity=".5" stroke-width="2"/><path d="M270 315V262L287 234 303 262V315Z" fill="#25252b" stroke="#6b5841" stroke-width="2"/><path d="M277 264L287 235 300 264Z" fill="#18191e" stroke="#94724a" stroke-opacity=".65" stroke-width="2"/>
-<path d="M318 548V256L349 223 378 255V548Z" fill="url(#stone)" stroke="#87704e" stroke-opacity=".75" stroke-width="2"/><path d="M326 256V171L348 132 371 171V256Z" fill="#29272d" stroke="#a17e50" stroke-opacity=".65" stroke-width="2"/><path d="M318 174L348 127 380 174Z" fill="#17171c" stroke="#9e7c4f" stroke-width="2"/>
-<path d="M350 548V345L378 316 409 345V548Z" fill="#222127" stroke="#6b5841" stroke-opacity=".6" stroke-width="2"/><path d="M394 548V300L422 275 447 300V548Z" fill="url(#stone)" stroke="#8f714a" stroke-opacity=".7" stroke-width="2"/><path d="M405 300V244L421 215 438 244V300Z" fill="#29272c" stroke="#94724a" stroke-width="2"/><path d="M399 245L421 211 443 245Z" fill="#16171c" stroke="#94724a" stroke-width="2"/>
-<path d="M469 548V373L498 343 524 373V548Z" fill="#1e1f25" stroke="#745a3d" stroke-opacity=".6" stroke-width="2"/><path d="M490 344V302L506 278 522 302V344Z" fill="#24242a" stroke="#8e7047" stroke-width="2"/><path d="M483 303L506 273 529 303Z" fill="#17181e" stroke="#8e7047" stroke-width="2"/>
-<g fill="#07090d"><path d="M179 368h18v34h-18z"/><path d="M279 364h14v27h-14z"/><path d="M336 298h25v36h-25z"/><path d="M412 365h18v33h-18z"/><path d="M493 399h16v30h-16z"/></g><g fill="#d18c4e"><path d="M184 375h8v18h-8z" opacity=".35"/><path d="M342 306h12v19h-12z" opacity=".45"/><path d="M417 371h8v17h-8z" opacity=".28"/></g>
-<path d="M57 548L99 512 141 523 180 499 231 520 279 497 318 520 369 498 405 515 446 492 493 522 547 502 623 548Z" fill="#0b0c10"/><path d="M65 547L109 526 145 536 196 516 230 538 289 515 330 540 383 516 424 536 478 512 518 539 565 523 619 547" fill="none" stroke="#806340" stroke-opacity=".55" stroke-width="3"/><path d="M107 525L91 487 103 457 121 488 114 525 M548 519L558 482 578 454 573 492 591 521" fill="#101217" stroke="#60503b" stroke-width="2"/><g fill="#e4a05b"><circle cx="310" cy="485" r="2"/><circle cx="465" cy="465" r="2.5"/><circle cx="241" cy="441" r="1.5"/><circle cx="536" cy="414" r="2"/></g>
-</svg><div class="art-note">Reinos quebrados<br>guardam histórias<br>e dívidas esquecidas.</div>
-</aside>
+<header class="topbar">
+ <a class="brand" href="#" id="brandHome"><span class="crest">R</span><span><span class="brandname">Reinos em Ruína</span><span class="brandsub" id="brandSubtitle">RPG medieval · escolhas e consequências</span></span></a>
+ <div class="topright"><div class="network"><span class="dot"></span><span id="headerStatus">Projeto independente</span></div><button class="subtle-btn" id="headerLanguage">PT · Idioma</button></div>
+</header>
+<main class="stage">
+ <section class="view active" id="homeView">
+  <div class="hero">
+   <div class="hero-copy">
+    <div class="eyebrow" id="homeEyebrow">UMA AVENTURA EM UM REINO ESQUECIDO</div>
+    <h1><span class="title-line">Reinos</span><span class="title-line gold">em Ruína</span></h1>
+    <p class="lede" id="homeLede">O dinheiro constrói reinos. As escolhas decidem o que resta deles.</p>
+    <p class="description" id="homeDescription">Explore terras esquecidas, enfrente criaturas e descubra os segredos por trás da ruína de Brumaforte.</p>
+    <div class="ornament"></div>
+    <div class="primary-actions">
+     <button class="action primary" id="playButton"><span class="action-icon">⚔</span><span class="action-label"><strong id="playLabel">Jogar</strong><small id="playSub">Escolha um espaço de salvamento</small></span><span class="arrow">›</span></button>
+     <button class="action" id="languageButton"><span class="action-icon">文</span><span class="action-label"><strong id="languageLabel">Idioma</strong><small id="languageSub">Português (Brasil)</small></span><span class="arrow">›</span></button>
+    </div>
+    <p class="form-help" id="homeNote">Até 3 jornadas salvas neste navegador. Moedas de jogo são fictícias.</p>
+   </div>
+   <aside class="hero-art" aria-hidden="true">
+    <svg viewBox="0 0 700 610">
+     <defs><linearGradient id="stone" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#45404a"/><stop offset=".55" stop-color="#1d1d24"/><stop offset="1" stop-color="#101116"/></linearGradient></defs>
+     <ellipse cx="360" cy="560" rx="280" ry="22" fill="#000" opacity=".45"/>
+     <path d="M72 548 L90 456 135 432 158 332 199 312 219 230 264 201 283 265 306 284 328 177 367 142 402 185 421 285 458 307 477 236 519 218 543 310 570 347 605 548Z" fill="#14151a" stroke="#5e4a35" stroke-opacity=".55" stroke-width="2"/>
+     <path d="M142 548V352L171 325V285L196 264 218 285V325L245 352V548Z" fill="url(#stone)" stroke="#6b5841" stroke-opacity=".65" stroke-width="2"/>
+     <path d="M176 285V239L195 208 215 239V285Z" fill="#2c2a30" stroke="#6b5841" stroke-width="2"/><path d="M163 239L195 204 228 239Z" fill="#17181e" stroke="#94724a" stroke-opacity=".75" stroke-width="2"/>
+     <path d="M260 548V315L286 292 307 314V548Z" fill="url(#stone)" stroke="#6b5841" stroke-opacity=".5" stroke-width="2"/>
+     <path d="M318 548V256L349 223 378 255V548Z" fill="url(#stone)" stroke="#a17e50" stroke-opacity=".85" stroke-width="2"/><path d="M326 256V171L348 132 371 171V256Z" fill="#29272d" stroke="#a17e50" stroke-opacity=".65" stroke-width="2"/><path d="M318 174L348 127 380 174Z" fill="#17171c" stroke="#9e7c4f" stroke-width="2"/>
+     <path d="M394 548V300L422 275 447 300V548Z" fill="url(#stone)" stroke="#8f714a" stroke-opacity=".8" stroke-width="2"/><path d="M405 300V244L421 215 438 244V300Z" fill="#29272c" stroke="#94724a" stroke-width="2"/><path d="M399 245L421 211 443 245Z" fill="#16171c" stroke="#94724a" stroke-width="2"/>
+     <path d="M469 548V373L498 343 524 373V548Z" fill="#1e1f25" stroke="#745a3d" stroke-opacity=".7" stroke-width="2"/>
+     <g fill="#08090d"><path d="M179 368h18v34h-18z"/><path d="M336 298h25v36h-25z"/><path d="M412 365h18v33h-18z"/></g><g fill="#d18c4e" opacity=".55"><path d="M184 375h8v18h-8z"/><path d="M342 306h12v19h-12z"/><path d="M417 371h8v17h-8z"/></g>
+     <path d="M57 548L99 512 141 523 180 499 231 520 279 497 318 520 369 498 405 515 446 492 493 522 547 502 623 548Z" fill="#0b0c10"/><path d="M65 547L109 526 145 536 196 516 230 538 289 515 330 540 383 516 424 536 478 512 518 539 565 523 619 547" fill="none" stroke="#806340" stroke-opacity=".55" stroke-width="3"/>
+    </svg>
+    <div class="art-note" id="artNote">Reinos quebrados<br>guardam histórias<br>e dívidas esquecidas.</div>
+   </aside>
+  </div>
+ </section>
+
+ <section class="view" id="slotsView">
+  <div class="page-head"><div><div class="eyebrow" id="slotsEyebrow">SUA JORNADA</div><h2 class="page-title" id="slotsTitle">Escolha um salvamento</h2><p class="page-subtitle" id="slotsSubtitle">Continue uma aventura existente ou crie um personagem para começar uma nova. Cada espaço guarda sua própria jornada.</p></div><button class="back-btn" id="slotsBack">← Voltar</button></div>
+  <div class="slots" id="slotGrid"></div>
+  <p class="no-slots-note" id="slotsNote">Os salvamentos ficam neste navegador. Excluir um espaço remove apenas aquela jornada.</p>
+ </section>
+
+ <section class="view" id="creatorView">
+  <div class="page-head"><div><div class="eyebrow" id="creatorEyebrow">PERSONAGEM</div><h2 class="page-title" id="creatorTitle">Crie seu aventureiro</h2><p class="page-subtitle" id="creatorSubtitle">Escolha a aparência do herói que vai explorar Brumaforte e atravessar as ruínas.</p></div><button class="back-btn" id="creatorBack">← Voltar</button></div>
+  <div class="creator-layout">
+   <div class="preview-card"><div class="preview-stage"><canvas id="characterPreview" width="205" height="250" aria-label="Prévia do personagem"></canvas></div><div class="preview-name" id="previewName">Aventureiro</div><div class="preview-caption" id="previewCaption">Prévia do personagem</div></div>
+   <div class="creator-card" id="creatorControls"></div>
+  </div>
+ </section>
+
+ <section class="view" id="languageView">
+  <div class="page-head"><div><div class="eyebrow" id="langEyebrow">PREFERÊNCIAS</div><h2 class="page-title" id="langTitle">Idioma</h2><p class="page-subtitle" id="langSubtitle">Escolha o idioma dos menus e da criação de personagem.</p></div><button class="back-btn" id="langBack">← Voltar</button></div>
+  <div class="language-list" id="languageList"></div>
+  <p class="language-note" id="languageNote">A história e os diálogos da versão jogável ainda estão em português; a tradução completa do jogo será feita numa etapa posterior.</p>
+ </section>
 </main>
-<footer class="footer"><span><b>Reinos em Ruína</b> · Projeto independente</span><span>Protótipo local · Sem multiplayer ou dinheiro real</span></footer>
-<div class="modalback" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><section class="modal"><div class="modalhead"><h2 id="modalTitle">Caderno financeiro</h2><button class="close" id="closeModal" aria-label="Fechar">×</button></div><div class="modalbody" id="modalBody"></div><div class="modalfoot" id="modalFoot"></div></section></div>
+<footer class="footer"><span><b>Reinos em Ruína</b> · <span id="footerLeft">Projeto independente</span></span><span id="footerRight">Protótipo de navegador · salvamentos locais</span></footer>
 <script>
 (function(){
-'use strict';const $=id=>document.getElementById(id);const SAVE_KEY='cronicas_valoria_save';const SETTINGS_KEY='reinos_ruina_settings';
-const lessons=[
-{tag:'LIÇÃO 01 · FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro pode funcionar como meio de troca, unidade de conta e forma de guardar valor. O real é a moeda oficial do Brasil. No jogo, cobre, prata e ouro são moedas fictícias: servem para simular escolhas, não representam dinheiro real.',tip:'O valor de uma moeda depende também da confiança, das regras e da estabilidade do sistema que a utiliza.'},
-{tag:'LIÇÃO 02 · PLANEJAMENTO',title:'Um orçamento é um mapa',body:'Um orçamento compara o que entra com o que sai. Planejar gastos e reservar recursos para imprevistos ajuda a evitar decisões apressadas. No reino, gastar todo o cobre em itens secundários pode deixar você sem recursos quando surgir uma necessidade maior.',tip:'Antes de comprar, pergunte: preciso disso agora? O que deixo de fazer se gastar aqui?'},
-{tag:'LIÇÃO 03 · INFLAÇÃO',title:'Quando os preços sobem',body:'Inflação é uma alta generalizada dos preços ao longo do tempo. Quando a renda não acompanha essa alta, a mesma quantia compra menos. O aumento isolado de um único item, por si só, não demonstra inflação em toda a economia.',tip:'Compare vários produtos e períodos, em vez de tirar conclusões a partir de um único preço.'},
-{tag:'LIÇÃO 04 · DÍVIDAS E JUROS',title:'O preço de pegar emprestado',body:'Juros são o custo de usar dinheiro emprestado e podem também remunerar quem empresta. Prazo, taxa, parcelas e custo total importam. Uma parcela pequena pode esconder muitos meses de pagamento e um custo acumulado elevado.',tip:'Antes de aceitar crédito, entenda as condições completas e quanto será devolvido no total.'},
-{tag:'LIÇÃO 05 · CRIPTOATIVOS',title:'Promessas de riqueza fácil',body:'Criptoativos podem sofrer grandes oscilações de preço e envolvem riscos de perda, fraude e falhas técnicas. Stablecoins tentam acompanhar o valor de outro ativo, mas também podem falhar. Nenhum deles garante lucro.',tip:'Desconfie de retornos garantidos, pressão para agir rápido e pedidos de senha, frase-semente ou chave privada.'},
-{tag:'LIÇÃO 06 · FRAUDES',title:'Nem toda oferta é uma oportunidade',body:'Golpes costumam explorar a pressa, a confiança ou a esperança de ganhar muito sem risco. Verifique quem está oferecendo, compare informações independentes e não entregue recursos só porque alguém parece confiável.',tip:'Pare, verifique e consulte alguém de confiança antes de uma decisão financeira importante.'}
-];let lessonIndex=0;
-function hasSave(){try{return !!localStorage.getItem(SAVE_KEY)}catch(e){return false}}
-function refreshContinue(){const saved=hasSave(),b=$('continueBtn');b.disabled=!saved;$('continueDesc').textContent=saved?'Retome o progresso salvo neste navegador':'Jogue uma vez e salve dentro do protótipo';$('saveNote').textContent=saved?'Progresso local encontrado. Continuar retoma seu último salvamento.':'A aventura é local neste protótipo. As moedas são fictícias.'}
-function startNew(){if(hasSave()&&!confirm('Começar uma nova jornada? O progresso salvo será substituído ao iniciar.'))return;window.location.href='jogar.html?new=1'}
-function continueGame(){if(!hasSave()){refreshContinue();return}window.location.href='jogar.html?continue=1'}
-function openModal(title,body,buttons){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML='';(buttons||[]).forEach(b=>{const el=document.createElement('button');el.className='flat-btn';el.textContent=b.label;el.onclick=b.action;$('modalFoot').appendChild(el)});$('modalBack').classList.add('open');$('closeModal').focus()}
-function closeModal(){$('modalBack').classList.remove('open')}
-function showLesson(){const l=lessons[lessonIndex];openModal('Caderno financeiro','<div class="lesson-tag">'+l.tag+'</div><h3>'+l.title+'</h3><p>'+l.body+'</p><div class="tip">✦ Lembrete: '+l.tip+'</div><p style="font-size:10px;color:#938b7f">Lição '+(lessonIndex+1)+' de '+lessons.length+' · Conteúdo educativo geral, não é recomendação financeira.</p>',[{label:'← Anterior',action:()=>{lessonIndex=(lessonIndex-1+lessons.length)%lessons.length;showLesson()}},{label:'Fechar',action:closeModal},{label:'Próxima →',action:()=>{lessonIndex=(lessonIndex+1)%lessons.length;showLesson()}}])}
-function openSettings(){let s={noEffects:false};try{s=Object.assign(s,JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}'))}catch(e){}openModal('Configurações','<div class="setting-row"><div><strong>Reduzir efeitos visuais</strong><small>Desativa a animação da névoa e alguns brilhos decorativos.</small></div><input id="reduceEffects" type="checkbox" '+(s.noEffects?'checked':'')+'></div><p>O protótipo ainda não possui música nem efeitos sonoros.</p>',[{label:'Salvar configurações',action:()=>{const settings={noEffects:$('reduceEffects').checked};try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings))}catch(e){}document.body.classList.toggle('no-effects',settings.noEffects);closeModal()} }])}
-function openCredits(){openModal('Sobre o projeto','<h3>Reinos em Ruína</h3><p>Um RPG medieval independente em que exploração, combate e decisões econômicas se conectam. No capítulo A Moeda Partida, você ajuda Brumaforte a enfrentar escassez e preços instáveis escolhendo uma política para o reino — e precisa lidar com os resultados.</p><div class="credits"><strong>Estado atual</strong><br>Protótipo experimental para navegador.<br>As moedas e o painel econômico são fictícios.<br>A prova de capítulo na Arc está preparada, mas ainda depende de implantação e configuração do contrato.</div><p>Um projeto de aprendizagem construído etapa por etapa.</p>',[{label:'Voltar ao menu',action:closeModal}])}
-$('newGameBtn').addEventListener('click',startNew);$('continueBtn').addEventListener('click',continueGame);$('codexBtn').addEventListener('click',()=>{lessonIndex=0;showLesson()});$('settingsBtn').addEventListener('click',openSettings);$('creditsBtn').addEventListener('click',openCredits);$('closeModal').addEventListener('click',closeModal);$('modalBack').addEventListener('click',e=>{if(e.target===$('modalBack'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});try{const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');document.body.classList.toggle('no-effects',!!s.noEffects)}catch(e){}refreshContinue();window.addEventListener('pageshow',refreshContinue)
+'use strict';
+const $=id=>document.getElementById(id);
+const LEGACY_KEY='cronicas_valoria_save';
+const LEGACY_MIGRATED_KEY='reinos_ruina_legacy_checked';
+const SLOT_PREFIX='reinos_ruina_slot_';
+const LANG_KEY='reinos_ruina_language';
+const SETTINGS_KEY='reinos_ruina_settings';
+const SLOT_COUNT=3;
+let language='pt-BR';
+let currentView='home';
+let creatorSlot=1;
+let creatorMode='new';
+let creatorDraft=defaultCharacter();
+const TEXT={
+ 'pt-BR':{
+  subtitle:'RPG medieval · escolhas e consequências',status:'Projeto independente',eyebrow:'UMA AVENTURA EM UM REINO ESQUECIDO',
+  lede:'O dinheiro constrói reinos. As escolhas decidem o que resta deles.',description:'Explore terras esquecidas, enfrente criaturas e descubra os segredos por trás da ruína de Brumaforte.',
+  play:'Jogar',playSub:'Escolha um espaço de salvamento',language:'Idioma',languageSub:'Português (Brasil)',homeNote:'Até 3 jornadas salvas neste navegador. Moedas de jogo são fictícias.',
+  art:'Reinos quebrados<br>guardam histórias<br>e dívidas esquecidas.',slotsEyebrow:'SUA JORNADA',slotsTitle:'Escolha um salvamento',slotsSubtitle:'Continue uma aventura existente ou crie um personagem para começar uma nova. Cada espaço guarda sua própria jornada.',
+  back:'Voltar',slotsNote:'Os salvamentos ficam neste navegador. Excluir um espaço remove apenas aquela jornada.',
+  slot:'ESPAÇO',empty:'Slot vazio',emptyDesc:'Nenhum personagem ainda. Crie um herói e comece uma nova aventura.',create:'Criar personagem',continue:'Continuar',start:'Começar jornada',customize:'Personalizar',delete:'Excluir',level:'Nível',chapter:'Capítulo',noProgress:'A jornada ainda não foi iniciada.',
+  deleteConfirm:'Excluir este salvamento e o personagem deste espaço? Esta ação não pode ser desfeita.',deleteDone:'Salvamento excluído.',oldSave:'Jornada anterior importada',oldSaveDesc:'Seu salvamento antigo foi colocado no Espaço 1 para preservar seu progresso.',
+  creatorEyebrow:'PERSONAGEM',creatorTitle:'Crie seu aventureiro',creatorSubtitle:'Escolha a aparência do herói que vai explorar Brumaforte e atravessar as ruínas.',
+  editTitle:'Personalize seu personagem',editSubtitle:'Mude a aparência sem apagar o progresso desta jornada.',name:'Nome do personagem',namePlaceholder:'Digite um nome',nameHelp:'Máximo de 16 caracteres.',gender:'Aparência',male:'Masculino',female:'Feminino',maleDesc:'Corte curto e silhueta clássica.',femaleDesc:'Cabelo longo e silhueta clássica.',clothes:'Roupas',cloak:'Manto',hair:'Cor do cabelo',skin:'Tom de pele',none:'Sem manto',red:'Vinho',green:'Floresta',blue:'Azul',ivory:'Marfim',brown:'Castanho',black:'Preto',blond:'Loiro',silver:'Prateado',light:'Claro',tan:'Bronzeado',dark:'Escuro',
+  traveler:'Viajante',travelerDesc:'Couro e tecido resistentes',guard:'Guarda',guardDesc:'Couro reforçado e aço',mage:'Místico',mageDesc:'Manto arcano',noble:'Nobre',nobleDesc:'Roupa fina e detalhes dourados',
+  preview:'Prévia do personagem',newSave:'Criar jornada',saveAppearance:'Salvar aparência',cancel:'Cancelar',nameRequired:'Escolha um nome para seu personagem.',slotTaken:'Este espaço já tem uma jornada. Exclua-a antes de criar outra.',
+  languageEyebrow:'PREFERÊNCIAS',languageTitle:'Idioma',languageSubtitle:'Escolha o idioma dos menus e da criação de personagem.',portuguese:'Português (Brasil)',english:'English',selected:'Selecionado',choose:'Usar este idioma',languageNote:'A história e os diálogos da versão jogável ainda estão em português; a tradução completa do jogo será feita numa etapa posterior.',
+  footerLeft:'Projeto independente',footerRight:'Protótipo de navegador · salvamentos locais',timeNow:'Atualizado agora',genderLabel:{masculino:'Masculino',feminino:'Feminino'},
+  confirmNew:'Começar uma nova jornada neste espaço?',renameNote:'Seu progresso será preservado.',lastPlayed:'Última vez',emptySlot:'Disponível'
+ },
+ 'en-US':{
+  subtitle:'Medieval RPG · choices and consequences',status:'Independent project',eyebrow:'AN ADVENTURE IN A FORGOTTEN KINGDOM',
+  lede:'Money builds kingdoms. Choices decide what remains.',description:'Explore forgotten lands, face creatures, and uncover the secrets behind Brumaforte’s ruin.',
+  play:'Play',playSub:'Choose a save slot',language:'Language',languageSub:'English',homeNote:'Up to 3 journeys on this browser. In-game coins are fictional.',
+  art:'Broken kingdoms<br>hold stories<br>and forgotten debts.',slotsEyebrow:'YOUR JOURNEY',slotsTitle:'Choose a save slot',slotsSubtitle:'Continue an existing adventure or create a character to begin a new one. Each slot keeps its own journey.',
+  back:'Back',slotsNote:'Saves are stored in this browser. Deleting a slot removes only that journey.',
+  slot:'SLOT',empty:'Empty slot',emptyDesc:'No character yet. Create a hero and begin a new adventure.',create:'Create character',continue:'Continue',start:'Start journey',customize:'Customize',delete:'Delete',level:'Level',chapter:'Chapter',noProgress:'The journey has not started yet.',
+  deleteConfirm:'Delete this save and its character? This cannot be undone.',deleteDone:'Save deleted.',oldSave:'Previous journey imported',oldSaveDesc:'Your older save was placed in Slot 1 to preserve your progress.',
+  creatorEyebrow:'CHARACTER',creatorTitle:'Create your adventurer',creatorSubtitle:'Customize the hero who will explore Brumaforte and cross the ruins.',
+  editTitle:'Customize your character',editSubtitle:'Change appearance without erasing this journey’s progress.',name:'Character name',namePlaceholder:'Enter a name',nameHelp:'Maximum 16 characters.',gender:'Appearance',male:'Masculine',female:'Feminine',maleDesc:'Short hair and classic silhouette.',femaleDesc:'Long hair and classic silhouette.',clothes:'Clothing',cloak:'Cloak',hair:'Hair color',skin:'Skin tone',none:'No cloak',red:'Burgundy',green:'Forest',blue:'Blue',ivory:'Ivory',brown:'Brown',black:'Black',blond:'Blond',silver:'Silver',light:'Light',tan:'Tan',dark:'Dark',
+  traveler:'Traveler',travelerDesc:'Hardwearing cloth and leather',guard:'Guard',guardDesc:'Reinforced leather and steel',mage:'Mystic',mageDesc:'Arcane robes',noble:'Noble',nobleDesc:'Fine clothes and gold trim',
+  preview:'Character preview',newSave:'Create journey',saveAppearance:'Save appearance',cancel:'Cancel',nameRequired:'Please choose a character name.',slotTaken:'This slot already has a journey. Delete it before creating another.',
+  languageEyebrow:'PREFERENCES',languageTitle:'Language',languageSubtitle:'Choose the language for menus and character creation.',portuguese:'Português (Brasil)',english:'English',selected:'Selected',choose:'Use this language',languageNote:'The playable chapter and dialogue are currently in Portuguese; full game localization will come in a later update.',
+  footerLeft:'Independent project',footerRight:'Browser prototype · local saves',timeNow:'Just updated',genderLabel:{masculino:'Masculine',feminino:'Feminine'},
+  confirmNew:'Start a new journey in this slot?',renameNote:'Your progress will be preserved.',lastPlayed:'Last played',emptySlot:'Available'
+ }
+};
+const OUTFITS={
+ traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c',label:'traveler',desc:'travelerDesc'},
+ guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39',label:'guard',desc:'guardDesc'},
+ mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744',label:'mage',desc:'mageDesc'},
+ noble:{coat:'#783c3c',trim:'#dcbd7a',pants:'#4a2d2d',label:'noble',desc:'nobleDesc'}
+};
+const CLOAKS={none:null,red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
+const HAIR={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5'};
+const SKIN={light:'#dbb28a',tan:'#b8794f',dark:'#754833'};
+
+function defaultCharacter(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'light'};}
+function slotKey(slot){return SLOT_PREFIX+slot;}
+function readSlot(slot){try{const raw=localStorage.getItem(slotKey(slot));if(!raw)return null;const record=JSON.parse(raw);return record&&record.version===1?record:null;}catch(e){return null;}}
+function writeSlot(slot,record){try{localStorage.setItem(slotKey(slot),JSON.stringify(record));return true;}catch(e){return false;}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function t(key){return (TEXT[language]&&TEXT[language][key])||TEXT['pt-BR'][key]||key;}
+function translatePage(){
+ document.documentElement.lang=language;
+ $('brandSubtitle').textContent=t('subtitle');$('headerStatus').textContent=t('status');$('headerLanguage').textContent=(language==='pt-BR'?'PT':'EN')+' · '+t('language');
+ $('homeEyebrow').textContent=t('eyebrow');$('homeLede').textContent=t('lede');$('homeDescription').textContent=t('description');
+ $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
+ $('slotsEyebrow').textContent=t('slotsEyebrow');$('slotsTitle').textContent=t('slotsTitle');$('slotsSubtitle').textContent=t('slotsSubtitle');$('slotsBack').textContent='← '+t('back');$('slotsNote').textContent=t('slotsNote');
+ $('creatorEyebrow').textContent=t('creatorEyebrow');$('creatorBack').textContent='← '+t('back');
+ $('langEyebrow').textContent=t('languageEyebrow');$('langTitle').textContent=t('languageTitle');$('langSubtitle').textContent=t('languageSubtitle');$('langBack').textContent='← '+t('back');$('languageNote').textContent=t('languageNote');
+ $('footerLeft').textContent=t('footerLeft');$('footerRight').textContent=t('footerRight');
+ renderLanguageCards();
+}
+function showView(view){
+ currentView=view;
+ document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id===view+'View'));
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function importLegacyIfNeeded(){
+ try{
+  if(localStorage.getItem(LEGACY_MIGRATED_KEY)==='1')return;
+  const legacy=localStorage.getItem(LEGACY_KEY);
+  if(legacy&&!readSlot(1)){
+   const game=JSON.parse(legacy);
+   const char=defaultCharacter();
+   const now=Date.now();
+   writeSlot(1,{version:1,slot:1,character:char,game:game,createdAt:now,updatedAt:now,importedLegacy:true});
+  }
+  localStorage.setItem(LEGACY_MIGRATED_KEY,'1');
+ }catch(e){try{localStorage.setItem(LEGACY_MIGRATED_KEY,'1')}catch(ignore){}}
+}
+function formatDate(timestamp){
+ if(!timestamp)return t('timeNow');
+ try{return new Intl.DateTimeFormat(language,{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(timestamp));}catch(e){return t('timeNow');}
+}
+function renderSlots(){
+ const grid=$('slotGrid');grid.innerHTML='';
+ for(let slot=1;slot<=SLOT_COUNT;slot++){
+  const record=readSlot(slot);const hasCharacter=!!(record&&record.character);const hasGame=!!(record&&record.game);
+  const card=document.createElement('article');card.className='slot'+(hasCharacter?'':' empty');
+  const character=hasCharacter?Object.assign(defaultCharacter(),record.character):null;
+  let title=t('empty'),desc=t('emptyDesc'),mark='＋',pills='';
+  if(hasCharacter){
+   title=character.name||t('empty');desc=hasGame?t('lastPlayed')+': '+formatDate(record.updatedAt):t('noProgress');
+   mark=character.gender==='feminino'?'♙':'♟';
+   pills='<span class="pill gold">'+esc(t(character.gender==='feminino'?'female':'male'))+'</span><span class="pill">'+esc(t(character.outfit==='traveler'?'traveler':character.outfit==='guard'?'guard':character.outfit==='mage'?'mage':'noble'))+'</span>';
+   if(hasGame){const lvl=Number(record.game.level)||1;const step=Math.min(5,Number(record.game.questStep)||0);pills+='<span class="pill">'+esc(t('level'))+' '+lvl+'</span><span class="pill">'+esc(t('chapter'))+' 1</span>';}
+  }
+  card.innerHTML='<div class="slot-top"><span class="slot-no">'+esc(t('slot'))+' 0'+slot+'</span><span>'+(hasCharacter?'✦ '+esc(t('lastPlayed')):'○ '+esc(t('emptySlot')) )+'</span></div><div class="slot-mark" aria-hidden="true">'+mark+'</div><h3 class="slot-name">'+esc(title)+'</h3><p class="slot-desc">'+esc(desc)+'</p><div class="slot-stats">'+pills+'</div><div class="slot-actions" id="slotActions'+slot+'"></div>';
+  grid.appendChild(card);
+  const actions=card.querySelector('#slotActions'+slot);
+  if(!hasCharacter){
+   addSlotButton(actions,t('create'),'primary',()=>beginCreator(slot,'new'));
+  }else{
+   addSlotButton(actions,hasGame?t('continue'):t('start'),'primary',()=>startGame(slot,!hasGame));
+   addSlotButton(actions,t('customize'),'',()=>beginCreator(slot,'edit'));
+   addSlotButton(actions,t('delete'),'danger',()=>deleteSlot(slot));
+  }
+ }
+}
+function addSlotButton(parent,label,kind,onClick){
+ const b=document.createElement('button');b.type='button';b.className='slot-button'+(kind?' '+kind:'');b.textContent=label;b.addEventListener('click',onClick);parent.appendChild(b);
+}
+function deleteSlot(slot){
+ const label=t('deleteConfirm');
+ if(!window.confirm(label))return;
+ try{localStorage.removeItem(slotKey(slot));}catch(e){}
+ renderSlots();
+}
+function beginCreator(slot,mode){
+ creatorSlot=slot;creatorMode=mode;
+ const record=readSlot(slot);
+ creatorDraft=mode==='edit'&&record&&record.character?Object.assign(defaultCharacter(),record.character):defaultCharacter();
+ $('creatorTitle').textContent=t(mode==='edit'?'editTitle':'creatorTitle');
+ $('creatorSubtitle').textContent=t(mode==='edit'?'editSubtitle':'creatorSubtitle');
+ renderCreator();
+ showView('creator');
+}
+function renderCreator(){
+ const c=creatorDraft;
+ const controls=$('creatorControls');
+ controls.innerHTML=
+  '<div class="form-section"><label class="form-label" for="characterName">'+esc(t('name'))+'</label><input class="name-input" id="characterName" maxlength="16" autocomplete="off" value="'+esc(c.name)+'" placeholder="'+esc(t('namePlaceholder'))+'"><p class="form-help">'+esc(t('nameHelp'))+'</p></div>'+
+  '<div class="form-section"><span class="form-label">'+esc(t('gender'))+'</span><div class="choice-row">'+
+  '<button type="button" class="choice '+(c.gender==='masculino'?'active':'')+'" data-gender="masculino"><span class="choice-emoji">♟</span><span><strong>'+esc(t('male'))+'</strong><small>'+esc(t('maleDesc'))+'</small></span></button>'+
+  '<button type="button" class="choice '+(c.gender==='feminino'?'active':'')+'" data-gender="feminino"><span class="choice-emoji">♙</span><span><strong>'+esc(t('female'))+'</strong><small>'+esc(t('femaleDesc'))+'</small></span></button></div></div>'+
+  '<div class="form-section"><span class="form-label">'+esc(t('clothes'))+'</span><div class="outfit-grid">'+
+  Object.keys(OUTFITS).map(key=>'<button type="button" class="outfit '+(c.outfit===key?'active':'')+'" data-outfit="'+key+'"><span class="outfit-swatch" style="background:'+OUTFITS[key].coat+';box-shadow:inset 0 -8px '+OUTFITS[key].trim+'"></span><span><strong>'+esc(t(OUTFITS[key].label))+'</strong><small>'+esc(t(OUTFITS[key].desc))+'</small></span></button>').join('')+
+  '</div></div>'+
+  '<div class="form-section"><span class="form-label">'+esc(t('cloak'))+'</span><div class="color-grid">'+
+  [['none','#28272a','none'],['red',CLOAKS.red,'red'],['green',CLOAKS.green,'green'],['blue',CLOAKS.blue,'blue'],['ivory',CLOAKS.ivory,'ivory']].map(item=>'<button type="button" class="color-choice '+(c.cloak===item[0]?'active':'')+'" data-cloak="'+item[0]+'"><span class="color-dot" style="background:'+item[1]+'"></span>'+esc(t(item[2]))+'</button>').join('')+
+  '</div></div>'+
+  '<div class="form-section two-selects"><div><label class="form-label" for="hairColor">'+esc(t('hair'))+'</label><select class="select-input" id="hairColor">'+[['brown','brown'],['black','black'],['blond','blond'],['silver','silver']].map(item=>'<option value="'+item[0]+'" '+(c.hair===item[0]?'selected':'')+'>'+esc(t(item[1]))+'</option>').join('')+'</select></div><div><label class="form-label" for="skinTone">'+esc(t('skin'))+'</label><select class="select-input" id="skinTone">'+[['light','light'],['tan','tan'],['dark','dark']].map(item=>'<option value="'+item[0]+'" '+(c.skin===item[0]?'selected':'')+'>'+esc(t(item[1]))+'</option>').join('')+'</select></div></div>'+
+  '<div class="creator-actions"><button type="button" class="slot-button" id="cancelCreator">'+esc(t('cancel'))+'</button><button type="button" class="slot-button primary" id="confirmCreator">'+esc(t(creatorMode==='edit'?'saveAppearance':'newSave'))+'</button></div>';
+ const name=$('characterName');
+ name.addEventListener('input',()=>{creatorDraft.name=name.value.slice(0,16)||t('empty');drawPreview();});
+ controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;renderCreator();}));
+ controls.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfit=b.dataset.outfit;renderCreator();}));
+ controls.querySelectorAll('[data-cloak]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.cloak=b.dataset.cloak;renderCreator();}));
+ $('hairColor').addEventListener('change',e=>{creatorDraft.hair=e.target.value;drawPreview();});
+ $('skinTone').addEventListener('change',e=>{creatorDraft.skin=e.target.value;drawPreview();});
+ $('cancelCreator').addEventListener('click',()=>{if(creatorMode==='edit')showView('slots');else showView('slots');renderSlots();});
+ $('confirmCreator').addEventListener('click',confirmCreator);
+ drawPreview();
+}
+function drawPreview(){
+ const canvas=$('characterPreview');if(!canvas)return;
+ const ctx=canvas.getContext('2d');ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=false;
+ const char=creatorDraft;const outfit=OUTFITS[char.outfit]||OUTFITS.traveler;const cloak=CLOAKS[char.cloak];const hair=HAIR[char.hair]||HAIR.brown;const skin=SKIN[char.skin]||SKIN.light;
+ const px=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h)};
+ ctx.fillStyle='#0008';ctx.fillRect(55,215,96,5);ctx.fillStyle='#d0ae6d22';ctx.fillRect(25,229,155,1);
+ if(cloak){px(58,112,22,69,cloak);px(54,129,8,39,cloak);px(76,164,18,15,cloak);}
+ px(72,164,19,35,'#40372c');px(111,164,19,35,'#40372c');
+ px(68,190,23,7,'#211c19');px(108,190,23,7,'#211c19');
+ px(75,111,52,55,outfit.coat);px(68,113,10,42,outfit.trim);px(124,113,9,42,outfit.trim);
+ px(75,145,52,7,outfit.trim);px(88,147,25,6,'#292724');px(98,146,5,7,'#dec17e');
+ px(78,95,45,23,skin);px(80,82,41,31,skin);px(74,78,49,14,hair);
+ if(char.gender==='feminino'){px(73,86,8,38,hair);px(116,86,8,38,hair);px(79,72,43,9,hair);px(78,89,10,12,skin);px(113,89,10,12,skin);}
+ else{px(81,72,38,11,hair);px(77,78,8,14,hair);px(116,78,8,13,hair);}
+ px(88,94,4,4,'#2a2624');px(109,94,4,4,'#2a2624');px(95,105,9,2,'#8d4f3f');
+ px(67,113,12,20,outfit.trim);px(124,113,12,20,outfit.trim);
+ px(78,128,44,3,'#ffffff19');
+ $('previewName').textContent=char.name||t('empty');$('previewCaption').textContent=t('preview');
+}
+function confirmCreator(){
+ const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
+ if(!name){window.alert(t('nameRequired'));input.focus();return;}
+ creatorDraft.name=name;
+ const now=Date.now();const existing=readSlot(creatorSlot);
+ if(creatorMode==='new'){
+  if(existing){window.alert(t('slotTaken'));showView('slots');renderSlots();return;}
+  const record={version:1,slot:creatorSlot,character:Object.assign({},creatorDraft),game:null,createdAt:now,updatedAt:now};
+  if(!writeSlot(creatorSlot,record)){window.alert('Não foi possível salvar neste navegador. Verifique o espaço disponível.');return;}
+  startGame(creatorSlot,true);
+ }else{
+  if(!existing){window.alert(t('slotTaken'));showView('slots');renderSlots();return;}
+  existing.character=Object.assign({},creatorDraft);existing.updatedAt=now;
+  if(existing.game)existing.game.character=Object.assign({},creatorDraft);
+  if(!writeSlot(creatorSlot,existing)){window.alert('Não foi possível salvar neste navegador.');return;}
+  renderSlots();showView('slots');
+ }
+}
+function startGame(slot,isNew){
+ if(isNew){
+  const record=readSlot(slot);
+  if(!record||!record.character){beginCreator(slot,'new');return;}
+ }
+ const query='?slot='+slot+(isNew?'&new=1':'')+'&lang='+encodeURIComponent(language);
+ window.location.href='jogar.html'+query;
+}
+function renderLanguageCards(){
+ const area=$('languageList');if(!area)return;area.innerHTML='';
+ const opts=[{id:'pt-BR',flag:'PT',name:t('portuguese'),note:language==='pt-BR'?'✓ '+t('selected'):t('choose')},{id:'en-US',flag:'EN',name:t('english'),note:language==='en-US'?'✓ '+t('selected'):t('choose')}];
+ opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='language-card'+(language===o.id?' active':'');b.innerHTML='<span class="language-flag">'+o.flag+'</span><span><strong>'+esc(o.name)+'</strong><small>'+esc(o.note)+'</small></span>';b.addEventListener('click',()=>{language=o.id;try{localStorage.setItem(LANG_KEY,language)}catch(e){}translatePage();renderSlots();if(currentView==='creator')renderCreator();});area.appendChild(b);});
+}
+function setLanguage(lang){
+ language=lang==='en-US'?'en-US':'pt-BR';
+ try{localStorage.setItem(LANG_KEY,language)}catch(e){}
+ translatePage();
+}
+function openSlots(){renderSlots();showView('slots');}
+$('playButton').addEventListener('click',openSlots);
+$('languageButton').addEventListener('click',()=>showView('language'));
+$('headerLanguage').addEventListener('click',()=>showView('language'));
+$('slotsBack').addEventListener('click',()=>showView('home'));
+$('creatorBack').addEventListener('click',()=>{renderSlots();showView('slots');});
+$('langBack').addEventListener('click',()=>showView('home'));
+$('brandHome').addEventListener('click',e=>{e.preventDefault();showView('home');});
+try{language=localStorage.getItem(LANG_KEY)==='en-US'?'en-US':'pt-BR';}catch(e){}
+importLegacyIfNeeded();
+translatePage();
+renderSlots();
+try{const s=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');document.body.classList.toggle('no-effects',!!s.noEffects)}catch(e){}
 })();
 </script>
 </body>
