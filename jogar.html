@@ -216,16 +216,32 @@ body{position:fixed;inset:0}
 .region-art{border:1px solid #8d714b!important;box-shadow:inset 0 0 20px #0007}.region-art.region-brumaforte{background:linear-gradient(135deg,#6b884e,#c6b178,#4a7046)!important}.region-art.region-bosque{background:linear-gradient(135deg,#172a20,#496b43,#89905d)!important}.region-art.region-lago{background:linear-gradient(135deg,#17383e,#477c83,#c0b48d)!important}
 .battle-card[data-card="classpower"]{border-color:#b89556;background:linear-gradient(145deg,#30271f,#1c1b1e)}
 @media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.class-grid{grid-template-columns:1fr;gap:7px}.class-card{grid-template-columns:34px 1fr;padding:9px;gap:8px}.class-icon{width:33px;height:36px;font-size:19px}.difficulty-grid{grid-template-columns:1fr;gap:6px}.difficulty-card{padding:9px}.class-stat .value{font-size:10px!important}.canvashead{top:158px}}
+/* AVENTURA 16-BIT — novo rumo visual: mapas claros, sprites pequenos e menus de portátil clássico */
+:root{--bg:#1b3035;--panel:#29464c;--panel2:#36575a;--line:#9eb76e;--ink:#f6f2d5;--muted:#c0cdb0;--gold:#f2cf72;--orange:#cb7d52;--green:#9bc878;--red:#d96b62}
+html,body{background:#1a3036;color:#f4f0d0;font-family:ui-monospace,Consolas,monospace}
+.brand h1,.brand p,.buildtag,.location,.subhead,.paneltitle,.questname,.modalhead h2,.modalbody h3{font-family:ui-monospace,Consolas,monospace;letter-spacing:.03em}
+.brand .mark{border-radius:3px;background:#e4d88e;color:#203b42;border:3px solid #23383c;box-shadow:inset 0 0 0 2px #f7edb4}
+.brand h1{text-shadow:2px 2px #1a2a2e;color:#f5f0cf}.brand p{color:#c0d0a5}.buildtag{border:2px solid #8aa963;border-radius:3px;background:#253f45;color:#e8edbf}
+.stat{border:2px solid #91ad69;border-radius:3px;background:#29484e;box-shadow:inset 0 0 0 1px #456267}.stat .label{color:#cad5aa;font-family:ui-monospace,monospace}.stat .value{font-family:ui-monospace,monospace;color:#fff2be}
+.gamecard{border:3px solid #192e33;box-shadow:0 0 0 2px #9db86f,0 14px 32px #08191d88;border-radius:4px}.canvashead{background:#29464c;border-bottom:2px solid #9db86f}.location{color:#f4edc1}.dot{background:#a1d576;box-shadow:0 0 8px #b1d889}
+.stagewrap{background:#78ad6b}.stage{image-rendering:pixelated;image-rendering:crisp-edges}
+.actionrow,.mobilehelp{background:#203a40;border-color:#92aa65}.btn{font-family:ui-monospace,Consolas,monospace;border-radius:3px;border:2px solid #142b30;background:#d5dba9;color:#233c40;box-shadow:inset 0 -3px #9bad78;font-weight:800}.btn:hover{background:#f0df9e;border-color:#d8c46f;color:#1e3438}.btn.primary{background:#e8cb76;color:#263b3d;border-color:#1c3034}.btn.active{background:#6b9e73;color:#f5f0d1;border-color:#e2d58f}.btn:disabled{opacity:.48}
+.modalback{backdrop-filter:none;background:#10262bcb}.modal{border:3px solid #1a3338;background:#e9ecc9;color:#263b3e;box-shadow:0 0 0 3px #91a965,0 22px 70px #071518;border-radius:4px}.modalhead,.modalfoot{background:#29494f;border-color:#78965e}.modalhead h2{color:#f4efcb}.modalbody{color:#2c4144}.modalbody h3{color:#31484a}.modalbody p{color:#405354}.modalnote{background:#d1dfad;color:#2b4141;border-left-color:#8ca85d}.dialogline{background:#c9d9a3;color:#2d4241;border-left-color:#b67c48}.shoprow,.ledgeritem,.econstat,.feature-card,.feature-hero,.menu-section,.region-card,.class-card,.difficulty-card{border-radius:3px!important}
+.toast{background:#263f43;border:2px solid #aec77e;color:#fff6d1;border-radius:3px;font-family:ui-monospace,monospace}
+.battle-side,.battle-card,.battle-intro,.battle-log{border-radius:3px}.battle-card{background:#d6e1af;border-color:#526f54;color:#243c3d;box-shadow:inset 0 -3px #a5bd7a}.battle-card strong{color:#293f41}.battle-card small{color:#4b5e51}.battle-card:hover:not(:disabled){background:#f2e7b6}.battle-intro{background:#cadba3;color:#2e4544;border-color:#67885a}.battle-side{background:#dce6b7;border-color:#7d9b63}.battle-side .battle-name{color:#2f4847}.battle-side.enemy{background:#e8d6a1;border-color:#b77c4e}.battle-side.enemy .battle-name{color:#733e35}.battle-log{background:#cddca7;border-color:#8ba66a;color:#2d4240}.battle-disclaimer{color:#6b7c61}.battle-energy .energy-pip{border-color:#617d52;background:#9eae70}.battle-energy .energy-pip.ready{background:#e0c56d}
+.class-stat,#classBtn,#difficultyBtn,#powerBtn{display:none!important}
+#attackBtn{background:#e8cb76}
+@media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.canvashead{top:139px}.brand p{font-size:7px}.modal{border-width:2px}}
 </style>
 </head>
 <body>
 <div class="shell">
   <header class="top">
-    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 1.1</p></div></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ REBOOT · MUNDO VIVO · MOEDAS FICTÍCIAS</div></div>
+    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · AVENTURA 16-BIT</p></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ AVENTURA CLÁSSICA · CRIATURAS ORIGINAIS</div></div>
   </header>
   <section class="stats" aria-label="Status do personagem">
-    <div class="stat"><div class="label">Personagem</div><div class="value" id="lv">Nível 1</div><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
+    <div class="stat"><div class="label">Parceiro ativo</div><div class="value" id="lv">Nível 1</div><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
     <div class="stat"><div class="label">Experiência</div><div class="value" id="xp">0 / 100 XP</div></div>
     <div class="stat"><div class="label">Vida</div><div class="value heart" id="hp">♥ 100 / 100</div><div class="xpbar"><div class="xpfill" id="hpfill" style="width:100%;background:#d97667"></div></div></div>
     <div class="stat"><div class="label">Bolsa do reino</div><div class="value coins" id="coins">◈ 25 cobre</div></div>
@@ -237,19 +253,19 @@ body{position:fixed;inset:0}
     <div class="stagewrap"><canvas id="game" class="stage" width="960" height="540" tabindex="0" aria-label="Jogo Reinos em Ruína"></canvas><div class="toast" id="toast"></div></div>
     <div class="actionrow">
       <button class="btn active" data-scene="map" id="mapBtn">⌂ Mapa</button><button class="btn" id="worldMapBtn" title="Viajar entre regiões">🗺 Regiões <span class="kbd">G</span></button>
-      <button class="btn" data-scene="action" id="ruinsBtn">⚔ Ruínas</button>
+      <button class="btn" data-scene="action" id="ruinsBtn">⛏ Mina antiga</button>
       <button class="btn" id="financeBtn">◈ Caderno financeiro <span class="kbd">M</span></button>
       <button class="btn" id="shopBtn">▤ Mercador <span class="kbd">T</span></button>
       <button class="btn" id="councilBtn">♜ Conselho do reino</button>
-      <button class="btn" id="attackBtn">⚔ Atacar <span class="kbd">J</span></button><button class="btn" id="tacticalBtn" title="Combate por turnos com cartas">♜ Cartas táticas</button>
+      <button class="btn" id="attackBtn">✦ Enfrentar <span class="kbd">J</span></button><button class="btn" id="tacticalBtn" title="Encontro por turnos com criaturas">◈ Encontros</button>
       <button class="btn" id="interactBtn">✦ Interagir <span class="kbd">E</span></button>
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
       <button class="btn" id="loadBtn">↑ Carregar save</button><input id="loadFile" type="file" accept="application/json,.json" hidden />
-      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="dailyBtn" title="Recompensa de entrada diária">🎁 Diário</button><button class="btn" id="professionsBtn" title="Coletar e fabricar recursos">⚒ Profissões</button><button class="btn" id="achievementsBtn" title="Ver conquistas do aventureiro">🏅 Conquistas</button><button class="btn" id="characterBtn" title="Atributos e talentos do herói">✦ Personagem</button><button class="btn" id="classBtn" title="Escolher classe e poder">🛡 Classes</button><button class="btn" id="difficultyBtn" title="Ajustar dificuldade">⚖ Dificuldade</button><button class="btn" id="powerBtn" title="Usar poder da classe (Q)">✦ Poder <span class="kbd">Q</span></button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
+      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="dailyBtn" title="Recompensa de entrada diária">🎁 Diário</button><button class="btn" id="professionsBtn" title="Coletar e fabricar recursos">⚒ Profissões</button><button class="btn" id="achievementsBtn" title="Ver conquistas do aventureiro">🏅 Conquistas</button><button class="btn" id="characterBtn" title="Veja e escolha sua equipe de criaturas">♧ Equipe</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
     </div>
     <div class="mobilehelp" aria-label="Controles de toque">
-      <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑ / pular</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
+      <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
     </div>
   </main>
   <div class="below">
@@ -509,7 +525,7 @@ const lessons=[
 ];
 let modalType=null;
 function notify(text,duration=3.2){const t=$('toast');t.textContent=text;t.classList.add('show');g.toastTimer=duration;}
-function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(18,Math.min(942,g.mapPlayer.x)):128;const zone=REGION_META[g.region]||REGION_META.brumaforte;$('sceneTitle').textContent=zone.title;$('sceneSub').textContent=zone.subtitle;$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4);updateUI();}
+function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(18,Math.min(942,g.mapPlayer.x)):128;const zone=REGION_META[g.region]||REGION_META.brumaforte;$('sceneTitle').textContent=zone.title;$('sceneSub').textContent=zone.subtitle;$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Exploração em visão superior · procure o livro-razão e encontre criaturas.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à exploração da vila.':'Você entrou na mina antiga. Explore em visão superior.',2.4);updateUI();}
 function xpToNext(){return g.level*100;}
 function addXP(n){g.xp+=n;let levels=0;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);g.attributePoints=(g.attributePoints||0)+1;g.skillPoints=(g.skillPoints||0)+1;levels++;}if(levels){playSfx('win');notify(`NÍVEL ${g.level}! +${levels} ponto(s) de atributo e talento. Abra Personagem para evoluir.`,4.5);persistProgress();}}
 function allMobs(){
@@ -557,13 +573,7 @@ function damageMob(mob,damage,source='ataque'){
  }else notify((mob.name||'Criatura')+': '+mob.hp+' / '+mob.maxHp+' de resistência. '+amount+' de dano.',2);
  updateUI();persistProgress();return mob.hp<=0;
 }
-function attack(){
- if(g.attackCD>0)return;g.attackCD=.42;
- const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;
- for(const mob of allMobs()){if(!mob.alive)continue;const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}
- if(!target){notify('Nenhuma criatura ao alcance. Aproxime-se e tente novamente.',2);playSfx('ui');return;}
- damageMob(target,playerDamage('basic'),'ataque');
-}
+function attack(){openTacticalBattle();}
 function useClassPower(){
  const c=classProfile();
  if(g.level<2){notify('Seu poder de classe desperta no nível 2.',2.5);return;}
@@ -1476,44 +1486,29 @@ const NPC_PROFILES={
 function drawNPCActor(id,x,y,prop='none'){
  const appearance=NPC_APPEARANCES[id];if(!appearance)return;
  const time=performance.now()/1000,phase={mara:.2,ivo:1.1,toren:2.3,elira:3.2,brann:4.1,sabela:5,liora:2.8,arven:1.7,yara:4.7,neris:.8}[id]||0;
- drawPlayer(x,y+Math.sin(time*1.35+phase)*.65,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
+ drawPlayer(x,y+Math.sin(time*1.35+phase)*.3,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
  ctx.save();
- // Readable role silhouettes: accents remain visible at normal game zoom.
- if(id==='mara'){line(x-7,y-38,x+5,y-25,'#ddc777',3);circle(x+1,y-31,3,'#f0d995');}
- else if(id==='ivo'){rect(x-15,y-27,8,12,'#754728');rect(x-14,y-29,6,3,'#d9b35d');circle(x+1,y-34,3,'#e5c46b');}
- else if(id==='toren'){poly([[x-6,y-43],[x+6,y-43],[x+5,y-22],[x-5,y-22]],'#292d2b');line(x-4,y-37,x+4,y-37,'#a07c48',1);rect(x-2,y-31,4,3,'#d1a65d');}
- else if(id==='elira'){circle(x-5,y-63,3,'#e3c96e');circle(x+1,y-66,3,'#d88972');circle(x+6,y-62,3,'#d8d57b');line(x-5,y-37,x+5,y-27,'#91b96a',3);}
- else if(id==='brann'){poly([[x-12,y-59],[x-9,y-65],[x+7,y-65],[x+12,y-59]],'#6b5637');rect(x-14,y-59,28,3,'#b69861');}
- else if(id==='sabela'){rect(x-8,y-61,16,4,'#9c3e3c');circle(x-7,y-29,2,'#e1b65e');circle(x+7,y-29,2,'#e1b65e');}
- else if(id==='liora'){poly([[x-12,y-54],[x-10,y-64],[x-5,y-69],[x+6,y-68],[x+12,y-58],[x+8,y-53],[x+4,y-61],[x-5,y-62]],'#243c31');line(x-9,y-38,x-3,y-28,'#7aa05c',3);}
- else if(id==='arven'){rect(x-14,y-42,7,15,'#8a9a92');rect(x-12,y-40,3,11,'#d0c5a5');line(x+11,y-42,x+16,y-24,'#b9c3bc',2);}
- else if(id==='yara'){poly([[x-10,y-40],[x,y-45],[x+10,y-40],[x+6,y-33],[x-6,y-33]],'#315f86');circle(x+2,y-34,3,'#b3ebea');}
- else if(id==='neris'){rect(x-7,y-36,14,8,'#5c4632');rect(x-5,y-34,10,4,'#d2bd8a');line(x-5,y-57,x-1,y-57,'#d8dfd0',1);line(x+1,y-57,x+5,y-57,'#d8dfd0',1);}
+ if(id==='mara'){line(x-5,y-31,x+5,y-26,'#e5c66e',2);circle(x+1,y-29,2,'#f1d88a');}
+ else if(id==='ivo'){rect(x-8,y-35,16,3,'#8b6a42');rect(x-6,y-37,12,3,'#b89a63');}
+ else if(id==='toren'){rect(x-7,y-29,14,8,'#353b3a');rect(x-6,y-28,12,2,'#b38b51');}
+ else if(id==='elira'){circle(x-4,y-38,2,'#e7d27a');circle(x,y-40,2,'#d88972');circle(x+4,y-38,2,'#99c56a');}
+ else if(id==='brann'){poly([[x-9,y-33],[x-6,y-38],[x+6,y-38],[x+9,y-33]],'#675239');rect(x-10,y-34,20,2,'#bda06c');}
+ else if(id==='sabela'){rect(x-7,y-34,14,3,'#a94948');circle(x-7,y-22,1,'#eed080');circle(x+7,y-22,1,'#eed080');}
+ else if(id==='liora'){poly([[x-9,y-33],[x-7,y-39],[x-3,y-41],[x+5,y-40],[x+9,y-34],[x+5,y-35],[x-5,y-36]],'#264a36');}
+ else if(id==='arven'){rect(x-11,y-27,5,9,'#a9b7a4');rect(x-10,y-26,3,7,'#d1c7a8');}
+ else if(id==='yara'){poly([[x-7,y-33],[x,y-37],[x+7,y-33],[x+4,y-29],[x-4,y-29]],'#3d78a0');circle(x+2,y-30,2,'#b7e0de');}
+ else if(id==='neris'){rect(x-6,y-30,12,7,'#5b4634');rect(x-4,y-29,8,5,'#d3c18f');}
  if(prop==='hammer'){
-  const swing=Math.sin(time*3.4+phase)*.24;ctx.translate(x+13,y-25);ctx.rotate(swing);
-  rect(-1,0,3,13,'#6f4c31');rect(-5,-5,11,5,'#a7ada7');rect(-4,-7,9,2,'#d5d4c5');
-  ctx.restore();
-  if(Math.sin(time*3.4+phase)>.88){circle(x+16,y-29,2,'#ffe49a');circle(x+20,y-31,1,'#f4ae59');}
-  return;
+  const swing=Math.sin(time*3.4+phase)*.18;ctx.translate(x+8,y-24);ctx.rotate(swing);
+  rect(-1,0,2,8,'#6f4c31');rect(-4,-4,8,4,'#a7ada7');ctx.restore();return;
  }
- if(prop==='basket'){
-  rect(x-16,y-9,9,8,'#8f6a45');rect(x-15,y-8,7,6,'#b78b58');rect(x-13,y-12,3,5,'#5a9652');rect(x-9,y-13,3,5,'#8fbe67');rect(x-6,y-11,3,4,'#d4ca76');
- }else if(prop==='rod'){
-  const wave=Math.sin(time*1.7+phase)*2;
-  line(x+12,y-16,x+20,y-37+wave,'#704c2e',2);line(x+20,y-37+wave,x+30,y-43+wave,'#9c815b',1);
-  line(x+30,y-43+wave,x+33,y-28+wave,'#d7e4d0',1);
- }else if(prop==='tray'){
-  rect(x+8,y-18,13,2,'#7d5a38');rect(x+10,y-22,4,4,'#d6b777');rect(x+16,y-21,3,3,'#94a66b');
- }else if(prop==='staff'){
-  line(x+15,y-8,x+18,y-43,'#775536',3);circle(x+18,y-46,5,'#86c5cc');circle(x+18,y-46,2,'#dbf4d4');
- }else if(prop==='bow'){
-  ctx.strokeStyle='#98663c';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x+13,y-20,11,-Math.PI*.6,Math.PI*.6);ctx.stroke();line(x+19,y-29,x+19,y-11,'#e1d5ad',1);
- }else if(prop==='book'){
-  poly([[x+8,y-20],[x+15,y-22],[x+20,y-18],[x+20,y-7],[x+14,y-10],[x+8,y-7]],'#382d25');
-  poly([[x+9,y-19],[x+14,y-20],[x+14,y-11],[x+9,y-9]],'#cfbc8a');poly([[x+15,y-20],[x+19,y-18],[x+19,y-9],[x+15,y-11]],'#e2d6ad');
- }else if(prop==='sword'){
-  line(x+13,y-12,x+22,y-36,'#aeb8b4',3);line(x+10,y-17,x+16,y-15,'#9f7448',3);line(x+19,y-35,x+24,y-37,'#e6e9df',1);
- }
+ if(prop==='basket'){rect(x-12,y-9,7,6,'#987449');rect(x-11,y-11,5,3,'#79a45c');rect(x-7,y-12,3,3,'#d4ca76');}
+ else if(prop==='rod'){line(x+8,y-14,x+17,y-34,'#704c2e',2);line(x+17,y-34,x+25,y-38,'#d7e4d0',1);}
+ else if(prop==='tray'){rect(x+6,y-20,11,2,'#7d5a38');rect(x+8,y-23,3,3,'#d6b777');rect(x+13,y-22,3,2,'#94a66b');}
+ else if(prop==='staff'){line(x+11,y-7,x+13,y-31,'#775536',2);circle(x+13,y-34,3,'#86c5cc');circle(x+13,y-34,1,'#dbf4d4');}
+ else if(prop==='bow'){ctx.strokeStyle='#98663c';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x+9,y-19,7,-Math.PI*.6,Math.PI*.6);ctx.stroke();line(x+13,y-25,x+13,y-13,'#e1d5ad',1);}
+ else if(prop==='book'){rect(x+7,y-18,10,8,'#382d25');rect(x+8,y-17,4,6,'#cfbc8a');rect(x+13,y-17,3,6,'#e2d6ad');}
+ else if(prop==='sword'){line(x+9,y-12,x+15,y-30,'#b9c4c6',2);line(x+7,y-15,x+11,y-14,'#9f7448',2);}
  ctx.restore();
 }
 function npcForDialogue(title){
@@ -1545,7 +1540,7 @@ function drawNameplate(name,x,y,color='#f5edc5',size=9){
 function drawNPCName(name,x,y,status){
  if(!gameSettings.showLabels)return;
  const color=status==='complete'?'#b6e68a':status==='active'?'#ffd06b':'#f5edc5';
- const width=drawNameplate(name,x,y-17,color,8.5);
+ const width=drawNameplate(name,x,y+13,color,8.5);
  if(status&&status!=='none')drawNameplate(status==='complete'?'✓':status==='active'?'!':'?',x+width/2+9,y-17,color,8.5);
 }
 
@@ -1832,7 +1827,7 @@ function drawPlayer(x,y,rawAppearance,motion){
  if(!drawPlayer.poseCache)drawPlayer.poseCache=new Map();
  const poseKey=cacheKey+'|'+dir+'|'+(moving?'walk'+step:'idle');let pose=drawPlayer.poseCache.get(poseKey);
  if(!pose){pose=buildAnimatedPlayerFrame(sprite,a,dir,step,moving);drawPlayer.poseCache.set(poseKey,pose);if(drawPlayer.poseCache.size>220)drawPlayer.poseCache.delete(drawPlayer.poseCache.keys().next().value);}
- const height=56,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
+ const height=38,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
  const dx=Math.round(x-width/2),dy=Math.round(y-height+bob);ctx.save();ctx.imageSmoothingEnabled=false;
  if(dir==='left'){ctx.translate(dx+width,dy);ctx.scale(-1,1);ctx.drawImage(pose,0,0,width,height);}
  else ctx.drawImage(pose,dx,dy,width,height);
@@ -1973,7 +1968,7 @@ function drawBrumaforteMap(){
     drawNPCName('ELIRA · HERBORISTA',455,393,g.sideQuests.elira);
     drawNPCName('BRANN · PESCADOR',248,389,g.sideQuests.brann);
     drawNPCName('SABELA · ESTALAJADEIRA',565,252,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
-    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-83,'#f4d49a',9);
+    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-48,'#f4d49a',8);
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
@@ -2223,35 +2218,7 @@ function applyIncomingDamage(mob,block=0,enraged=false){
  return {damage:Math.max(0,raw-armor),shield,blocked,armor};
 }
 function updateEnemyCombat(dt){
- const mobs=allMobs().filter(m=>m.alive),p=g.scene==='map'?g.mapPlayer:g.actionPlayer;
- for(const mob of mobs){
-  mob.attackCooldown=Math.max(-1,(typeof mob.attackCooldown==='number'?mob.attackCooldown:.65)-dt);
-  let dx=p.x-mob.x,dy=(g.scene==='map'?p.y-mob.y:0),distance=Math.hypot(dx,dy);
-  const boss=!!mob.boss,aggro=g.scene==='map'?(boss?190:135):275;
-  if(distance<aggro&&distance>1){
-   const speed=boss?24:mob.type==='bat'?34:mob.type==='mistwolf'?31:23;
-   if(g.scene==='map'){
-    const step=Math.min(distance-(boss?37:25),speed*dt);
-    if(step>0){mob.x=Math.max(18,Math.min(942,mob.x+dx/distance*step));mob.y=Math.max(137,Math.min(522,mob.y+dy/distance*step));}
-   }else if(Math.abs(dx)>22){mob.x=Math.max(28,Math.min(1865,mob.x+Math.sign(dx)*speed*dt));}
-  }
-  dx=p.x-mob.x;dy=g.scene==='map'?p.y-mob.y:Math.abs(p.y-mob.y)*.6;distance=Math.hypot(dx,dy);
-  const reach=g.scene==='map'?(boss?43:29):(boss?38:29);
-  const close=g.scene==='map'?distance<reach:(Math.abs(dx)<reach&&Math.abs(p.y-mob.y)<58);
-  if(!close||mob.attackCooldown>0||g.invuln>0)continue;
-  const incoming=applyIncomingDamage(mob,0,!!mob.boss&&mob.hp<=mob.maxHp*.45);
-  const damage=incoming.damage;g.hp=Math.max(0,g.hp-damage);g.invuln=1.05;mob.attackCooldown=1.4;
-  spawnCombatText('-'+damage,p.x,p.y-48,'#ff716c');playSfx('hit');triggerScreenShake(3.2,.16);updateUI();
-  notify((mob.name||'A criatura')+' causou '+damage+' de dano fixo'+(incoming.shield?' ('+incoming.shield+' absorvido pelo escudo)':'')+'.',1.5);
-  if(g.hp<=0){
-   g.coins=Math.max(0,g.coins-3);g.hp=Math.max(25,Math.ceil(g.maxHp*.4));g.invuln=1.8;
-   if(g.scene==='map'){
-    const spots={brumaforte:[128,334],bosque:[78,446],lago:[88,450]},spot=spots[g.region]||spots.brumaforte;g.mapPlayer.x=spot[0];g.mapPlayer.y=spot[1];
-   }else{g.actionPlayer.x=70;g.actionPlayer.y=430;g.actionPlayer.vy=0;g.actionPlayer.onGround=true;}
-   playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;notify('Você caiu em batalha e voltou ao último refúgio. Recuperou parte da vida e perdeu 3 cobres.',3.8);persistProgress();updateUI();return;
-  }
-  persistProgress();
- }
+ // Exploration is peaceful: creatures only battle when the player chooses to engage them.
 }
 function update(dt){
  updateAmbient(dt);
@@ -2299,10 +2266,10 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyQ'){useClassPower();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
+function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){openTacticalBattle();return;}if(key==='KeyQ'){openTacticalBattle();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{const button=e.target&&e.target.closest?e.target.closest('button'):null;if(gameSettings.soundEnabled&&button&&!(e.relatedTarget&&button.contains(e.relatedTarget)))playSfx('ui');});
-$('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCharacterProgression;$('classBtn').onclick=openClassMenu;$('difficultyBtn').onclick=openDifficultyMenu;$('powerBtn').onclick=useClassPower;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCreatureTeam;$('classBtn').onclick=openClassMenu;$('difficultyBtn').onclick=openDifficultyMenu;$('powerBtn').onclick=useClassPower;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=openTacticalBattle;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
