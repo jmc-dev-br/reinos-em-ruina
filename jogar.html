@@ -403,7 +403,7 @@ function stopAmbientMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=
 function playFirstInteractionAudio(){if(gameSettings.soundEnabled){getAudioContext();if(gameSettings.musicEnabled)startAmbientMusic();}}
 document.addEventListener('pointerdown',playFirstInteractionAudio,{passive:true});
 
-const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -462,10 +462,15 @@ function interact(){
  if(g.scene==='map'){
   const p=g.mapPlayer;
   const dM=Math.hypot(p.x-230,p.y-333),dShop=Math.hypot(p.x-350,p.y-333),dGate=Math.hypot(p.x-850,p.y-325);
+  const dToren=Math.hypot(p.x-747,p.y-315),dElira=Math.hypot(p.x-455,p.y-456),dBrann=Math.hypot(p.x-248,p.y-452),dSabela=Math.hypot(p.x-565,p.y-315);
   if(dM<65){talkMara();return;}
   if(dShop<68){openShop();return;}
+  if(dToren<63){talkTorenShop();return;}
+  if(dElira<63){talkElira();return;}
+  if(dBrann<63){talkBrann();return;}
+  if(dSabela<63){openTavern();return;}
   if(dGate<78){setScene('action');g.actionPlayer.x=70;g.actionPlayer.y=430;return;}
-  notify('Não há nada para interagir aqui. Procure Mara, o mercador ou o portão das ruínas.',2.5);
+  notify('Procure Mara, Ivo no mercado, Toren na ferraria, Elira no jardim, Brann no lago ou Sabela na taverna.',2.8);
  }else{
   if(g.actionPlayer.x<95){setScene('map');g.mapPlayer.x=825;g.mapPlayer.y=325;return;}
   if(g.actionPlayer.x>1700){
@@ -482,6 +487,57 @@ function interact(){
  }
 }
 function openShop(){const potionCost=Math.max(3,Math.round(5*g.economy.priceIndex/100));const mapCost=Math.max(2,Math.round(3*g.economy.priceIndex/100));const body='<p>“Tudo aqui custa cobre do reino. Nada nesta loja representa dinheiro real.”</p><div class="shoprow"><div><strong>Poção de ervas</strong><span>Recupera 35 pontos de vida, até o máximo.</span></div><div style="text-align:right"><div class="shopprice">'+potionCost+' cobre</div><button class="btn primary" id="buyPotion">Comprar</button></div></div><div class="shoprow"><div><strong>Mapa da estrada</strong><span>Uma dica sobre onde encontrar criaturas.</span></div><div style="text-align:right"><div class="shopprice">'+mapCost+' cobre</div><button class="btn" id="buyMap">Comprar</button></div></div><div class="modalnote">O índice de preços da vila é '+g.economy.priceIndex+'. O preço do mercador acompanha a simulação. Nenhuma quantia tem valor real.</div>';showModal('shop','Mercador de Brumaforte',body,[{label:'Fechar',action:()=>closeModal()}]);setTimeout(()=>{const bp=$('buyPotion'),bm=$('buyMap');if(bp)bp.onclick=()=>{if(g.coins<potionCost){notify('Você não tem cobre suficiente.');return;}g.coins-=potionCost;g.potions++;updateUI();persistProgress();notify('Poção adicionada ao inventário. Pressione H para usar.',2.5);};if(bm)bm.onclick=()=>{if(g.coins<mapCost){notify('Você não tem cobre suficiente.');return;}g.coins-=mapCost;updateUI();persistProgress();closeModal();openDialogue('Mapa da estrada','“Limos verdes costumam aparecer perto do caminho e das paredes quebradas. Se pretende lutar, aproxime-se antes de atacar.”','Dica comprada por '+mapCost+' cobres fictícios.');};},30);}
+
+const SIDE_QUESTS={
+ toren:{id:'toren',name:'Ferro para as ferramentas',need:{ore:3},reward:{coins:18,xp:28},intro:'A ferraria está quase parando. Preciso de três minérios para consertar as ferramentas e reforçar o portão. Pode me ajudar?',active:'Traga 3 minérios. Você pode coletá-los em Profissões ou comprá-los na ferraria.',done:'Bom trabalho. Essas ferramentas vão durar o inverno inteiro. Receba seu pagamento.'},
+ elira:{id:'elira',name:'Ervas para os feridos',need:{herb:4},reward:{coins:10,xp:22,potions:1},intro:'Sou Elira, cuidadora do jardim. Depois dos ataques, os viajantes chegam machucados. Preciso de quatro feixes de ervas para preparar remédios.',active:'Ainda preciso de 4 ervas. Colha no jardim ou compre algumas na ferraria.',done:'Perfeito. Vou preparar remédios para quem precisa. Fique com esta poção e um pequeno pagamento.'},
+ brann:{id:'brann',name:'A pesca do dia',need:{fish:3},reward:{coins:15,xp:20},intro:'Meu nome é Brann. A água está boa, mas perdi minhas iscas e não consigo abastecer a taverna. Traga três peixes e dividimos o pagamento.',active:'Traga 3 peixes. A profissão Pesca fica disponível no painel Profissões.',done:'Peixe fresco! Sabela vai servir uma boa refeição esta noite. Aqui está sua parte.'}
+};
+function questMaterialsReady(quest,data){return Object.entries(quest.need).every(([key,amount])=>(data.materials[key]||0)>=amount);}
+function showSideQuestProgress(quest){
+ const state=g.sideQuests[quest.id],data=professionsData();
+ const req=Object.entries(quest.need).map(([key,need])=>({ore:'minério',herb:'ervas',fish:'peixes'}[key]||key)+': '+(data.materials[key]||0)+' / '+need).join(' · ');
+ if(state==='locked'){
+  g.sideQuests[quest.id]='active';persistProgress();updateUI();
+  openDialogue(quest.id==='toren'?'Toren, ferreiro de Brumaforte':quest.id==='elira'?'Elira, cuidadora do jardim':'Brann, pescador do lago',quest.intro,'Missão secundária iniciada: '+quest.name+'.');return;
+ }
+ if(state==='complete'){
+  openDialogue(quest.name,'Você já concluiu esta tarefa.','Missão concluída. Continue explorando a vila e conversando com os moradores.');return;
+ }
+ if(!questMaterialsReady(quest,data)){
+  openDialogue(quest.name,quest.active,'Objetivo: '+req+'. Abra Profissões para reunir os materiais necessários.');return;
+ }
+ for(const [key,amount] of Object.entries(quest.need))data.materials[key]-=amount;
+ saveProfessions(data);g.sideQuests[quest.id]='complete';g.coins+=quest.reward.coins;g.xp+=quest.reward.xp;
+ if(quest.reward.potions)g.potions+=quest.reward.potions;
+ addXP(0);updateUI();persistProgress();checkAchievements();playSfx('win');
+ openDialogue(quest.name,quest.done,'Missão concluída: +'+quest.reward.coins+' cobres fictícios, +'+quest.reward.xp+' XP'+(quest.reward.potions?' e +'+quest.reward.potions+' poção':'')+'.');
+}
+function talkToren(){showSideQuestProgress(SIDE_QUESTS.toren);}
+function talkElira(){showSideQuestProgress(SIDE_QUESTS.elira);}
+function talkBrann(){showSideQuestProgress(SIDE_QUESTS.brann);}
+function talkTorenShop(){if(g.sideQuests.toren==='complete')openBlacksmithShop();else talkToren();}
+function openBlacksmithShop(){
+ const oreCost=6,herbCost=5,fishCost=4;
+ const body='<div class="menu-intro">Toren vende materiais e repara ferramentas. Tudo é pago com cobre fictício do jogo.</div>'+
+ '<div class="shoprow"><div><strong>Minério de ferro</strong><span>Para a ferraria e a missão de Toren.</span></div><div style="text-align:right"><div class="shopprice">'+oreCost+' cobre</div><button class="btn primary" id="buyOre">Comprar</button></div></div>'+
+ '<div class="shoprow"><div><strong>Feixe de ervas</strong><span>Ingrediente para a botica de Elira.</span></div><div style="text-align:right"><div class="shopprice">'+herbCost+' cobre</div><button class="btn" id="buyHerb">Comprar</button></div></div>'+
+ '<div class="shoprow"><div><strong>Peixe salgado</strong><span>Para receitas e a missão de Brann.</span></div><div style="text-align:right"><div class="shopprice">'+fishCost+' cobre</div><button class="btn" id="buyFish">Comprar</button></div></div>'+
+ '<div class="modalnote">Materiais comprados contam para missões secundárias e fabricação. Nenhum saldo tem valor real.</div>';
+ showModal('blacksmith','Ferraria de Toren',body,[{label:'Fechar',action:()=>closeModal()}]);
+ const buy=(key,cost)=>{if(g.coins<cost){notify('Você não tem cobres suficientes.',2);return;}const d=professionsData();d.materials[key]++;g.coins-=cost;saveProfessions(d);updateUI();persistProgress();playSfx('coin');openBlacksmithShop();};
+ $('buyOre').onclick=()=>buy('ore',oreCost);$('buyHerb').onclick=()=>buy('herb',herbCost);$('buyFish').onclick=()=>buy('fish',fishCost);
+}
+function openTavern(){
+ const body='<div class="feature-hero"><div class="feature-icon">🍲</div><div><strong>Estalagem da Folha Dourada</strong><small>Sabela mantém a casa aberta para viajantes e moradores. “Sente-se um minuto; as estradas ficam menos cruéis depois de uma sopa quente.”</small></div></div>'+
+ '<div class="shoprow"><div><strong>Caldo quente</strong><span>Recupera 20 pontos de vida.</span></div><div style="text-align:right"><div class="shopprice">4 cobres</div><button class="btn primary" id="buyStew">Pedir</button></div></div>'+
+ '<div class="shoprow"><div><strong>Rumor da estrada</strong><span>Descubra uma pista sobre os carregamentos desaparecidos.</span></div><div style="text-align:right"><div class="shopprice">Grátis</div><button class="btn" id="askRumor">Ouvir</button></div></div>'+
+ '<div class="modalnote">Sabela também aceita peixes de Brann para o cardápio da semana. A casa e suas atividades são parte do mundo fictício.</div>';
+ showModal('tavern','Sabela · Estalagem da Folha Dourada',body,[{label:'Fechar',action:()=>closeModal()}]);
+ $('buyStew').onclick=()=>{if(g.coins<4){notify('Você precisa de 4 cobres para o caldo.',2);return;}if(g.hp>=g.maxHp){notify('Você está com a vida cheia.',2);return;}g.coins-=4;const healed=Math.min(20,g.maxHp-g.hp);g.hp+=healed;playSfx('heal');updateUI();persistProgress();closeModal();notify('Caldo quente: +'+healed+' de vida por 4 cobres.',3);};
+ $('askRumor').onclick=()=>openDialogue('Sabela, dona da estalagem','Há três noites, um carroceiro chegou com o recibo molhado e a carga vazia. Disse que ouviu um tilintar de metal vindo das ruínas, mesmo sem ver ninguém. Se quer respostas, procure Mara e examine o livro-razão.','Pista registrada: compare recibos, mercadorias e pagamentos; registros duplicados podem esconder desvios.');
+}
+
 function openFinance(){const l=lessons[g.financeIndex];showModal('finance','Caderno financeiro',`<div class="eyebrow">${escapeHtml(l.tag)}</div><h3>${escapeHtml(l.title)}</h3><p>${escapeHtml(l.body)}</p><div class="modalnote">✦ Dica: ${escapeHtml(l.tip)}</div><p style="font-size:11px;color:#87948b">Lição ${g.financeIndex+1} de ${lessons.length}. Conteúdo educativo geral — não é recomendação financeira.</p>`,[{label:'← Anterior',action:()=>{g.financeIndex=(g.financeIndex-1+lessons.length)%lessons.length;openFinance();}},{label:'Próxima →',action:()=>{g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();},primary:true}]);}
 
 function updateEconomyUI(){
@@ -884,7 +940,7 @@ function usePotion(){
  if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
  g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
 }
-function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
  try{
   const data=saveData();
@@ -910,6 +966,7 @@ function normalizeSave(d){
  const merged=Object.assign(defaults,d);
  merged.character=normalizeAppearance(d.character||defaults.character);
  merged.economy=Object.assign({},defaults.economy,d.economy||{});
+ merged.sideQuests=Object.assign({toren:'locked',elira:'locked',brann:'locked'},d.sideQuests||{});
  if(!d.questVersion){
   if(merged.economy.decision>0){merged.questStep=5;merged.questRewarded=true;merged.ledgerFound=true;}
   else if(merged.questStep===3&&merged.questRewarded){merged.questStep=4;merged.ledgerFound=true;}
@@ -982,6 +1039,23 @@ function poly(points,c){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(points[0][0],
 function text(s,x,y,size=12,color='#f1eddf',align='left'){ctx.fillStyle=color;ctx.font=`${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;ctx.textAlign=align;ctx.fillText(s,x,y);ctx.textAlign='left';}
 function drawTree(x,y,scale=1){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.fillStyle='#101a1b';ctx.beginPath();ctx.ellipse(0,12,14,5,0,0,Math.PI*2);ctx.fill();rect(-3,-3,6,21,'#44372a');rect(-4,7,8,3,'#6b5035');poly([[-15,3],[0,-25],[15,3]],'#20382d');poly([[-12,-5],[0,-31],[12,-5]],'#2a4634');poly([[-9,-13],[0,-37],[9,-13]],'#36523a');line(-9,-2,-1,-19,'#526343',1.2);line(2,-7,8,-18,'#41583b',1);ctx.restore();}
 function drawHuman(x,y,isMara=false){rect(x-7,y-2,14,13,isMara?'#6b3f9b':'#344b61');rect(x-8,y+9,6,8,'#40372c');rect(x+2,y+9,6,8,'#40372c');circle(x,y-8,7,'#dbb28a');rect(x-7,y-15,14,5,isMara?'#b5a05c':'#5c4730');rect(x-5,y-8,2,2,'#2a2624');rect(x+3,y-8,2,2,'#2a2624');if(isMara){rect(x+9,y-12,3,28,'#8f7443');circle(x+10,y-14,4,'#d4ba75');}}
+function drawNamedNPC(x,y,shirt,skin,hat,prop){
+ rect(x-9,y-1,18,4,'#53794e');
+ rect(x-7,y-1,6,10,'#493a2c');rect(x+2,y-1,6,10,'#493a2c');
+ rect(x-8,y-15,16,16,'#1d2921');rect(x-6,y-14,12,13,shirt);
+ rect(x-11,y-14,4,12,skin);rect(x+7,y-14,4,12,skin);
+ rect(x-7,y-25,14,12,skin);rect(x-9,y-27,18,5,hat);rect(x-7,y-30,14,4,hat);
+ rect(x-4,y-21,2,2,'#272623');rect(x+3,y-21,2,2,'#272623');rect(x-3,y-16,6,1,'#8f5948');
+ if(prop==='hammer'){rect(x+10,y-20,2,14,'#704d32');rect(x+7,y-22,8,4,'#a8aba0');rect(x+8,y-23,6,2,'#d4d0bd');}
+ if(prop==='basket'){rect(x-14,y-8,7,7,'#987448');rect(x-13,y-10,5,3,'#6fa05d');rect(x-11,y-12,3,3,'#91bd70');}
+ if(prop==='rod'){line(x+9,y-12,x+18,y-29,'#775639',2);line(x+18,y-29,x+24,y-35,'#d3d6b4',1);}
+}
+function drawNPCName(name,x,y,status){
+ if(!gameSettings.showLabels)return;
+ const color=status==='complete'?'#b6e68a':status==='active'?'#ffd06b':'#f5edc5';
+ text(name,x,y,8,color,'center');
+ if(status&&status!=='none')text(status==='complete'?'✓':status==='active'?'!':'?',x+27,y-1,9,color,'center');
+}
 
 function buildAnimatedPlayerFrame(sprite,a,dir,step,moving){
  const frame=document.createElement('canvas');frame.width=48;frame.height=72;
@@ -1305,6 +1379,7 @@ function drawMap(){
   for(let tx=39;tx<=46;tx++)pathCell(tx,29);
   for(let tx=8;tx<=10;tx++)for(let ty=16;ty<=18;ty++)pathCell(tx,ty);
   for(let tx=43;tx<=47;tx++)for(let ty=15;ty<=18;ty++)pathCell(tx,ty);
+  for(let tx=30;tx<=36;tx++)for(let ty=16;ty<=18;ty++)pathCell(tx,ty);
 
   function topTree(x,y,scale=1){
     ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
@@ -1353,6 +1428,12 @@ function drawMap(){
   house(54,158,162,112,{roof:'#d6e3a0',wall:'#c2d39c',trim:'#426849'},'market');
   house(264,145,195,126,{roof:'#6d9a65',wall:'#b9ce91',trim:'#355f43'},'inn');
   house(688,166,139,105,{roof:'#7d998d',wall:'#a8c78a',trim:'#3b6144'},'forge');
+  house(480,158,150,106,{roof:'#a85843',wall:'#d2bd8c',trim:'#6e4934'},'inn');
+  house(286,405,103,78,{roof:'#9e7750',wall:'#c5bd91',trim:'#5a6240'},'house');
+  rect(540,224,46,15,'#61452e');rect(543,227,40,9,'#e2d09a');
+  if(gameSettings.showLabels)text('TAVERNA',563,234,6,'#4d5334','center');
+  rect(607,241,4,15,'#61452e');circle(609,239,4,'#e5b758');circle(609,239,2,'#fff0ae');
+  rect(300,472,23,8,'#75563a');rect(302,468,22,5,'#9a7046');rect(325,469,4,11,'#5e7548');
 
   // Fenced vegetable beds and a cottage off the path to the east.
   rect(494,405,127,77,'#4c7649');rect(500,411,115,64,'#315c42');rect(506,417,103,52,'#a7c986');
@@ -1383,10 +1464,18 @@ function drawMap(){
   // Creatures, NPCs and player remain on their original interaction coordinates.
   for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);
   drawHuman(230,333,true);drawHuman(350,333,false);
+  drawNamedNPC(747,315,'#8a5b43','#d3a17b','#a7a9a3','hammer');
+  drawNamedNPC(455,456,'#456f4e','#e0b58d','#c5a45a','basket');
+  drawNamedNPC(248,452,'#3e6570','#b97b56','#4a4034','rod');
+  drawNamedNPC(565,315,'#8b573d','#dcad83','#75442f','basket');
   if(gameSettings.showLabels){
     text('BRUMAFORTE',18,166,12,'#eaf2c8');
     text('MERCADO',136,286,8,'#f5f4cc','center');text('ESTALAGEM',362,285,8,'#f5f4cc','center');text('FERREIRO',758,285,8,'#f5f4cc','center');
-    text('MARA',230,311,9,'#f7f0be','center');text('MERCADOR',350,311,8,'#f7f0be','center');
+    text('MARA',230,311,9,'#f7f0be','center');text('IVO · MERCADO',350,311,7,'#f7f0be','center');
+    drawNPCName('TOREN',747,279,g.sideQuests.toren);
+    drawNPCName('ELIRA',455,422,g.sideQuests.elira);
+    drawNPCName('BRANN',248,418,g.sideQuests.brann);
+    text('SABELA',565,279,8,'#fff0c5','center');
     text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
@@ -1416,7 +1505,7 @@ rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.
 function render(){renderWithEffects();}
 
 function mapBlocked(x,y){
- const boxes=[[45,148,181,128],[254,136,216,141],[678,157,159,121],[646,396,171,119],[103,345,100,79],[487,399,142,87],[29,383,121,57],[824,278,61,85]];
+ const boxes=[[45,148,181,128],[254,136,216,141],[678,157,159,121],[470,148,167,123],[276,400,115,91],[490,400,134,85],[646,396,171,119],[103,345,100,79],[487,399,142,87],[29,383,121,57],[824,278,61,85]];
  return boxes.some(([bx,by,bw,bh])=>x>bx-13&&x<bx+bw+13&&y>by-5&&y<by+bh+12);
 }
 function approach(current,target,rate,dt){return current+(target-current)*Math.min(1,rate*dt);}
