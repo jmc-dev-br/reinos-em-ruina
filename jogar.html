@@ -71,7 +71,7 @@ const W=960,H=540, canvas=document.getElementById('game'), ctx=canvas.getContext
 ctx.imageSmoothingEnabled=false;
 const $=id=>document.getElementById(id);
 const keys=new Set();
-const originalState=()=>({scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -95,7 +95,7 @@ function openShop(){const potionCost=Math.max(3,Math.round(5*g.economy.priceInde
 function openFinance(){const l=lessons[g.financeIndex];showModal('finance','Caderno financeiro',`<div class="eyebrow">${escapeHtml(l.tag)}</div><h3>${escapeHtml(l.title)}</h3><p>${escapeHtml(l.body)}</p><div class="modalnote">✦ Dica: ${escapeHtml(l.tip)}</div><p style="font-size:11px;color:#87948b">Lição ${g.financeIndex+1} de ${lessons.length}. Conteúdo educativo geral — não é recomendação financeira.</p>`,[{label:'← Anterior',action:()=>{g.financeIndex=(g.financeIndex-1+lessons.length)%lessons.length;openFinance();}},{label:'Próxima →',action:()=>{g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();},primary:true}]);}
 
 function updateEconomyUI(){
- const e=g.economy||(g.economy={treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',onchain:false});
+ const e=g.economy||(g.economy={treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false});
  $('economyTreasury').textContent=e.treasury+' cobre';
  $('economyDebt').textContent=e.debt+' cobre';
  $('economyTrust').textContent=e.trust+'/100';
@@ -105,7 +105,7 @@ function updateEconomyUI(){
  $('economyPolicy').textContent=e.decisionName;
  $('economyDecision').textContent=e.decision===0?'O conselho aguarda sua decisão. Cada proposta resolve um problema e cria um custo diferente.':e.lastOutcome;
  $('councilBtn').classList.toggle('active',e.decision!==0);
- if(e.onchain){$('arcStatus').textContent='Capítulo registrado on-chain: '+(e.receiptHash?e.receiptHash.slice(0,14)+'…':'confirmação recebida');$('recordArcBtn').disabled=true;$('arcHelp').textContent='Este navegador já registrou um capítulo nesta carteira. A crônica on-chain não transfere moedas do jogo.';}
+ if(e.onchain){$('arcStatus').textContent='Capítulo registrado on-chain: '+(e.receiptHash?e.receiptHash.slice(0,14)+'…':'confirmação recebida');$('recordArcBtn').disabled=true;$('arcHelp').textContent='Resultado calculado pelo contrato, não informado pelo navegador. Transação: '+(e.txHash||'confirmada')+'. A crônica não transfere moedas do jogo.';}
  else if(CHRONICLE_CONTRACT_ADDRESS){$('connectArcBtn').disabled=false;$('arcStatus').textContent=arcAddress?'Carteira conectada: '+arcAddress.slice(0,6)+'…'+arcAddress.slice(-4):'Contrato configurado. Conecte uma carteira para publicar sua crônica.';$('recordArcBtn').disabled=!(arcAddress&&e.decision>0);$('arcHelp').textContent='A transação grava um resumo da decisão e exige gas em USDC na Arc Mainnet. O estado do jogo é informado pelo jogador, não auditado automaticamente.';}
  else{$('arcStatus').textContent='Contrato ainda não implantado — registro on-chain indisponível.';$('connectArcBtn').disabled=true;$('recordArcBtn').disabled=true;$('arcHelp').textContent='A conexão de carteira é opcional. Uma transação na rede principal exige uma pequena taxa em USDC. Não conecte uma carteira com fundos sem entender a transação.';}
 }
@@ -146,9 +146,9 @@ function chooseEconomy(choice){
 const ARC_MAINNET={chainId:5042,chainIdHex:'0x13b2',chainName:'Arc Mainnet',rpcUrls:['https://rpc.mainnet.arc.io'],nativeCurrency:{name:'USDC',symbol:'USDC',decimals:18},blockExplorerUrls:['https://explorer.arc.io']};
 const CHRONICLE_CONTRACT_ADDRESS='';
 const CHRONICLE_ABI=[
- 'function recordChapter(uint8 chapterId,bytes32 stateHash,uint32 treasury,uint32 debt,uint16 publicTrust,uint16 priceIndex) external',
- 'function chronicles(address,uint8) view returns (bytes32 stateHash,uint64 recordedAt,uint32 treasury,uint32 debt,uint16 publicTrust,uint16 priceIndex,bool exists)',
- 'event ChapterRecorded(address indexed player,uint8 indexed chapterId,bytes32 indexed stateHash,uint32 treasury,uint16 publicTrust,uint16 priceIndex,uint32 debt,uint64 recordedAt)'
+ 'function recordChapter(uint8 chapterId,uint8 policyId) external returns (bytes32 stateHash)',
+ 'function chronicles(address,uint8) view returns (bytes32 stateHash,uint64 recordedAt,uint32 treasury,uint32 debt,uint16 publicTrust,uint16 priceIndex,uint8 foodDays,uint8 policyId,bool exists)',
+ 'event ChapterRecorded(address indexed player,uint8 indexed chapterId,uint8 indexed policyId,bytes32 stateHash,uint32 treasury,uint32 debt,uint16 publicTrust,uint16 priceIndex,uint8 foodDays,uint64 recordedAt)'
 ];
 let arcAddress='',arcProvider=null,arcSigner=null;
 async function connectArcWallet(){
@@ -177,18 +177,18 @@ async function recordArcChapter(){
  try{
   const network=await arcProvider.getNetwork();
   if(Number(network.chainId)!==ARC_MAINNET.chainId){notify('Selecione Arc Mainnet na carteira.',4);return;}
-  const snapshot={game:'Realms in Ruin',chapter:1,decision:g.economy.decisionName,treasury:g.economy.treasury,debt:g.economy.debt,trust:g.economy.trust,priceIndex:g.economy.priceIndex,foodDays:g.economy.foodDays,version:1};
-  const bytes=new TextEncoder().encode(JSON.stringify(snapshot));
-  const digest=await window.crypto.subtle.digest('SHA-256',bytes);
-  const stateHash='0x'+Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
   const contract=new window.ethers.Contract(CHRONICLE_CONTRACT_ADDRESS,CHRONICLE_ABI,arcSigner);
-  notify('Confirme na carteira apenas se endereço, rede e taxa estiverem corretos.',5);
-  const tx=await contract.recordChapter(1,stateHash,g.economy.treasury,g.economy.debt,g.economy.trust,g.economy.priceIndex);
+  notify('O contrato vai calcular o resultado da política. Confirme somente após revisar rede, destino e taxa na carteira.',6);
+  const tx=await contract.recordChapter(1,g.economy.decision);
   notify('Transação enviada. Aguardando confirmação da Arc…',5);
-  await tx.wait();
-  g.economy.receiptHash=stateHash;g.economy.onchain=true;
-  updateEconomyUI();saveGame();notify('Crônica registrada. Hash da transação: '+tx.hash.slice(0,12)+'…',5);
- }catch(err){notify('Registro não confirmado. Nenhuma moeda do jogo foi transferida; confira a carteira e a taxa de rede.',5);}
+  const receipt=await tx.wait();
+  let ev=null;
+  for(const log of receipt.logs){try{const parsed=contract.interface.parseLog(log);if(parsed&&parsed.name==='ChapterRecorded'){ev=parsed;break;}}catch(err){}}
+  if(!ev){notify('A transação confirmou, mas o evento esperado não foi encontrado. Confira o explorer antes de repetir.',6);return;}
+  const a=ev.args;
+  g.economy.treasury=Number(a.treasury);g.economy.debt=Number(a.debt);g.economy.trust=Number(a.publicTrust);g.economy.priceIndex=Number(a.priceIndex);g.economy.foodDays=Number(a.foodDays);g.economy.receiptHash=String(a.stateHash);g.economy.txHash=tx.hash;g.economy.onchain=true;
+  updateUI();saveGame();notify('Crônica confirmada na Arc. Resultado calculado pelo contrato; transação '+tx.hash.slice(0,12)+'…',6);
+ }catch(err){notify('Registro não confirmado. Nenhuma moeda do jogo foi transferida; confira a carteira, o capítulo e a taxa de rede.',5);}
 }
 
 function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalFoot').innerHTML='';for(const b of buttons||[]){const el=document.createElement('button');el.className='btn'+(b.primary?' primary':'');el.textContent=b.label;el.onclick=b.action;$('modalFoot').appendChild(el);} $('modalback').classList.add('open');$('modalClose').focus();}
