@@ -634,6 +634,9 @@ function beginCreator(slot,mode){
  creatorSlot=slot;creatorMode=mode;creatorCategory='identity';
  const record=readSlot(slot);
  creatorDraft=mode==='edit'&&record&&record.character?Object.assign(defaultCharacter(),record.character):defaultCharacter();
+ const storedGender=String(creatorDraft.gender||'masculino').trim().toLowerCase();
+ creatorDraft.gender=['feminino','female','woman','mulher','f'].includes(storedGender)?'feminino':'masculino';
+ if(creatorDraft.gender==='feminino'){creatorDraft.facialHair='none';if(creatorDraft.faceShape==='angular')creatorDraft.faceShape='oval';}
  $('creatorTitle').textContent=t(mode==='edit'?'editTitle':'creatorTitle');
  $('creatorSubtitle').textContent=t(mode==='edit'?'editSubtitle':'creatorSubtitle');
  renderCreator();
@@ -726,7 +729,8 @@ function beginCreator(slot,mode){
   const outfitColors={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
   const skin=Object.assign({},SKIN,SKIN_EXTRA)[c.skin]||SKIN.light;
   const baseOnly=c.outfit==='none',coat=baseOnly?skin:(outfitColors[c.outfitColor]||o.coat),cape=baseOnly?null:CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
-  const female=c.gender==='feminino';
+  const female=['feminino','female','woman','mulher','f'].includes(String(c.gender||'').toLowerCase());
+  if(female)c.facialHair='none';
   const outline='#17191d',shade='#262328',trim=o.trim;
   const r=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
   const p=(pts,color)=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();};
@@ -755,9 +759,7 @@ function beginCreator(slot,mode){
     r(16,47,2,7,'#ffffff12');r(29,47,2,7,'#0000001c');
   }
   r(16,47,4,1,'#ffffff12');r(27,47,4,1,'#ffffff12');
-  p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);
-  p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);
-  r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');
+  if(baseOnly){p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[14,59],[19,59],[19,62],[20,64],[12,64],[12,62]],skin);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);p([[27,59],[33,59],[35,62],[36,63],[27,64],[26,62]],skin);}else{p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');}
   // Torso anatomy: narrowed waist and rounded hips for the feminine form,
   // broad rib cage, stronger shoulders and a straighter waist for the masculine form.
   if(female){
@@ -772,6 +774,7 @@ function beginCreator(slot,mode){
     r(17,25,2,13,'#ffffff12');r(28,27,2,11,'#00000020');r(18,38,2,5,'#ffffff08');
   }
   // Arms are separate shapes with visible shoulders, elbows, forearms and gloves.
+  if(!baseOnly){
   if(female){
     p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
     p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],coat);
@@ -789,6 +792,19 @@ function beginCreator(slot,mode){
     p([[31,30],[34,29],[36,34],[34,38],[31,36]],'#747774');l(32,30,34,33,'#d0c3a9',1);l(32,35,34,36,'#292c31',1);
     r(10,37,4,3,'#352d29');r(32,37,4,3,'#352d29');
   }
+  } else if(female){
+   p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
+   p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],skin);
+   p([[29,23],[32,24],[35,29],[36,34],[34,38],[31,38],[29,34],[29,28]],outline);
+   p([[30,25],[32,26],[34,30],[34,34],[32,36],[30,33],[30,28]],skin);
+   r(11,37,4,2,skin);r(31,37,4,2,skin);
+  }else{
+   p([[14,22],[11,24],[9,29],[9,35],[11,39],[15,39],[17,35],[17,28]],outline);
+   p([[14,24],[12,26],[11,30],[11,35],[13,37],[15,35],[16,29]],skin);
+   p([[30,22],[33,24],[36,29],[37,35],[35,39],[31,39],[29,35],[29,28]],outline);
+   p([[31,24],[33,26],[35,30],[35,35],[33,37],[31,35],[30,29]],skin);
+   r(10,37,4,3,skin);r(32,37,4,3,skin);
+  }
   // Shoulder and chest pieces vary with outfit but keep a consistent fantasy silhouette.
   if(c.outfit==='guard'||c.outfit==='royal'||c.outfit==='noble'){
     p([[14,23],[18,22],[20,26],[17,29],[13,27]],outline);
@@ -805,7 +821,7 @@ function beginCreator(slot,mode){
       p([[15,25],[31,25],[30,47],[24,51],[18,47]],'#392b53');
       r(22,27,3,17,trim);r(21,31,5,1,'#b9a4d0');
     }
-  } else {
+  } else if(!baseOnly) {
     if(female){
       p([[17,23],[22,22],[28,23],[30,27],[27,31],[25,34],[26,39],[29,44],[27,47],[17,47],[15,44],[18,39],[19,34],[16,30]],outline);
       p([[18,24],[22,23],[27,24],[28,27],[26,30],[24,33],[24,38],[27,43],[26,45],[18,45],[17,43],[19,38],[20,33],[18,30]],(c.outfit==='guard'||c.outfit==='royal')?'#4a5054':coat);
@@ -858,9 +874,9 @@ function beginCreator(slot,mode){
   p([[17,9],[19,6],[26,6],[30,10],[30,18],[27,23],[20,22],[16,18]],outline);
   if(c.faceShape==='round')p([[18,10],[20,8],[26,8],[28,11],[29,16],[27,20],[24,21],[20,21],[17,18],[17,13]],skin);else if(c.faceShape==='oval')p([[19,9],[25,9],[28,12],[27,18],[24,22],[21,21],[18,18],[17,12]],skin);else p([[18,10],[20,8],[26,8],[28,11],[28,17],[25,21],[22,22],[19,19],[17,15]],skin);
   r(17,14,2,4,skin);r(28,14,2,4,skin);
-  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[c.eyeColor]||'#5a3828';r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
+  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[c.eyeColor]||'#5a3828';if(female){r(19,12,4,1,'#684237');r(24,12,4,1,'#684237');}r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
   r(21,15,1,1,'#f2d7b6');r(26,15,1,1,'#f2d7b6');
-  r(23,15,2,3,'#9a6246');r(22,18,4,1,'#683d31');
+  r(23,15,2,3,'#9a6246');if(female){r(22,18,4,1,'#a65f5a');r(23,18,2,1,'#d58a80');}else{r(22,18,4,1,'#683d31');}
   if(!female&&c.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(!female&&c.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(!female&&c.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(!female&&c.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
   // hair is shaped from chunky locks; each option remains customizable.
   p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
@@ -872,6 +888,7 @@ function beginCreator(slot,mode){
   if(c.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
   if(c.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
   if(c.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
+  if(female&&['medium','long','braids'].includes(c.hairstyle)){p([[16,15],[18,16],[18,21],[17,25],[15,24],[16,20]],outline);p([[17,16],[18,17],[17,21],[16,23],[16,19]],hair);p([[28,15],[30,15],[31,20],[31,24],[29,25],[28,21]],outline);p([[29,16],[30,17],[30,22],[29,23],[29,19]],hair);}
   // Scarf wraps the neck; selected cloak colour does not affect its burgundy accent.
   if(!baseOnly){p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');}
   // Equipment details, armor wear and shoulder straps.
@@ -899,13 +916,14 @@ function beginCreator(slot,mode){
     l(37,27,39,57,'#6a4329',2);l(36,27,38,57,'#d3c3a0',1);r(35,29,3,2,'#6a4329');r(38,53,3,2,'#6a4329');
   }
   // Small metal glints and pixel contours finish the sprite.
-  r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');
+  if(!baseOnly){r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');}
   $('previewName').textContent=c.name||t('empty');$('previewCaption').textContent=t('preview');
 }
 function confirmCreator(){
  const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
  if(!name){window.alert(t('nameRequired'));input.focus();return;}
  creatorDraft.name=name;
+ if(['feminino','female','woman','mulher','f'].includes(String(creatorDraft.gender||'').toLowerCase())){creatorDraft.gender='feminino';creatorDraft.facialHair='none';}
  const now=Date.now();const existing=readSlot(creatorSlot);
  if(creatorMode==='new'){
   if(existing){window.alert(t('slotTaken'));showView('slots');renderSlots();return;}
