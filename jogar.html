@@ -71,7 +71,7 @@ const W=960,H=540, canvas=document.getElementById('game'), ctx=canvas.getContext
 ctx.imageSmoothingEnabled=false;
 const $=id=>document.getElementById(id);
 const keys=new Set();
-const originalState=()=>({scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -87,10 +87,56 @@ function setScene(scene){g.scene=scene;if(scene==='map'){g.mapPlayer.x=scene==='
 function xpToNext(){return g.level*100;}
 function addXP(n){g.xp+=n;let leveled=false;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);leveled=true;}if(leveled)notify(`NÍVEL ${g.level}! Vida máxima aumentou e você recuperou um pouco de vida.`,4);}
 function allMobs(){return g.scene==='map'?g.slimes:g.ruinMobs;}
-function attack(){if(g.attackCD>0)return;g.attackCD=.3;let p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;for(const mob of allMobs()){if(!mob.alive)continue;let d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);return;}target.hp=(target.hp===undefined?1:target.hp)-35;if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;addXP(0);notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);if(g.questStep===1&&g.kills>=3){g.questStep=2;notify('Você encontrou pistas nas criaturas. Volte a Mara quando estiver na vila!',4);}updateUI();}
-function talkMara(){if(g.questStep===0){g.questStep=(g.kills>=3?2:1);if(g.questStep===2){openDialogue('Mara, guardiã da vila','“Viajante, você já derrotou criaturas suficientes para encontrar pistas. Agora precisamos comparar o que foi perdido com o que foi registrado.”','Objetivo atualizado: volte a falar com Mara para concluir a primeira missão.');}else{openDialogue('Mara, guardiã da vila','“Viajante, os carregamentos da mina desapareceram. Os preços estão mudando e ninguém sabe por quê. Investigue as criaturas na estrada e nas ruínas. Talvez estejam guardando pistas.”','Missão iniciada: derrote 3 criaturas e descubra o que mudou no comércio.');}updateUI();return;}if(g.questStep===1){openDialogue('Mara, guardiã da vila','“A estrada ainda está perigosa. Derrote três criaturas e volte quando tiver encontrado pistas. Não lute sem observar seus arredores.”','Progresso: '+Math.min(g.kills,3)+' / 3 criaturas derrotadas.');return;}if(g.questStep===2&&!g.questRewarded){g.questRewarded=true;g.questStep=3;g.coins+=20;openDialogue('Mara, guardiã da vila','“Você conseguiu! Essas marcas mostram que alguém desviou os carregamentos. Receba 20 cobres pelo trabalho e guarde isto: dinheiro é útil, mas informação e planejamento também têm valor.”','Missão concluída: +20 cobres fictícios. Pressione M para abrir o Caderno Financeiro.');updateUI();return;}openDialogue('Mara, guardiã da vila','“Nem toda oferta boa é uma oferta segura. Confira os detalhes, compare opções e não confunda uma promessa com uma garantia.”','Mara pode compartilhar conselhos; fale com ela sempre que quiser.');}
+function attack(){if(g.attackCD>0)return;g.attackCD=.3;let p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;for(const mob of allMobs()){if(!mob.alive)continue;let d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);return;}target.hp=(target.hp===undefined?1:target.hp)-35;if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;addXP(0);notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);if(g.questStep===1&&g.kills>=3){g.questStep=g.ledgerFound?3:2;notify(g.ledgerFound?'Você reuniu as pistas. Volte a Mara em Brumaforte!':'Você derrotou três criaturas. Agora encontre o livro-razão no fundo das ruínas.',4);}updateUI();}
+function talkMara(){
+ if(g.questStep===0){
+  g.questStep=g.kills>=3?(g.ledgerFound?3:2):1;
+  if(g.questStep===1)openDialogue('Mara, guardiã da vila','Os carregamentos de grãos desapareceram. Os preços já estão mudando e as famílias estão preocupadas. Investigue a estrada e descubra quem está atacando os viajantes.','Missão iniciada: derrote 3 criaturas e siga as pistas.');
+  else if(g.questStep===2)openDialogue('Mara, guardiã da vila','Você já enfrentou criaturas suficientes, mas ainda falta a prova principal. Procure o antigo livro-razão no fundo das ruínas.','Objetivo: encontre o livro-razão e volte com provas.');
+  else openDialogue('Mara, guardiã da vila','Você trouxe pistas e encontrou o livro-razão. Agora podemos provar que os carregamentos foram desviados.','Objetivo atualizado: entregue as provas a Mara.');
+  updateUI();return;
+ }
+ if(g.questStep===1){
+  openDialogue('Mara, guardiã da vila','A estrada continua perigosa. Derrote três criaturas, mas não pare por aí: procure também os registros comerciais nas ruínas.','Progresso: '+Math.min(g.kills,3)+' / 3 criaturas derrotadas.');return;
+ }
+ if(g.questStep===2){
+  openDialogue('Mara, guardiã da vila','Sem o livro-razão, só temos suspeitas. Procure o edifício mais profundo das ruínas e pressione E perto do registro.','Objetivo: encontrar o livro-razão.');return;
+ }
+ if(g.questStep===3&&!g.questRewarded){
+  g.questRewarded=true;g.questStep=4;g.coins+=20;
+  openDialogue('Mara, guardiã da vila','Estas páginas provam que alguém desviou os carregamentos. Aqui estão 20 cobres pela investigação. Mas a vila ainda precisa decidir como enfrentar a escassez.','Recompensa: +20 cobres fictícios. Próximo objetivo: leve as provas ao Conselho do reino.');
+  updateUI();return;
+ }
+ if(g.questStep===4){
+  openDialogue('Mara, guardiã da vila','As provas estão com o conselho. A vila precisa agir: reparar a estrada, assumir uma dívida ou congelar os preços. Cada opção cobra seu preço.','Abra Conselho do reino para decidir o futuro de Brumaforte.');return;
+ }
+ openDialogue('Mara, guardiã da vila','O reino não se recupera com uma única boa decisão. Continue investigando, compare os custos e desconfie de promessas fáceis.','Você concluiu o primeiro capítulo. Há outras histórias a descobrir.');
+}
 function openDialogue(title,line,small){showModal('dialogue',title,`<div class="dialogline">${escapeHtml(line)}</div><div class="modalnote">${escapeHtml(small)}</div>`,[{label:'Continuar',action:()=>closeModal(),primary:true}]);}
-function interact(){if(modalType)return;if(g.scene==='map'){const p=g.mapPlayer;let dM=Math.hypot(p.x-230,p.y-333),dShop=Math.hypot(p.x-350,p.y-333),dGate=Math.hypot(p.x-850,p.y-325);if(dM<65){talkMara();return;}if(dShop<68){openShop();return;}if(dGate<78){setScene('action');g.actionPlayer.x=70;g.actionPlayer.y=430;return;}notify('Não há nada para interagir aqui. Procure Mara, o mercador ou o portão das ruínas.',2.5);}else{if(g.actionPlayer.x<95){setScene('map');g.mapPlayer.x=825;g.mapPlayer.y=325;return;}if(g.actionPlayer.x>1700){showModal('relic','Registro da Moeda Partida',`<div class="eyebrow">ACHADO DE HISTÓRIA</div><h3>O livro das contas</h3><p>As páginas mostram entradas e saídas de cobre. O total não bate: alguém registrou despesas falsas. Em uma economia, manter registros confiáveis ajuda a perceber erros e fraudes.</p><div class="modalnote">Pista encontrada. Isso é um exemplo ficcional de auditoria e controle de registros.</div>`,[{label:'Guardar pista',action:()=>{g.coins+=5;closeModal();notify('Registro arquivado. +5 cobres fictícios.',3);updateUI();},primary:true}]);return;}notify('Explore mais as ruínas. A passagem para a vila fica no extremo esquerdo.',2.4);}}
+function interact(){
+ if(modalType)return;
+ if(g.scene==='map'){
+  const p=g.mapPlayer;
+  const dM=Math.hypot(p.x-230,p.y-333),dShop=Math.hypot(p.x-350,p.y-333),dGate=Math.hypot(p.x-850,p.y-325);
+  if(dM<65){talkMara();return;}
+  if(dShop<68){openShop();return;}
+  if(dGate<78){setScene('action');g.actionPlayer.x=70;g.actionPlayer.y=430;return;}
+  notify('Não há nada para interagir aqui. Procure Mara, o mercador ou o portão das ruínas.',2.5);
+ }else{
+  if(g.actionPlayer.x<95){setScene('map');g.mapPlayer.x=825;g.mapPlayer.y=325;return;}
+  if(g.actionPlayer.x>1700){
+   if(!g.ledgerFound){
+    g.ledgerFound=true;
+    if(g.kills>=3&&(g.questStep===0||g.questStep===1||g.questStep===2))g.questStep=3;
+    g.coins+=5;
+    showModal('relic','Registro da Moeda Partida','<div class="eyebrow">PROVA ENCONTRADA</div><h3>O livro-razão da mina</h3><p>As entradas mostram que parte dos carregamentos foi desviada e que despesas foram registradas duas vezes. A escassez não veio apenas de uma colheita ruim: alguém manipulou os registros.</p><div class="modalnote">Você encontrou uma pista sobre fraude e auditoria. Um registro claro ajuda a comparar entradas, saídas e diferenças.</div>',[{label:'Guardar o livro-razão',action:()=>{closeModal();notify('Prova arquivada. +5 cobres fictícios.',3);updateUI();},primary:true}]);
+    updateUI();return;
+   }
+   showModal('relic','Livro-razão da mina','<div class="eyebrow">PROVA ARQUIVADA</div><h3>As contas não fecham</h3><p>Você já guardou este registro. As duplicações e desvios continuam anotados no seu diário.</p><div class="modalnote">Progresso da investigação: '+Math.min(g.kills,3)+' / 3 criaturas derrotadas.</div>',[{label:'Voltar às ruínas',action:()=>closeModal(),primary:true}]);return;
+  }
+  notify('Explore mais as ruínas. O livro-razão está no extremo direito, perto do fim do caminho.',2.4);
+ }
+}
 function openShop(){const potionCost=Math.max(3,Math.round(5*g.economy.priceIndex/100));const mapCost=Math.max(2,Math.round(3*g.economy.priceIndex/100));const body='<p>“Tudo aqui custa cobre do reino. Nada nesta loja representa dinheiro real.”</p><div class="shoprow"><div><strong>Poção de ervas</strong><span>Recupera 35 pontos de vida, até o máximo.</span></div><div style="text-align:right"><div class="shopprice">'+potionCost+' cobre</div><button class="btn primary" id="buyPotion">Comprar</button></div></div><div class="shoprow"><div><strong>Mapa da estrada</strong><span>Uma dica sobre onde encontrar criaturas.</span></div><div style="text-align:right"><div class="shopprice">'+mapCost+' cobre</div><button class="btn" id="buyMap">Comprar</button></div></div><div class="modalnote">O índice de preços da vila é '+g.economy.priceIndex+'. O preço do mercador acompanha a simulação. Nenhuma quantia tem valor real.</div>';showModal('shop','Mercador de Brumaforte',body,[{label:'Fechar',action:()=>closeModal()}]);setTimeout(()=>{const bp=$('buyPotion'),bm=$('buyMap');if(bp)bp.onclick=()=>{if(g.coins<potionCost){notify('Você não tem cobre suficiente.');return;}g.coins-=potionCost;g.potions++;updateUI();notify('Poção adicionada ao inventário. Pressione H para usar.',2.5);};if(bm)bm.onclick=()=>{if(g.coins<mapCost){notify('Você não tem cobre suficiente.');return;}g.coins-=mapCost;updateUI();closeModal();openDialogue('Mapa da estrada','“Limos verdes costumam aparecer perto do caminho e das paredes quebradas. Se pretende lutar, aproxime-se antes de atacar.”','Dica comprada por '+mapCost+' cobres fictícios.');};},30);}
 function openFinance(){const l=lessons[g.financeIndex];showModal('finance','Caderno financeiro',`<div class="eyebrow">${escapeHtml(l.tag)}</div><h3>${escapeHtml(l.title)}</h3><p>${escapeHtml(l.body)}</p><div class="modalnote">✦ Dica: ${escapeHtml(l.tip)}</div><p style="font-size:11px;color:#87948b">Lição ${g.financeIndex+1} de ${lessons.length}. Conteúdo educativo geral — não é recomendação financeira.</p>`,[{label:'← Anterior',action:()=>{g.financeIndex=(g.financeIndex-1+lessons.length)%lessons.length;openFinance();}},{label:'Próxima →',action:()=>{g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();},primary:true}]);}
 
@@ -205,12 +251,56 @@ function showModal(type,title,body,buttons){modalType=type;$('modalTitle').textC
 function closeModal(){modalType=null;$('modalback').classList.remove('open');canvas.focus();}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function usePotion(){if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}g.potions--;g.hp=Math.min(g.maxHp,g.hp+35);notify('Poção usada: +35 de vida.',2);updateUI();}
-function saveData(){return {scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function saveData(){return {scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function saveGame(){const data=saveData();try{window.localStorage.setItem('cronicas_valoria_save',JSON.stringify(data));notify('Progresso salvo neste navegador.',2.5);}catch(err){try{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cronicas_valoria_save.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);notify('O navegador bloqueou o salvamento automático; baixei um arquivo JSON com seu progresso.',4.8);}catch(downloadErr){notify('Não foi possível salvar neste navegador. Continue jogando ou tente outro navegador.',4.8);}}}
-function loadSaveFile(raw){try{const d=JSON.parse(raw);if(!d||!d.mapPlayer||!d.actionPlayer||!Array.isArray(d.slimes)||!Array.isArray(d.ruinMobs))throw new Error('Arquivo não reconhecido.');g=Object.assign(originalState(),d);closeModal();setScene(g.scene==='action'?'action':'map');updateUI();notify('Progresso carregado do arquivo.',3);}catch(err){notify('Não consegui carregar esse arquivo de progresso. Use um JSON salvo pelo jogo.',4.5);}}
-function loadGame(){try{const raw=localStorage.getItem('cronicas_valoria_save');if(!raw)return false;const d=JSON.parse(raw);Object.assign(g,d);return true;}catch(e){return false;}}
+function normalizeSave(d){
+ const defaults=originalState();
+ const merged=Object.assign(defaults,d);
+ merged.economy=Object.assign({},defaults.economy,d.economy||{});
+ if(!d.questVersion){
+  if(merged.questStep===3&&merged.questRewarded){merged.questStep=4;merged.ledgerFound=true;}
+  else if(merged.questStep===2&&merged.kills>=3){merged.questStep=3;merged.ledgerFound=true;}
+  merged.questVersion=2;
+ }
+ if(typeof merged.ledgerFound!=='boolean')merged.ledgerFound=false;
+ return merged;
+}
+function loadSaveFile(raw){try{const d=JSON.parse(raw);if(!d||!d.mapPlayer||!d.actionPlayer||!Array.isArray(d.slimes)||!Array.isArray(d.ruinMobs))throw new Error('Arquivo não reconhecido.');g=normalizeSave(d);closeModal();setScene(g.scene==='action'?'action':'map');updateUI();notify('Progresso carregado do arquivo.',3);}catch(err){notify('Não consegui carregar esse arquivo de progresso. Use um JSON salvo pelo jogo.',4.5);}}
+function loadGame(){try{const raw=localStorage.getItem('cronicas_valoria_save');if(!raw)return false;const d=JSON.parse(raw);g=normalizeSave(d);return true;}catch(e){return false;}}
 function resetGame(){if(!confirm('Reiniciar a aventura? O progresso salvo neste navegador também será apagado.'))return;try{window.localStorage.removeItem('cronicas_valoria_save');}catch(err){}g=originalState();closeModal();setScene('map');notify('Nova aventura iniciada. Fale com Mara perto da praça.',3);updateUI();}
-function updateUI(){ $('lv').textContent='Nível '+g.level;$('xp').textContent=`${g.xp} / ${xpToNext()} XP`;$('xpfill').style.width=Math.min(100,g.xp/xpToNext()*100)+'%';$('hp').textContent=`♥ ${g.hp} / ${g.maxHp}`;$('hpfill').style.width=Math.max(0,g.hp/g.maxHp*100)+'%';$('coins').textContent='◈ '+g.coins+' cobre';$('potions').textContent='♜ '+g.potions;$('mapBtn').classList.toggle('active',g.scene==='map');$('ruinsBtn').classList.toggle('active',g.scene==='action');const labels=[['MISSÃO NOVA','Fale com Mara perto da praça.','Chegue perto dela e pressione E.'],['EM ANDAMENTO','Derrote 3 criaturas.','Cada criatura derrotada conta para a investigação.'],['RETORNE À VILA','Volte a Mara com as pistas.','Mara está perto da praça de Brumaforte.'],['CONCLUÍDA','A moeda sem valor','Você ajudou a vila e recebeu a recompensa.']];const q=labels[Math.min(g.questStep,3)];$('questStatus').textContent=q[0];$('questName').textContent=g.questStep===3?'A moeda sem valor — concluída':'A moeda sem valor';$('questDesc').textContent=g.questStep===0?'Os carregamentos da mina desapareceram. Fale com a guardiã da vila.':g.questStep===1?'Investigue a estrada e as ruínas. Descubra o que está atacando os carregamentos.':g.questStep===2?'Você reuniu pistas suficientes. Volte a Mara, perto da praça.':'Você descobriu as primeiras pistas sobre o desvio dos carregamentos.';$('questMark').textContent=g.questStep===3?'✓':g.questStep===1?'◌':'○';$('questObjective').innerHTML=escapeHtml(q[1])+`<small>${escapeHtml(q[2])}</small>`;$('discovery').textContent=`${g.kills} criaturas derrotadas · ${g.level>1?'Nível evoluído':'Ganhe XP ao derrotar criaturas'}.`;updateEconomyUI();}
+function updateUI(){
+ $('lv').textContent='Nível '+g.level;
+ $('xp').textContent=g.xp+' / '+xpToNext()+' XP';
+ $('xpfill').style.width=Math.min(100,g.xp/xpToNext()*100)+'%';
+ $('hp').textContent='♥ '+g.hp+' / '+g.maxHp;
+ $('hpfill').style.width=Math.max(0,g.hp/g.maxHp*100)+'%';
+ $('coins').textContent='◈ '+g.coins+' cobre';$('potions').textContent='♜ '+g.potions;
+ $('mapBtn').classList.toggle('active',g.scene==='map');$('ruinsBtn').classList.toggle('active',g.scene==='action');
+ const labels=[
+  ['MISSÃO NOVA','Fale com Mara perto da praça.','Chegue perto dela e pressione E.'],
+  ['EM ANDAMENTO','Investigue os ataques à estrada.','Derrote 3 criaturas e descubra por que os carregamentos sumiram.'],
+  ['PROCURE O LIVRO-RAZÃO','Explore as ruínas antigas.','Vá até o fundo das ruínas e pressione E perto do registro.'],
+  ['RETORNE À VILA','Entregue as provas a Mara.','Volte a Mara, perto da praça de Brumaforte.'],
+  ['DECISÃO DO CONSELHO','Escolha uma política para a vila.','Abra Conselho do reino e avalie os custos de cada alternativa.'],
+  ['CAPÍTULO CONCLUÍDO','A Moeda Partida','Você investigou o desvio e decidiu o futuro de Brumaforte.']
+ ];
+ const q=labels[Math.min(g.questStep,5)];
+ $('questStatus').textContent=q[0];
+ $('questName').textContent=g.questStep>=5?'A Moeda Partida — capítulo concluído':'A Moeda Partida';
+ const descriptions=[
+  'Os carregamentos de grãos desapareceram. Fale com a guardiã da vila.',
+  'Investigue a estrada e enfrente as criaturas que atacam os viajantes.',
+  'As criaturas não contam a história toda. Encontre o livro-razão no fundo das ruínas.',
+  'O livro-razão revela discrepâncias. Entregue as provas a Mara.',
+  'Mara reuniu evidências. Agora a vila precisa escolher como responder à escassez.',
+  'A investigação e a decisão econômica inicial foram concluídas. Novas aventuras virão.'
+ ];
+ $('questDesc').textContent=descriptions[Math.min(g.questStep,5)];
+ $('questMark').textContent=g.questStep===5?'✓':g.questStep===0?'○':'◌';
+ $('questObjective').innerHTML=q[1]+'<small>'+escapeHtml(q[2])+'</small>';
+ $('discovery').textContent=g.kills+' criaturas derrotadas · '+(g.ledgerFound?'livro-razão encontrado':'procure pistas nas ruínas')+' · '+(g.level>1?'Nível evoluído':'Ganhe XP ao derrotar criaturas')+'.';
+ updateEconomyUI();
+}
 // Pixel-art drawing helpers.
 function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
 function line(x1,y1,x2,y2,c,width=1){ctx.strokeStyle=c;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(Math.round(x1),Math.round(y1));ctx.lineTo(Math.round(x2),Math.round(y2));ctx.stroke();}
