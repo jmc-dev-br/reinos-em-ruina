@@ -123,8 +123,10 @@ const slotStorageKey=slot=>SLOT_PREFIX+slot;
 function defaultAppearance(){return {name:'Aventureiro',gender:'masculino',outfit:'none',cloak:'none',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'none'};}
 function normalizeAppearance(value){
  const d=defaultAppearance(),v=value&&typeof value==='object'?value:{};
+ const rawGender=String(v.gender||d.gender).trim().toLowerCase();
+ const gender=['feminino','female','woman','mulher','f'].includes(rawGender)?'feminino':'masculino';
  return {name:String(v.name||d.name).trim().slice(0,16)||d.name,
-  gender:['masculino','feminino'].includes(v.gender)?v.gender:d.gender,
+  gender,
   outfit:['none','traveler','guard','mage','noble','ranger','royal'].includes(v.outfit)?v.outfit:d.outfit,
   cloak:['none','red','green','blue','ivory'].includes(v.cloak)?v.cloak:d.cloak,
   hair:['brown','black','blond','silver','red','blue','purple','pink'].includes(v.hair)?v.hair:d.hair,
@@ -136,7 +138,7 @@ function normalizeAppearance(value){
   outfitColor:['default','crimson','emerald','sapphire','violet','charcoal'].includes(v.outfitColor)?v.outfitColor:d.outfitColor,
   faceShape:['oval','angular','round'].includes(v.faceShape)?v.faceShape:d.faceShape,
   eyeColor:['brown','blue','green','gray'].includes(v.eyeColor)?v.eyeColor:d.eyeColor,
-  facialHair:['none','stubble','shortBeard','mustache','goatee'].includes(v.facialHair)?v.facialHair:d.facialHair};
+  facialHair:gender==='feminino'?'none':(['none','stubble','shortBeard','mustache','goatee'].includes(v.facialHair)?v.facialHair:d.facialHair)};
 }
 
 function readActiveSlot(){
@@ -428,7 +430,7 @@ function drawTree(x,y,scale=1){ctx.save();ctx.translate(x,y);ctx.scale(scale,sca
 function drawHuman(x,y,isMara=false){rect(x-7,y-2,14,13,isMara?'#6b3f9b':'#344b61');rect(x-8,y+9,6,8,'#40372c');rect(x+2,y+9,6,8,'#40372c');circle(x,y-8,7,'#dbb28a');rect(x-7,y-15,14,5,isMara?'#b5a05c':'#5c4730');rect(x-5,y-8,2,2,'#2a2624');rect(x+3,y-8,2,2,'#2a2624');if(isMara){rect(x+9,y-12,3,28,'#8f7443');circle(x+10,y-14,4,'#d4ba75');}}
 function drawPlayer(x,y,rawAppearance){
  const a=normalizeAppearance(rawAppearance||g.character);
- const female=a.gender==='feminino';
+ const female=['feminino','female','woman','mulher','f'].includes(String(a.gender||'').toLowerCase());if(female)a.facialHair='none';
  if(!drawPlayer.cache)drawPlayer.cache=new Map();
  const cacheKey=JSON.stringify(a);
  let sprite=drawPlayer.cache.get(cacheKey);
@@ -473,10 +475,7 @@ function drawPlayer(x,y,rawAppearance){
    p([[15,44],[21,44],[20,56],[18,59],[13,59],[14,55]],baseOnly?skin:o.pants);p([[26,44],[32,44],[33,56],[35,59],[27,59],[26,55]],baseOnly?skin:o.pants);
   }
   r(16,48,4,1,'#9d978a');r(27,48,4,1,'#9d978a');
-  r(17,53,3,2,'#24282c');r(28,53,3,2,'#24282c');
-  p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);
-  p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);
-  r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');
+  if(baseOnly){p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[14,59],[19,59],[19,62],[20,64],[12,64],[12,62]],skin);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);p([[27,59],[33,59],[35,62],[36,63],[27,64],[26,62]],skin);}else{r(17,53,3,2,'#24282c');r(28,53,3,2,'#24282c');p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');}
   // Torso: tapered waist and rounder hips for the feminine form, broad rib cage
   // and straighter trunk for the masculine form. Arms stay separate and visible.
   if(female){
@@ -489,6 +488,7 @@ function drawPlayer(x,y,rawAppearance){
    p([[16,22],[23,21],[29,23],[31,27],[30,33],[28,40],[29,44],[27,46],[18,46],[16,43],[16,34],[14,27]],coat);
    r(17,25,2,13,'#ffffff12');r(28,27,2,11,'#00000020');r(18,38,2,5,'#ffffff08');
   }
+  if(!baseOnly){
   if(female){
    p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
    p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],coat);
@@ -506,6 +506,19 @@ function drawPlayer(x,y,rawAppearance){
    p([[31,30],[34,29],[36,34],[34,38],[31,36]],'#747774');ln(32,30,34,33,'#d0c3a9',1);ln(32,35,34,36,'#292c31',1);
    r(10,37,4,3,'#352d29');r(32,37,4,3,'#352d29');
   }
+  } else if(female){
+   p([[15,23],[12,24],[10,29],[10,34],[12,38],[15,38],[17,34],[17,28]],outline);
+   p([[15,25],[13,26],[12,30],[12,34],[14,36],[15,33],[16,28]],skin);
+   p([[29,23],[32,24],[35,29],[36,34],[34,38],[31,38],[29,34],[29,28]],outline);
+   p([[30,25],[32,26],[34,30],[34,34],[32,36],[30,33],[30,28]],skin);
+   r(11,37,4,2,skin);r(31,37,4,2,skin);
+  }else{
+   p([[14,22],[11,24],[9,29],[9,35],[11,39],[15,39],[17,35],[17,28]],outline);
+   p([[14,24],[12,26],[11,30],[11,35],[13,37],[15,35],[16,29]],skin);
+   p([[30,22],[33,24],[36,29],[37,35],[35,39],[31,39],[29,35],[29,28]],outline);
+   p([[31,24],[33,26],[35,30],[35,35],[33,37],[31,35],[30,29]],skin);
+   r(10,37,4,3,skin);r(32,37,4,3,skin);
+  }
   // Layered breastplate and shoulder pieces.
   if(a.outfit==='guard'||a.outfit==='royal'||a.outfit==='noble'){
    p([[14,23],[18,22],[20,26],[17,29],[13,27]],outline);p([[15,24],[18,23],[19,26],[16,27]],'#8e9089');
@@ -519,7 +532,7 @@ function drawPlayer(x,y,rawAppearance){
    }else{
     p([[15,25],[31,25],[30,47],[24,51],[18,47]],'#392b53');r(22,27,3,17,o.trim);r(21,31,5,1,'#b9a4d0');
    }
-  }else{
+  }else if(!baseOnly){
    if(female){
     p([[17,23],[22,22],[28,23],[30,27],[27,31],[25,34],[26,39],[29,44],[27,47],[17,47],[15,44],[18,39],[19,34],[16,30]],outline);
     p([[18,24],[22,23],[27,24],[28,27],[26,30],[24,33],[24,38],[27,43],[26,45],[18,45],[17,43],[19,38],[20,33],[18,30]],(a.outfit==='guard'||a.outfit==='royal')?'#3a4146':coat);
@@ -562,8 +575,8 @@ function drawPlayer(x,y,rawAppearance){
   p([[17,9],[19,6],[26,6],[30,10],[30,18],[27,23],[20,22],[16,18]],outline);
   if(a.faceShape==='round')p([[18,10],[20,8],[26,8],[28,11],[29,16],[27,20],[24,21],[20,21],[17,18],[17,13]],skin);else if(a.faceShape==='oval')p([[19,9],[25,9],[28,12],[27,18],[24,22],[21,21],[18,18],[17,12]],skin);else p([[18,10],[20,8],[26,8],[28,11],[28,17],[25,21],[22,22],[19,19],[17,15]],skin);
   r(17,14,2,4,skin);r(28,14,2,4,skin);
-  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[a.eyeColor]||'#5a3828';r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
-  r(23,15,2,3,'#9a6246');r(22,18,4,1,'#683d31');
+  const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[a.eyeColor]||'#5a3828';if(female){r(19,12,4,1,'#684237');r(24,12,4,1,'#684237');}r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
+  r(23,15,2,3,'#9a6246');if(female){r(22,18,4,1,'#a65f5a');r(23,18,2,1,'#d58a80');}else{r(22,18,4,1,'#683d31');}
   p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
   p([[17,12],[18,9],[20,7],[25,7],[28,9],[29,12],[27,11],[25,9],[23,11],[21,10],[19,12],[18,15],[17,15]],hair);
   if(a.hairstyle==='medium'||a.hairstyle==='long'||a.hairstyle==='braids'){r(16,12,2,7,hair);r(28,11,2,7,hair);}
@@ -571,6 +584,7 @@ function drawPlayer(x,y,rawAppearance){
   if(a.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
   if(a.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
   if(a.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
+  if(female&&['medium','long','braids'].includes(a.hairstyle)){p([[16,15],[18,16],[18,21],[17,25],[15,24],[16,20]],outline);p([[17,16],[18,17],[17,21],[16,23],[16,19]],hair);p([[28,15],[30,15],[31,20],[31,24],[29,25],[28,21]],outline);p([[29,16],[30,17],[30,22],[29,23],[29,19]],hair);}
   if(!female&&a.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(!female&&a.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(!female&&a.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(!female&&a.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
   // Burgundy neck scarf.
   if(!baseOnly){p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');}
@@ -588,7 +602,7 @@ function drawPlayer(x,y,rawAppearance){
   if(a.weapon==='sword'){ln(34,34,42,56,'#14161a',4);ln(35,34,42,55,'#b9c4c6',2);ln(36,35,41,51,'#f4ead0',1);r(32,33,7,2,'#d4b16a');r(35,35,2,5,'#69462c');r(34,39,4,2,'#c69d59');}
   else if(a.weapon==='staff'){ln(36,22,38,61,'#271e19',4);ln(36,22,38,61,'#a37b49',2);r(34,20,5,3,'#8eb2bf');r(35,21,3,1,'#e3e0cb');}
   else if(a.weapon==='bow'){ln(37,27,39,57,'#6a4329',2);ln(36,27,38,57,'#d3c3a0',1);r(35,29,3,2,'#6a4329');r(38,53,3,2,'#6a4329');}
-  r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');
+  if(!baseOnly){r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');}
   drawPlayer.cache.set(cacheKey,sprite);if(drawPlayer.cache.size>40)drawPlayer.cache.delete(drawPlayer.cache.keys().next().value);
  }
  ctx.save();ctx.imageSmoothingEnabled=false;const height=56,width=height*2/3;
