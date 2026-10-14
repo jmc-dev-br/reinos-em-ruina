@@ -248,6 +248,7 @@ html,body{background:#1a3036;color:#f4f0d0;font-family:ui-monospace,Consolas,mon
 .classic-moves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.classic-move{position:relative;min-width:0;text-align:left;display:grid;grid-template-columns:23px 1fr;gap:5px;align-items:start;padding:8px;border:2px solid #6e8b57;background:#d6e4b1;color:#304743;font-family:ui-monospace,monospace}.classic-move:hover{background:#f0e4af;border-color:#c9a653}.move-index{grid-row:span 2;display:grid;place-items:center;width:20px;height:20px;background:#a5c486;color:#2a4541;border:1px solid #71905b;font-size:10px;font-weight:900}.classic-move strong{font-size:10px}.classic-move small{font-size:9px;line-height:1.45;color:#526657}
 .classic-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}.classic-action{padding:8px;border:2px solid #7b9560;background:#e6e9bf;color:#344947;font:800 10px ui-monospace,monospace;text-align:left}.classic-action small{display:block;margin-top:4px;font:9px/1.4 ui-monospace,monospace;color:#61715c}.classic-action:hover:not(:disabled){background:#f3e6a9;border-color:#cba755}.classic-action:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:560px){.starter-grid{grid-template-columns:1fr}.starter-card{grid-template-columns:44px 1fr;grid-template-rows:auto auto;text-align:left;justify-items:start;align-items:center}.starter-portrait{grid-row:span 2;width:42px;height:42px;font-size:25px}.starter-card small,.starter-card em{grid-column:2}.duel-field{min-height:160px;gap:6px;padding:7px}.duel-creature{width:62px;height:62px;font-size:34px}.wild-status,.partner-status{padding:5px}.wild-status strong,.partner-status strong{font-size:9px}.classic-move{padding:6px}.classic-move small{font-size:8px}.classic-action{padding:6px;font-size:9px}}
+.creature-portrait{display:block;image-rendering:pixelated;image-rendering:crisp-edges;object-fit:contain}.starter-portrait{width:64px;height:64px;background:#bad69a;border:2px solid #526f55;box-shadow:inset 0 -5px #8cad72}.party-sprite{width:42px;height:42px;padding:0!important;object-fit:contain;background:#b8d59b;border:1px solid #8cab67;font-size:0!important}.duel-creature{padding:6px;object-fit:contain}.party-actions{margin-top:8px}.starter-card{grid-template-rows:64px auto auto auto}
 </style>
 </head>
 <body>
@@ -1005,14 +1006,51 @@ function openActivityMenu(){
 }
 
 let tacticalBattle=null;
+function paintCreaturePortraits(root){
+ const area=root||document;
+ area.querySelectorAll('canvas[data-species]').forEach(canvas=>{
+  const id=canvas.dataset.species,c=canvas.getContext('2d');
+  c.clearRect(0,0,canvas.width,canvas.height);c.imageSmoothingEnabled=false;
+  const u=Math.max(2,Math.floor(Math.min(canvas.width,canvas.height)/24));
+  const ox=Math.floor((canvas.width-20*u)/2),oy=Math.floor((canvas.height-21*u)/2);
+  const pal={
+   folhote:['#355a47','#73ad61','#b3d985','#e0e59c'],braseco:['#794136','#d8754b','#f7c56d','#f4e29c'],
+   gotil:['#315b7a','#5c9fd0','#b9e4df','#f2e9a4'],musguito:['#355a47','#7ab168','#b9d98b','#f0e3a3'],
+   casquim:['#464e32','#8e9c50','#d3ca80','#eadfae'],vesperto:['#4a3f65','#8274ac','#bcb5d5','#f0d791'],
+   ossoeco:['#495154','#b9bba4','#e7dfba','#dba45f'],guardito:['#374b55','#829da0','#d0d6bd','#e4c779'],
+   brumilobo:['#2f4e53','#709b9b','#c5ddc2','#fae79c'],prismare:['#285466','#65aeb7','#b6ded0','#ffe6a0']
+  }[id]||['#355a47','#7ab168','#b9d98b','#f0e3a3'];
+  const px=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(ox+x*u,oy+y*u,w*u,h*u);};
+  const out=(x,y,w,h)=>px(x,y,w,h,pal[0]);
+  if(id==='folhote'||id==='musguito'){
+   out(6,1,8,5);px(7,0,3,4,pal[1]);px(10,0,3,4,pal[2]);px(8,4,8,4,pal[1]);out(3,7,14,10);px(4,6,12,10,pal[1]);px(6,7,8,8,pal[2]);px(7,9,2,2,pal[0]);px(12,9,2,2,pal[0]);px(8,9,1,1,'#fff7d0');px(13,9,1,1,'#fff7d0');px(9,12,3,1,pal[0]);px(4,15,4,3,pal[0]);px(12,15,4,3,pal[0]);
+  }else if(id==='braseco'){
+   px(7,0,6,4,pal[0]);px(8,1,4,3,pal[2]);px(9,0,2,2,'#fff2a3');out(6,5,9,13);px(7,6,7,10,pal[1]);px(8,7,5,6,pal[2]);px(8,9,2,2,pal[0]);px(12,9,2,2,pal[0]);px(9,10,1,1,'#fff7d0');px(13,10,1,1,'#fff7d0');px(9,13,4,1,pal[0]);px(5,16,4,2,pal[0]);px(13,16,4,2,pal[0]);
+  }else if(id==='gotil'||id==='prismare'){
+   out(5,5,11,12);px(6,4,9,11,pal[1]);px(7,3,6,2,pal[2]);px(3,7,3,5,pal[1]);px(16,7,3,5,pal[1]);px(7,6,7,5,pal[2]);px(8,9,2,2,pal[0]);px(13,9,2,2,pal[0]);px(9,10,1,1,'#fff7d0');px(14,10,1,1,'#fff7d0');px(9,13,4,1,pal[0]);px(7,16,3,3,pal[0]);px(13,16,3,3,pal[0]);px(10,2,2,3,pal[3]);px(9,1,4,1,pal[2]);if(id==='prismare'){px(15,1,3,5,pal[0]);px(16,1,2,3,pal[3]);}
+  }else if(id==='casquim'||id==='guardito'){
+   out(3,5,14,12);px(4,6,12,9,pal[1]);px(5,5,10,2,pal[2]);px(7,7,2,5,pal[0]);px(11,7,2,5,pal[0]);px(8,8,1,1,'#fff7d0');px(12,8,1,1,'#fff7d0');px(8,12,4,1,pal[0]);px(5,14,4,4,pal[0]);px(12,14,4,4,pal[0]);if(id==='casquim'){px(2,4,4,6,pal[0]);px(14,3,4,7,pal[0]);px(1,3,3,3,pal[2]);px(16,2,3,3,pal[2]);}else{px(6,3,8,4,pal[0]);px(7,4,6,2,pal[3]);}
+  }else if(id==='vesperto'){
+   out(1,4,7,9);out(12,4,7,9);px(2,5,5,7,pal[1]);px(13,5,5,7,pal[1]);out(7,5,7,12);px(8,6,5,10,pal[2]);px(9,8,1,2,pal[0]);px(13,8,1,2,pal[0]);px(10,9,1,1,'#fff7d0');px(14,9,1,1,'#fff7d0');px(11,11,2,1,pal[0]);px(8,16,2,3,pal[0]);px(13,16,2,3,pal[0]);
+  }else if(id==='ossoeco'){
+   out(5,4,10,11);px(6,5,8,9,pal[1]);px(7,7,2,2,pal[0]);px(12,7,2,2,pal[0]);px(7,7,1,1,pal[3]);px(12,7,1,1,pal[3]);px(8,11,1,2,pal[0]);px(10,12,1,2,pal[0]);px(12,11,1,2,pal[0]);px(7,15,3,3,pal[0]);px(12,15,3,3,pal[0]);
+  }else if(id==='brumilobo'){
+   out(4,7,13,9);px(5,7,11,7,pal[1]);out(5,1,4,8);out(13,1,4,8);px(6,2,2,5,pal[2]);px(14,2,2,5,pal[2]);px(7,8,2,2,pal[3]);px(13,8,2,2,pal[3]);px(9,12,4,1,pal[0]);px(5,14,3,4,pal[0]);px(14,14,3,4,pal[0]);px(3,11,3,2,pal[0]);px(17,11,2,2,pal[0]);
+  }else{
+   out(4,5,13,12);px(5,6,11,10,pal[1]);out(4,2,5,7);out(13,1,5,7);px(5,3,3,4,pal[2]);px(14,2,3,4,pal[2]);px(7,8,2,2,pal[0]);px(12,8,2,2,pal[0]);px(8,9,1,1,pal[3]);px(13,9,1,1,pal[3]);px(9,12,4,1,pal[0]);px(5,15,4,3,pal[0]);px(13,15,4,3,pal[0]);px(2,10,3,2,pal[3]);px(17,10,2,2,pal[3]);
+  }
+  px(4,19,12,1,'#4c6849');px(6,20,8,1,'#4c6849');
+ });
+}
 function openStarterSelection(){
  if(g.starterChosen&&g.team&&g.team.length){openCreatureTeam();return;}
  const cards=['folhote','braseco','gotil'].map(id=>{
   const c=CREATURE_SPECIES[id];
-  return '<button class="starter-card" data-starter="'+id+'"><span class="starter-portrait">'+c.icon+'</span><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>VIDA BASE '+c.baseHp+' · '+c.type.toUpperCase()+'</em></button>';
+  return '<button class="starter-card" data-starter="'+id+'"><canvas class="creature-portrait starter-portrait" data-species="'+id+'" width="64" height="64" aria-label="'+c.name+'"></canvas><strong>'+c.name+'</strong><small>'+c.desc+'</small><em>VIDA BASE '+c.baseHp+' · '+c.type.toUpperCase()+'</em></button>';
  }).join('');
  const body='<div class="retro-copy"><strong>UMA JORNADA COMEÇA COM UMA AMIZADE</strong><p>Escolha uma criatura para acompanhar você. Ela vai crescer com as batalhas e ajudar a descobrir os segredos do reino.</p></div><div class="starter-grid">'+cards+'</div>';
- showModal('starter','Escolha seu primeiro parceiro',body,[{label:'Explorar primeiro',action:()=>{g.starterChosen=true;g.team=[];persistProgress();closeModal();notify('Você pode conseguir sua primeira criatura mais tarde.',3);},primary:false}]);
+ showModal('starter','Escolha seu primeiro parceiro',body,[{label:'Explorar primeiro',action:()=>{g.starterChosen=false;g.team=[];persistProgress();closeModal();notify('Você pode escolher pelo botão Equipe quando estiver pronto.',3);},primary:false}]);
+ paintCreaturePortraits($('modalBody'));
  $('modalBody').querySelectorAll('[data-starter]').forEach(button=>button.addEventListener('click',()=>chooseStarter(button.dataset.starter)));
 }
 function chooseStarter(id){
@@ -1024,12 +1062,15 @@ function openCreatureTeam(){
  if(!g.team||!g.team.length){openStarterSelection();return;}
  const cards=g.team.map((c,i)=>{
   const p=CREATURE_SPECIES[c.species]||CREATURE_SPECIES.folhote,active=i===g.activeCreature,hp=Math.max(0,c.hp||0),max=Math.max(1,c.maxHp||p.baseHp);
-  return '<button class="party-card '+(active?'selected':'')+'" data-active-index="'+i+'"><span class="party-sprite">'+p.icon+'</span><span class="party-details"><strong>'+escapeHtml(c.nickname||p.name)+(active?' · PARCEIRO':'')+'</strong><small>'+p.type.toUpperCase()+' · NÍVEL '+c.level+' · '+hp+'/'+max+' VIDA</small><span class="party-hp"><i style="width:'+Math.max(0,Math.min(100,hp/max*100))+'%"></i></span><em>'+p.desc+'</em></span><span class="party-arrow">'+(active?'✓':'→')+'</span></button>';
+  return '<button class="party-card '+(active?'selected':'')+'" data-active-index="'+i+'"><canvas class="creature-portrait party-sprite" data-species="'+c.species+'" width="48" height="48" aria-label="'+escapeHtml(p.name)+'"></canvas><span class="party-details"><strong>'+escapeHtml(c.nickname||p.name)+(active?' · PARCEIRO':'')+'</strong><small>'+p.type.toUpperCase()+' · NÍVEL '+c.level+' · '+hp+'/'+max+' VIDA</small><span class="party-hp"><i style="width:'+Math.max(0,Math.min(100,hp/max*100))+'%"></i></span><em>'+p.desc+'</em></span><span class="party-arrow">'+(active?'✓':'→')+'</span></button>';
  }).join('');
  const body='<div class="retro-copy"><strong>SEUS PARCEIROS</strong><p>Leve até seis criaturas. Escolha quem vai caminhar ao seu lado; criaturas capturadas podem ser trocadas a qualquer momento fora de um duelo.</p></div>'+
  '<div class="party-strip"><span>CRIATURAS <b>'+g.team.length+'/6</b></span><span>LAÇOS DE SEMENTE <b>'+g.captureOrbs+'</b></span><span>ENCONTROS VENCIDOS <b>'+g.encountersWon+'</b></span></div><div class="party-list">'+cards+'</div>'+
+ '<div class="party-actions"><button class="classic-action" id="restTeam" '+(g.coins<5||g.team.every(c=>c.hp>=c.maxHp)?'disabled':'')+'>✚ Descansar no Centro de Amizade <small>5 cobres · recupera toda a vida da equipe</small></button></div>'+
  '<div class="menu-note">Dica: enfraqueça uma criatura selvagem antes de usar um Laço de Semente. Chefes únicos não podem ser capturados.</div>';
  showModal('team','Equipe de criaturas',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
+ paintCreaturePortraits($('modalBody'));
+ $('restTeam').onclick=()=>{if(g.coins<5){notify('Você precisa de 5 cobres para descansar a equipe.',2);return;}if(g.team.every(c=>c.hp>=c.maxHp)){notify('A equipe já está saudável.',2);return;}g.coins-=5;for(const creature of g.team)creature.hp=creature.maxHp;persistProgress();updateUI();openCreatureTeam();notify('A equipe descansou e recuperou toda a vida. -5 cobres fictícios.',3);};
  $('modalBody').querySelectorAll('[data-active-index]').forEach(button=>button.addEventListener('click',()=>{
   const index=Number(button.dataset.activeIndex),c=g.team[index];if(!c)return;
   if(c.hp<=0){notify('Essa criatura precisa descansar antes de lutar.',2.5);return;}
@@ -1083,8 +1124,8 @@ function renderTacticalBattle(){
  }).join('');
  const body='<div class="retro-duel"><div class="duel-kicker">ENCONTRO SELVAGEM · TURNO '+b.turn+'</div>'+
   '<div class="duel-field">'+
-   '<div class="wild-side"><div class="wild-status"><strong>'+enemy+'</strong><small>NÍVEL '+b.wildLevel+'</small><div class="duel-hp"><i style="width:'+Math.max(0,eh/em*100)+'%"></i></div><small>PV '+eh+' / '+em+'</small></div><div class="duel-creature wild">'+wp.icon+'</div></div>'+
-   '<div class="partner-side"><div class="duel-creature partner">'+cp.icon+'</div><div class="partner-status"><strong>'+escapeHtml(c.nickname||cp.name)+'</strong><small>NÍVEL '+c.level+'</small><div class="duel-hp"><i style="width:'+Math.max(0,hp/hm*100)+'%"></i></div><small>PV '+hp+' / '+hm+'</small></div></div>'+
+   '<div class="wild-side"><div class="wild-status"><strong>'+enemy+'</strong><small>NÍVEL '+b.wildLevel+'</small><div class="duel-hp"><i style="width:'+Math.max(0,eh/em*100)+'%"></i></div><small>PV '+eh+' / '+em+'</small></div><canvas class="creature-portrait duel-creature wild" data-species="'+b.speciesId+'" width="96" height="96" aria-label="'+wp.name+'"></canvas></div>'+
+   '<div class="partner-side"><canvas class="creature-portrait duel-creature partner" data-species="'+c.species+'" width="96" height="96" aria-label="'+escapeHtml(c.nickname||cp.name)+'"></canvas><div class="partner-status"><strong>'+escapeHtml(c.nickname||cp.name)+'</strong><small>NÍVEL '+c.level+'</small><div class="duel-hp"><i style="width:'+Math.max(0,hp/hm*100)+'%"></i></div><small>PV '+hp+' / '+hm+'</small></div></div>'+
   '</div><div class="duel-message">'+escapeHtml(b.log)+'</div>'+
   '<div class="battle-section-title">ESCOLHA UM MOVIMENTO</div><div class="classic-moves">'+moveCards+'</div>'+
   '<div class="classic-actions">'+
@@ -1094,6 +1135,7 @@ function renderTacticalBattle(){
    '<button class="classic-action" data-creature-action="run">→ Fugir <small>Voltar à exploração</small></button>'+
   '</div><div class="battle-disclaimer">Danos fixos · parceiros ganham experiência · Laços de Semente capturam criaturas enfraquecidas.</div></div>';
  showModal('tactical','Duelo de criaturas',body,[{label:'Fechar duelo',action:()=>runFromCreatureBattle()}]);
+ paintCreaturePortraits($('modalBody'));
  $('modalBody').querySelectorAll('[data-creature-move]').forEach(el=>el.addEventListener('click',()=>playCreatureMove(el.dataset.creatureMove)));
  $('modalBody').querySelectorAll('[data-creature-action]').forEach(el=>el.addEventListener('click',()=>playCreatureAction(el.dataset.creatureAction)));
 }
