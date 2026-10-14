@@ -135,5 +135,17 @@ Personagens novos:
 ### Migração e teste
 A migração de save fornece defaults para os novos atributos, relógio, clima, regiões e estados de missão, mantendo personagens antigos. A sintaxe JavaScript do script principal foi conferida após o reboot; o próximo passo de QA é testar no navegador todas as rotas de região, diálogos, turn-in de missão, pontos de atributo/talento e combate contra chefes em desktop e celular.
 
+## Reboot 1.1 — classes, dificuldade e combate previsível
+
+- **Classes disponíveis:** Guerreiro (vida e defesa), Patrulheiro (alcance), Arcanista (explosão em área) e Guardião (escudo e vida extra). Cada uma define valores base e um poder desbloqueado no nível 2.
+- **Dano determinístico:** os danos base vêm de tabelas por classe/inimigo e são modificados de forma explícita por dificuldade, atributos, perícias e fúria de chefe. Não há rolagem aleatória de dano em combate de exploração ou no turno tático.
+- **Dificuldades:** Aventureiro (menos dano recebido, maior dano causado), Sobrevivente (padrão) e Lenda Sombria (mais dano recebido, menos dano causado).
+- **Poderes:** Ruptura do Guardião, Tiro Perfurante, Explosão Arcana e Muralha Viva. Ativação por tecla Q/botão e recarga por classe; a carta de poder também entra no combate tático.
+- **Perícias universais:** Golpe Treinado, Postura de Pedra e Mãos Cuidadoras. Especializações da classe: Olho de Falcão, Maestria Arcana e Baluarte, com ranks e requisito de classe.
+- **Atlas e mapa:** rota esquemática entre regiões, bússola, avisos de perigo e trilha de pedra para reforçar a orientação visual.
+- **Migração de salvamentos:** classe, dificuldade e escudo persistem; salvamentos legados recebem defaults sem apagar missões ou progresso existente.
+
+**QA pendente:** a sintaxe JavaScript e verificações estáticas passaram, mas ainda é necessário validar uma sessão completa de jogo e ajustar os números após testes práticos em desktop e celular.
+
 ## Fronteira entre protótipo e mundo online
 O clima é visual local e não representa um evento sincronizado. Recompensas, conquistas, materiais, chefes e decisões ainda são locais ao navegador. Para contas multiplataforma, rankings públicos, guildas, comércio, eventos sincronizados e coop/PvP, usar autenticação e estado autoritativo no servidor; não confiar no navegador para validar itens ou recompensas.
