@@ -44,7 +44,7 @@ body{font-family:"Courier New",Consolas,monospace;background:#080b13}
 #homeView{max-width:100%;display:none}#homeView.active{display:block}
 .hero{display:flex;justify-content:center;align-items:center;gap:0;width:100%}
 .hero-copy{width:min(470px,100%);max-width:470px;padding:28px 34px 24px;text-align:center;background:linear-gradient(180deg,#090c13f4,#11131af2);border:4px solid #1a1512;outline:2px solid #b58a4d;box-shadow:0 0 0 7px #090b11d9,0 18px 0 #05070bcc,0 28px 85px #000b;position:relative}
-.hero-copy:before,.hero-copy:after{content:"◆";position:absolute;color:#d3a75f;font-size:13px;background:#101117;padding:0 5px;left:calc(50% - 9px}
+.hero-copy:before,.hero-copy:after{content:"◆";position:absolute;color:#d3a75f;font-size:13px;background:#101117;padding:0 5px;left:calc(50% - 9px)}
 .hero-copy:before{top:-12px}.hero-copy:after{bottom:-12px}
 .hero-copy .eyebrow{justify-content:center;font-size:9px;letter-spacing:.15em}.hero-copy .eyebrow:before{display:none}
 h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);line-height:.95;letter-spacing:-.045em;margin:17px 0 13px;text-shadow:3px 3px 0 #16121a,5px 5px 0 #8a542b,0 7px 25px #000}
@@ -228,12 +228,13 @@ function translatePage(){
  document.documentElement.lang=language;
  $('brandSubtitle').textContent=t('subtitle');$('headerStatus').textContent=t('status');$('headerLanguage').textContent=(language==='pt-BR'?'PT':'EN')+' · '+t('language');
  $('homeEyebrow').textContent=t('eyebrow');$('homeLede').textContent=t('lede');$('homeDescription').textContent=t('description');
- $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
+ $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('aboutLabel').textContent=language==='pt-BR'?'Sobre':'About';$('aboutSub').textContent=language==='pt-BR'?'Intenção, universo e história':'Purpose, world and story';$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
  $('slotsEyebrow').textContent=t('slotsEyebrow');$('slotsTitle').textContent=t('slotsTitle');$('slotsSubtitle').textContent=t('slotsSubtitle');$('slotsBack').textContent='← '+t('back');$('slotsNote').textContent=t('slotsNote');
  $('creatorEyebrow').textContent=t('creatorEyebrow');$('creatorBack').textContent='← '+t('back');
- $('langEyebrow').textContent=t('languageEyebrow');$('langTitle').textContent=t('languageTitle');$('langSubtitle').textContent=t('languageSubtitle');$('langBack').textContent='← '+t('back');$('languageNote').textContent=t('languageNote');
+ $('langEyebrow').textContent=t('languageEyebrow');$('langTitle').textContent=t('languageTitle');$('langSubtitle').textContent=t('languageSubtitle');$('langBack').textContent='← '+t('back');$('languageNote').textContent=t('languageNote');$('aboutEyebrow').textContent=language==='pt-BR'?'O PROPÓSITO DA AVENTURA':'THE PURPOSE OF THE ADVENTURE';$('aboutTitle').textContent=language==='pt-BR'?'Sobre Reinos em Ruína':'About Realms in Ruin';$('aboutSubtitle').textContent=language==='pt-BR'?'Um RPG medieval onde explorar, lutar e decidir são partes da mesma história.':'A medieval RPG where exploration, combat and choices belong to one story.';$('aboutBack').textContent='← '+t('back');
  $('footerLeft').textContent=t('footerLeft');$('footerRight').textContent=t('footerRight');
  renderLanguageCards();
+ renderAbout();
 }
 function showView(view){
  currentView=view;
@@ -372,6 +373,27 @@ function startGame(slot,isNew){
  const query='?slot='+slot+(isNew?'&new=1':'')+'&lang='+encodeURIComponent(language);
  window.location.href='jogar.html'+query;
 }
+function renderAbout(){
+ const pt=language==='pt-BR';
+ const cards=pt?[
+  {k:'A INTENÇÃO',h:'Aprender vivendo o mundo',p1:'Reinos em Ruína é um RPG medieval de exploração e ação. A educação financeira não aparece como uma prova separada: ela faz parte das missões, das recompensas, do comércio e das consequências das decisões do jogador.',p2:'Ao administrar cobre, comparar preços, lidar com dívidas e identificar fraudes, o jogador aprende a fazer perguntas melhores antes de tomar decisões. O objetivo é estimular curiosidade e pensamento crítico — não prometer fórmulas mágicas para enriquecer.',wide:true},
+  {k:'A HISTÓRIA · CAPÍTULO I',h:'A Moeda Partida',p1:'O reino atravessa tempos difíceis. Rotas comerciais enfraquecidas, recursos escassos e registros pouco confiáveis deixam vilas inteiras vulneráveis. Em Brumaforte, carregamentos de grãos desaparecem e os preços começam a mudar sem explicação.',p2:'A guardiã Mara pede ajuda ao aventureiro. Para descobrir o que aconteceu, será preciso explorar a vila, enfrentar criaturas nas ruínas e encontrar o livro-razão da mina. As páginas revelam diferenças nas contas e indícios de que os carregamentos foram desviados.',wide:false},
+  {k:'AS SUAS ESCOLHAS',h:'Toda solução tem um custo',p1:'Depois de reunir provas, o jogador ajuda Brumaforte a escolher como responder à escassez: investir na estrada comercial, tomar um empréstimo da guilda ou congelar os preços. Cada caminho altera o tesouro, a dívida, a confiança dos habitantes, a reserva de alimentos e os preços.',p2:'Não existe uma opção universalmente perfeita. O objetivo é observar os efeitos e entender por que uma decisão que alivia um problema hoje pode criar outro amanhã.',wide:false},
+  {k:'COMO SE JOGA',h:'Explorar, lutar, descobrir',p1:'O mundo é explorado em visão superior, com conversas, pontos de interesse e caminhos para descobrir. Ao entrar nas ruínas, o jogo muda para a perspectiva lateral, com criaturas, plataformas e combate.',p2:'Entre aventuras, o jogador negocia com comerciantes, administra recursos e consulta um caderno financeiro sobre orçamento, inflação, juros, fraudes e riscos dos criptoativos.',wide:true}
+ ]:[
+  {k:'THE PURPOSE',h:'Learn by living in the world',p1:'Realms in Ruin is a medieval exploration and action RPG. Financial education is not a separate quiz: it belongs to quests, rewards, trade, and the consequences of the player’s decisions.',p2:'By managing fictional copper, comparing prices, dealing with debt, and spotting fraud, players learn to ask better questions before making decisions. The goal is to encourage curiosity and critical thinking—not promise a shortcut to wealth.',wide:true},
+  {k:'STORY · CHAPTER I',h:'The Broken Coin',p1:'The kingdom is going through hard times. Weak trade routes, scarce resources, and unreliable records leave entire villages vulnerable. In Brumaforte, grain shipments disappear and prices begin changing without a clear explanation.',p2:'Mara, the village warden, asks the adventurer for help. To uncover the truth, the player explores the village, fights creatures in the ruins, and finds the mine’s ledger. Its pages reveal accounting discrepancies and signs that shipments were diverted.',wide:false},
+  {k:'YOUR CHOICES',h:'Every solution has a cost',p1:'After gathering evidence, the player helps Brumaforte decide how to answer the shortage: invest in the trade road, borrow from the guild, or freeze prices. Each path changes treasury, debt, public trust, food supplies, and prices.',p2:'There is no universally perfect option. The point is to observe the effects and understand why a decision that eases one problem today may create another tomorrow.',wide:false},
+  {k:'HOW TO PLAY',h:'Explore, fight, discover',p1:'The world is explored from a top-down perspective, with conversations, points of interest, and paths to uncover. Entering the ruins switches to side-view action, with creatures, platforms, and combat.',p2:'Between adventures, players trade with merchants, manage resources, and consult a finance codex covering budgeting, inflation, interest, fraud, and crypto-asset risks.',wide:true}
+ ];
+ $('aboutContent').innerHTML=cards.map(x=>'<article class="story-card'+(x.wide?' wide':'')+'"><div class="story-kicker">'+esc(x.k)+'</div><h3>'+esc(x.h)+'</h3><p>'+esc(x.p1)+'</p><p>'+esc(x.p2)+'</p></article>').join('')+
+  '<article class="story-card wide"><div class="story-facts">'+(pt?[
+   ['EXPLORAÇÃO','Mapa visto de cima, personagens e descobertas.'],['AÇÃO','Combate lateral e exploração das ruínas.'],['ECONOMIA','Decisões, comércio, dívidas e consequências.']
+  ]:[
+   ['EXPLORATION','Top-down maps, characters, and discoveries.'],['ACTION','Side-view combat and ruin exploration.'],['ECONOMY','Decisions, trade, debt, and consequences.']
+  ]).map(x=>'<div class="story-fact"><strong>'+esc(x[0])+'</strong><span>'+esc(x[1])+'</span></div>').join('')+'</div><p class="story-quote">'+(pt?'“O reino não precisa de um herói que saiba todas as respostas. Precisa de alguém disposto a investigar, comparar e aprender.”':'“The kingdom does not need a hero who knows every answer. It needs someone willing to investigate, compare, and learn.”')+'</p></article>';
+}
+
 function renderLanguageCards(){
  const area=$('languageList');if(!area)return;area.innerHTML='';
  const opts=[{id:'pt-BR',flag:'PT',name:t('portuguese'),note:language==='pt-BR'?'✓ '+t('selected'):t('choose')},{id:'en-US',flag:'EN',name:t('english'),note:language==='en-US'?'✓ '+t('selected'):t('choose')}];
@@ -385,10 +407,12 @@ function setLanguage(lang){
 function openSlots(){renderSlots();showView('slots');}
 $('playButton').addEventListener('click',openSlots);
 $('languageButton').addEventListener('click',()=>showView('language'));
+$('aboutButton').addEventListener('click',()=>{renderAbout();showView('about')});
 $('headerLanguage').addEventListener('click',()=>showView('language'));
 $('slotsBack').addEventListener('click',()=>showView('home'));
 $('creatorBack').addEventListener('click',()=>{renderSlots();showView('slots');});
 $('langBack').addEventListener('click',()=>showView('home'));
+$('aboutBack').addEventListener('click',()=>showView('home'));
 $('brandHome').addEventListener('click',e=>{e.preventDefault();showView('home');});
 try{language=localStorage.getItem(LANG_KEY)==='en-US'?'en-US':'pt-BR';}catch(e){}
 importLegacyIfNeeded();
