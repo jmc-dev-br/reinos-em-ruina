@@ -1,7 +1,7 @@
 # Realms in Ruin / Reinos em Ruína
 
-**A medieval RPG where economic choices change the world.**  
-Aventura medieval em que as decisões econômicas mudam o reino.
+**A classic handheld-style pixel-art adventure where economic choices change the world.**  
+Aventura 16-bit de exploração e criaturas, com decisões econômicas que mudam o reino.
 
 ## Play the browser prototype
 
@@ -147,3 +147,16 @@ A direção ativa agora é exploração top-down, personagens pequenos em pixel 
 - **A Moeda Partida continua:** as missões de Mara, as histórias dos NPCs, o comércio e as decisões do Conselho mantêm a educação financeira dentro da aventura. Os sistemas de clima, relógio e recompensas locais continuam no protótipo.
 
 A equipe e as capturas são guardadas no salvamento local, e os saves antigos são migrados para um parceiro inicial quando necessário. O criador de personagem também foi refeito para combinar com a arte de portátil: roupas simples, boné e acessórios discretos, prévia pixelada e uma interface verde-clara em blocos. A sintaxe JavaScript foi verificada; ainda é necessário testar a experiência completa no navegador em desktop e celular. Este protótipo continua single-player e local: contas partilhadas, troca entre pessoas e estado sincronizado exigem backend.
+
+
+## Reboot 3.0 — personagens portáteis e exploração 16-bit
+
+Esta atualização reforça a direção de aventura vista de cima inspirada nos jogos portáteis clássicos, usando arte original do projeto:
+
+- **Sprite compacto do protagonista:** renderização 16×24 em quatro direções, com pequenos ciclos de caminhada, roupa, cabelo, tons de pele e acessórios reconhecíveis à escala do mapa.
+- **NPCs no mesmo padrão visual:** moradores usam o mesmo sistema de sprite do protagonista, com paletas de roupa, cabelo e acessórios próprias e pequenos objetos de profissão.
+- **Criador alinhado ao jogo:** a prévia agora usa proporções compactas e pixel art 16-bit; a tela principal e os painéis do criador usam uma paleta mais clara de céu, grama e menus em blocos.
+- **Exploração consistente:** movimento sem diagonal, caminhos e árvores legíveis, bússola com paleta de portátil e mina retintada para combinar com as áreas externas.
+- **A identidade própria permanece:** Folhote, Braseco, Gotil e todas as criaturas são originais; a referência serve somente para a linguagem de aventura portátil, não para copiar personagens, sprites ou mapas de outra franquia.
+
+O projeto mantém suas missões, diálogos, criaturas, encontros por turnos e economia educativa. Os testes realizados nesta atualização foram estáticos (sintaxe e estrutura); ainda falta uma sessão completa validada no navegador publicado.
