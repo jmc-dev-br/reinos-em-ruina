@@ -465,6 +465,14 @@ function drawEnvironmentOverlay(){
    }
   }
  }
+ if(g.scene==='action'&&gameSettings.dynamicLighting){
+  // Mine lanterns cast warm pools of light instead of flat dots on the ground.
+  for(const wx of [260,790,1320,1760]){
+   const x=wx-Math.max(0,Math.min(1900-W,g.actionPlayer.x-330)),y=234,r=68;
+   const glow=ctx.createRadialGradient(x,y,2,x,y,r);glow.addColorStop(0,'rgba(255,192,91,.25)');glow.addColorStop(.38,'rgba(244,158,66,.11)');glow.addColorStop(1,'rgba(244,158,66,0)');
+   ctx.fillStyle=glow;ctx.fillRect(x-r,y-r,r*2,r*2);
+  }
+ }
  if(g.scene==='map'){
   // Gentle water glints in the village pond.
   for(let i=0;i<4;i++){
@@ -481,9 +489,11 @@ function drawEnvironmentOverlay(){
   for(let i=0;i<5;i++){const y=((visualFX.worldSeconds*13+i*119)%H);const grad=ctx.createLinearGradient(0,y-22,0,y+22);grad.addColorStop(0,'rgba(180,196,194,0)');grad.addColorStop(.5,'rgba(180,196,194,.16)');grad.addColorStop(1,'rgba(180,196,194,0)');ctx.fillStyle=grad;ctx.fillRect(0,y-22,W,44);}
  }else if(gameSettings.effectsEnabled&&visualFX.weather==='leaves'){
   for(const p of visualFX.particles){
-   rect(p.x,p.y,p.size+2,p.size, p.seed%3===0?'#d5a45d':p.seed%3===1?'#a86e43':'#7d9c55');
-   rect(p.x+1,p.y,p.size,1,'#edd08a');
+   ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(visualFX.worldSeconds*2+p.seed)*.7);
+   rect(0,0,p.size+3,Math.max(2,p.size-1),p.seed%3===0?'#d5a45d':p.seed%3===1?'#a86e43':'#7d9c55');
+   rect(1,0,p.size,1,'#edd08a');rect(2,1,1,2,'#735b3a');ctx.restore();
   }
+ }
  }
  if(gameSettings.effectsEnabled){
   const textItems=visualFX.floating;
@@ -2316,15 +2326,16 @@ function regionMobList(id){return id==='brumaforte'?g.slimes:(g.regionMobs&&g.re
 function currentRegionBoss(id){return regionMobList(id).find(m=>m.boss)||null;}
 function drawWorldTree(x,y,scale=1,variant=0){
  ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(scale,scale);
- // Layered square foliage: clear outlines and light pixels read well at small handheld resolution.
- ctx.fillStyle='#31563a55';ctx.beginPath();ctx.ellipse(1,12,14,5,0,0,Math.PI*2);ctx.fill();
- rect(-3,3,6,15,'#765438');rect(-5,8,10,5,'#8f6845');
- const dark=variant%2?'#326342':'#285b3d',mid=variant%2?'#4c8a4a':'#3c7947',light=variant%2?'#8abc5f':'#78ad55';
- rect(-11,-9,22,17,dark);rect(-8,-14,16,8,dark);rect(-14,-4,4,8,dark);rect(10,-5,4,8,dark);
- rect(-9,-10,18,14,mid);rect(-6,-14,12,7,mid);
- rect(-8,-10,6,4,light);rect(1,-7,6,4,variant%2?'#6aa24f':'#5b9948');
- rect(-12,-1,4,4,dark);rect(6,1,4,3,dark);
- rect(-5,-7,3,2,'#b0cf68');rect(2,-4,3,2,'#80b958');rect(-9,-2,2,3,'#477f45');
+ // Layered canopy, trunk roots, moss and dappled highlights for a hand-painted pixel look.
+ ctx.fillStyle='#152a235e';ctx.beginPath();ctx.ellipse(1,13,16,6,0,0,Math.PI*2);ctx.fill();
+ rect(-3,2,6,17,'#63472f');rect(-5,8,10,5,'#8f6845');rect(-7,16,5,3,'#6e5035');rect(2,16,6,3,'#6e5035');
+ const dark=variant%2?'#294f39':'#214e36',mid=variant%2?'#438047':'#347044',light=variant%2?'#91bf68':'#75ac58';
+ rect(-12,-9,24,18,dark);rect(-9,-15,18,9,dark);rect(-15,-4,5,9,dark);rect(10,-5,5,9,dark);
+ rect(-10,-10,20,15,mid);rect(-7,-15,14,8,mid);
+ rect(-9,-11,6,4,light);rect(1,-8,6,4,variant%2?'#73a957':'#5c984b');
+ rect(-13,-3,4,5,variant%2?'#386b43':'#285d3b');rect(5,0,5,5,dark);rect(-5,3,7,4,mid);
+ rect(-3,-16,4,2,light);rect(8,-5,3,2,'#a1c76a');rect(-11,2,3,2,'#9ab968');
+ if(variant%2===0){rect(-7,6,3,2,'#a1bd65');rect(5,-12,3,2,'#8fba61');}
  ctx.restore();
 }
 function drawMistWolfBoss(x,y,m){
@@ -2550,9 +2561,15 @@ function drawAction(){
   const x=wx-camera;if(x<-20||x>W+20)continue;
   rect(x-3,244,6,23,'#7a573a');rect(x-6,238,12,7,'#d1ab60');circle(x,235,5,'#f0b65f');circle(x,234,2,'#fff0a8');
  }
- // Entrance and the ledger altar sit at opposite ends of the same walkable map.
- const portalX=80-camera;rect(portalX-18,323,36,52,'#1b2e32');rect(portalX-13,327,26,44,'#79583c');rect(portalX-8,331,16,40,'#3c6960');rect(portalX-3,337,6,29,'#89b5a0');
- const relicX=1780-camera;rect(relicX-24,344,48,20,'#514535');rect(relicX-18,326,36,20,'#9b8557');rect(relicX-13,323,26,4,'#d6c48a');rect(relicX-2,329,4,12,'#344448');
+ // Gothic mine entrance: layered arch stones, iron braces and a faint runic glow.
+ const portalX=80-camera;
+ rect(portalX-23,318,46,60,'#1c2b2e');rect(portalX-19,320,38,56,'#66736a');
+ rect(portalX-15,325,30,48,'#273d3d');rect(portalX-11,329,22,43,'#76563b');rect(portalX-7,333,14,39,'#2c625e');
+ for(let k=0;k<3;k++){rect(portalX-22,320+k*12,5,8,'#9c9b7a');rect(portalX+17,320+k*12,5,8,'#9c9b7a');}
+ rect(portalX-16,316,32,5,'#c2b58a');rect(portalX-11,313,22,4,'#596c64');rect(portalX-3,338,6,26,'#9dc4a9');
+ // Ledger altar, cracked stone plinth and a small enchanted ember.
+ const relicX=1780-camera;rect(relicX-29,348,58,18,'#303b38');rect(relicX-24,342,48,8,'#76684c');rect(relicX-18,326,36,18,'#a28c5d');rect(relicX-13,323,26,4,'#d6c48a');rect(relicX-2,329,4,12,'#344448');
+ line(relicX-22,351,relicX-12,358,'#b0a078',1);line(relicX+12,347,relicX+20,355,'#b0a078',1);circle(relicX,320,4,'#5fb8a6');circle(relicX,320,2,'#d7fff0');
  for(const m of g.ruinMobs)if(m.alive){
   const x=m.x-camera;if(x<-40||x>W+40)continue;
   drawFieldCreature(x,m.y,m);
