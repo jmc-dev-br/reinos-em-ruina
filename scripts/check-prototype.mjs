@@ -23,6 +23,13 @@ const game = fs.readFileSync("jogar.html", "utf8");
 const contract = fs.readFileSync("contracts/ReinosChronicle.sol", "utf8");
 const requiredGameFeatures = [
   "function openCouncil()",
+  "function talkMara()",
+  "function normalizeSave(d)",
+  "function persistProgress()",
+  "ledgerFound:g.ledgerFound",
+  "if(!g.ledgerFound)",
+  "if(g.questStep<4)",
+  "g.questStep=5",
   "function chooseEconomy(choice)",
   "chooseEconomy(1)",
   "chooseEconomy(2)",
@@ -39,6 +46,8 @@ for (const feature of requiredGameFeatures) {
   assert.ok(game.includes(feature), `missing game feature: ${feature}`);
 }
 assert.ok(game.includes("if(!CHRONICLE_CONTRACT_ADDRESS)"), "wallet flow must remain gated until a contract address is configured");
+assert.ok(game.includes("Prova ENCONTRADA") || game.includes("PROVA ENCONTRADA"), "opening quest should require a found ledger proof");
+assert.ok(game.includes("A Moeda Partida"), "opening chapter title should appear in the quest UI");
 
 const requiredContractFeatures = [
   "contract ReinosChronicle",
