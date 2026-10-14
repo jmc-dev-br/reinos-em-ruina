@@ -160,6 +160,7 @@ function openCouncil(){
  if(e.decision){
   showModal('Conselho de Brumaforte','<div class="eyebrow">DECISÃO REGISTRADA NO JOGO</div><h3>'+escapeHtml(e.decisionName)+'</h3><p>'+escapeHtml(e.lastOutcome||'Sua política continua em vigor.')+'</p><div class="modalnote">Tesouro: '+e.treasury+' cobre · Dívida: '+e.debt+' cobre · Confiança: '+e.trust+'/100 · Preços: índice '+e.priceIndex+' · Alimentos: '+e.foodDays+' dias.</div><p>Este capítulo aceita uma decisão por jornada para que as consequências sejam comparáveis. Comece uma nova jornada para experimentar outra política.</p>',[{label:'Voltar ao jogo',action:()=>closeModal(),primary:true}]);return;
  }
+ if(g.questStep<4){openDialogue('O Conselho aguarda','Não podemos tomar uma decisão enquanto só temos boatos. Traga as provas do livro-razão para Mara primeiro.','Investigue as criaturas, encontre o livro-razão e entregue as provas à guardiã.');return;}
  const body='<div class="eyebrow">CAPÍTULO 01 · A MOEDA PARTIDA</div><h3>Três dias de grão</h3><p>O comboio de alimentos não chegou. Comerciantes temem perder dinheiro, famílias temem a escassez e o tesouro não pode resolver tudo ao mesmo tempo. Escolha uma política para Brumaforte. Não é uma pergunta de prova: é uma decisão com efeitos diferentes.</p><div class="shoprow"><div><strong>Restaurar a estrada</strong><span>Investir 35 cobres. Mais comida, preços mais baixos e confiança maior. Custa recursos agora.</span></div><div class="shopprice">−35 tesouro</div></div><div class="shoprow"><div><strong>Tomar empréstimo da guilda</strong><span>Receber 50 cobres agora e dever 60 depois. Ajuda no curto prazo, mas deixa um compromisso futuro.</span></div><div class="shopprice">+50 / dívida 60</div></div><div class="shoprow"><div><strong>Congelar os preços</strong><span>Baixar o índice de preços rapidamente. Parte dos comerciantes reduz a oferta e a confiança diminui.</span></div><div class="shopprice">custo social</div></div><div class="modalnote">Todos os valores são simulações em cobre fictício. Não há dinheiro real, compra de tokens ou aconselhamento financeiro.</div>';
  showModal('Conselho de Brumaforte',body,[
   {label:'Restaurar a estrada',action:()=>chooseEconomy(1),primary:true},
@@ -183,7 +184,7 @@ function chooseEconomy(choice){
   e.lastOutcome='Os preços anunciados caíram de imediato, aliviando parte das famílias. Porém, a oferta diminuiu e a confiança dos comerciantes caiu; a reserva de alimentos ficou mais curta. Um preço menor no cartaz não cria mercadoria por si só.';
  }else{return;}
  e.decision=choice;
- g.coins+=choice===1?0:0;
+  if(g.questStep===4){g.questStep=5;g.coins+=15;e.lastOutcome+=' A investigação e a decisão do conselho concluíram o primeiro capítulo; você recebeu 15 cobres pela entrega das provas.';}
  addXP(35);
  updateUI();
  try{localStorage.setItem('cronicas_valoria_save',JSON.stringify(saveData()));}catch(err){}
