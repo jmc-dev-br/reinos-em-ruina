@@ -350,6 +350,13 @@ body:has(#homeView.active) .menu-hotspots{display:none!important}
 @media(max-width:850px){.preview-stage{min-height:230px}#characterPreview{width:165px!important;height:205px!important}}
 @media(max-width:540px){#characterPreview{width:125px!important;height:165px!important}}
 
+
+/* Reference-aligned pixel-art character sprite */
+.preview-stage{min-height:330px;background:radial-gradient(ellipse at 50% 58%,#86644020,transparent 67%);overflow:hidden}
+#characterPreview{display:block;width:200px!important;height:300px!important;max-width:100%;image-rendering:pixelated!important;filter:drop-shadow(0 12px 15px #0005)}
+@media(max-width:850px){.preview-stage{min-height:255px}#characterPreview{width:160px!important;height:240px!important}}
+@media(max-width:540px){#characterPreview{width:124px!important;height:186px!important}}
+
 </style>
 </head>
 <body>
@@ -426,7 +433,7 @@ body:has(#homeView.active) .menu-hotspots{display:none!important}
  <section class="view" id="creatorView">
   <div class="page-head"><div><div class="eyebrow" id="creatorEyebrow">PERSONAGEM</div><h2 class="page-title" id="creatorTitle">Crie seu aventureiro</h2><p class="page-subtitle" id="creatorSubtitle">Escolha a aparência do herói que vai explorar Brumaforte e atravessar as ruínas.</p></div><button class="back-btn" id="creatorBack">← Voltar</button></div>
   <div class="creator-layout">
-   <div class="preview-card"><div class="preview-stage"><canvas id="characterPreview" width="300" height="360" aria-label="Prévia ilustrada do personagem"></canvas></div><div class="preview-name" id="previewName">Aventureiro</div><div class="preview-caption" id="previewCaption">Prévia do personagem</div></div>
+   <div class="preview-card"><div class="preview-stage"><canvas id="characterPreview" width="48" height="72" aria-label="Prévia pixel art do personagem"></canvas></div><div class="preview-name" id="previewName">Aventureiro</div><div class="preview-caption" id="previewCaption">Prévia do personagem</div></div>
    <div class="creator-card" id="creatorControls"></div>
   </div>
  </section>
@@ -643,124 +650,123 @@ function beginCreator(slot,mode){
  }
  function drawPreview(){
   const canvas=$('characterPreview');if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  if(canvas.width!==300||canvas.height!==360){canvas.width=300;canvas.height=360;}
-  ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=true;
-  const char=creatorDraft,o=OUTFITS[char.outfit]||OUTFITS.traveler;
-  const outfitPalette={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const coat=outfitPalette[char.outfitColor]||o.coat,cloak=CLOAKS[char.cloak],hair=HAIR[char.hair]||HAIR.brown;
-  const skin=Object.assign({},SKIN,SKIN_EXTRA)[char.skin]||SKIN.light;
-  const px=ctx.fillRect.bind(ctx);
-  const shape=(points,fill,stroke,sw=1)=>{ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.closePath();if(fill&&fill!=='none'){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw;ctx.stroke();}};
-  const stroke=(points,color,width=1)=>{ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();};
-  const ellipse=(x,y,rx,ry,fill,strokeColor)=>{ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();if(strokeColor){ctx.strokeStyle=strokeColor;ctx.lineWidth=1;ctx.stroke();}};
-  const rounded=(x,y,w,h,r,fill,strokeColor)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(strokeColor){ctx.strokeStyle=strokeColor;ctx.lineWidth=1;ctx.stroke();}};
-  const metal=ctx.createLinearGradient(-40,-210,37,-105);metal.addColorStop(0,'#c0b4a1');metal.addColorStop(.18,'#777773');metal.addColorStop(.38,'#393d43');metal.addColorStop(.57,'#77756d');metal.addColorStop(.79,'#33383e');metal.addColorStop(1,'#171b20');
-  const darkMetal=ctx.createLinearGradient(-30,-180,33,-110);darkMetal.addColorStop(0,'#535962');darkMetal.addColorStop(.5,'#222831');darkMetal.addColorStop(1,'#5d5c58');
-  const leather=ctx.createLinearGradient(-22,-155,25,-85);leather.addColorStop(0,'#6f5039');leather.addColorStop(.45,'#322820');leather.addColorStop(1,'#1d1b1a');
-  const gold=ctx.createLinearGradient(-5,-180,8,-95);gold.addColorStop(0,'#f1d59a');gold.addColorStop(.5,'#a87c42');gold.addColorStop(1,'#6e4928');
-  const capeShade=cloak?ctx.createLinearGradient(-55,-200,42,-30):null;
-  if(capeShade){capeShade.addColorStop(0,'#bd6857');capeShade.addColorStop(.27,cloak);capeShade.addColorStop(.75,cloak);capeShade.addColorStop(1,'#1d2026');}
-  // Quiet vignette behind the illustration and a grounded shadow.
-  const halo=ctx.createRadialGradient(150,176,18,150,176,150);halo.addColorStop(0,'#b28a5524');halo.addColorStop(1,'#12182000');ctx.fillStyle=halo;ctx.fillRect(0,0,300,360);
-  ctx.save();ctx.translate(150,330);ctx.scale(1.22,1.22);
-  ellipse(0,1,48,6,'#020406a8');
-  // The ragged cloak sits behind the shoulders and boots.
-  if(capeShade){
-    shape([[-18,-168],[-34,-159],[-42,-143],[-43,-116],[-48,-88],[-56,-64],[-48,-68],[-40,-59],[-32,-67],[-25,-57],[-17,-65],[-12,-91],[-13,-126]],capeShade,'#211a1c',1);
-    shape([[-36,-145],[-40,-114],[-45,-82],[-48,-69],[-41,-75],[-34,-66],[-30,-78],[-28,-112]],'#ffffff0d');
-    stroke([[-35,-145],[-30,-119],[-32,-94]],'#e8aa8b49',1);
-    // A few tears and thread-like hems make the fabric feel worn.
-    stroke([[-47,-73],[-41,-81],[-38,-74],[-33,-80],[-28,-69]],'#17191f',1.5);
-    stroke([[-27,-70],[-23,-79],[-20,-72]],'#17191f',1.2);
+  if(canvas.width!==48||canvas.height!==72){canvas.width=48;canvas.height=72;}
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,48,72);ctx.imageSmoothingEnabled=false;
+  const c=creatorDraft,o=OUTFITS[c.outfit]||OUTFITS.traveler;
+  const outfitColors={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+  const coat=outfitColors[c.outfitColor]||o.coat,cape=CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
+  const skin=Object.assign({},SKIN,SKIN_EXTRA)[c.skin]||SKIN.light;
+  const outline='#17191d',shade='#262328',trim=o.trim;
+  const r=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
+  const p=(pts,color)=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fillStyle=color;ctx.fill();};
+  const l=(x1,y1,x2,y2,color,w=1)=>{ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();};
+  const circle=(x,y,rad,color)=>{ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);ctx.fill();};
+  // Ground shadow; clean, chunky pixel silhouette.
+  r(8,68,31,1,'#b59a6320');r(12,66,24,2,'#0304058c');
+  // Long cloak is drawn first, so every selectable cloak sits behind the armor.
+  if(cape){
+    p([[16,19],[12,21],[11,31],[9,41],[11,49],[8,56],[13,54],[16,59],[20,56],[23,61],[27,56],[29,48],[30,31],[29,22],[25,19]],outline);
+    p([[16,20],[12,23],[12,32],[10,42],[12,49],[10,54],[14,52],[17,57],[20,54],[23,58],[26,53],[28,46],[28,31],[27,22],[24,20]],cape);
+    r(13,27,2,15,'#ffffff12');r(15,43,2,9,'#00000022');
   }
-  // Legs, leather trousers and individually shaded greaves.
-  shape([[-17,-94],[-2,-94],[-4,-51],[-9,-23],[-22,-21],[-24,-28],[-18,-56]],'#2e2b2b','#17191d',1);
-  shape([[3,-95],[18,-95],[20,-58],[26,-29],[17,-23],[8,-28],[6,-57]],'#343138','#17191d',1);
-  shape([[-23,-30],[-9,-30],[-10,-18],[-14,-11],[-31,-10],[-34,-15]],'#211f20','#11151a',1);
-  shape([[13,-30],[24,-30],[32,-17],[29,-11],[10,-11],[8,-16]],'#211f20','#11151a',1);
-  stroke([[-20,-26],[-13,-24],[-12,-15]],'#665141',1.2);stroke([[15,-25],[22,-23],[25,-15]],'#665141',1.2);
-  shape([[-18,-86],[-3,-87],[-5,-55],[-18,-53]],darkMetal,'#161a1f',1);
-  shape([[4,-87],[17,-87],[19,-55],[7,-53]],darkMetal,'#161a1f',1);
-  shape([[-18,-75],[-5,-77],[-7,-62],[-18,-61]],metal,'#64615b',.7);
-  shape([[5,-76],[17,-76],[18,-62],[7,-61]],metal,'#64615b',.7);
-  stroke([[-16,-71],[-8,-72]],'#d0c1a7',.8);stroke([[8,-72],[16,-72]],'#d0c1a7',.8);
-  // Body under-tunic and layered armor.
-  shape([[-17,-169],[14,-169],[23,-145],[19,-105],[11,-92],[-12,-92],[-23,-111],[-26,-145]],coat,'#171a20',1.2);
-  shape([[-15,-159],[-5,-165],[-3,-104],[-14,-102],[-22,-119]],'#171e24');
-  shape([[3,-162],[14,-158],[19,-132],[11,-105],[4,-109]],'#161b22');
-  if(cloak){shape([[-17,-167],[-25,-161],[-28,-137],[-21,-118],[-14,-137]],cloak,'#20191b',1);shape([[12,-166],[22,-158],[26,-138],[19,-121],[12,-139]],cloak,'#20191b',1);}
-  // Left arm with elbow plate and articulated gauntlet.
-  shape([[-20,-159],[-29,-157],[-34,-134],[-26,-123],[-20,-132],[-15,-150]],leather,'#17191d',1);
-  shape([[-31,-143],[-24,-141],[-21,-124],[-26,-117],[-33,-122]],metal,'#17191d',1);
-  shape([[-31,-125],[-23,-125],[-21,-113],[-27,-107],[-34,-112]],darkMetal,'#17191d',1);
-  stroke([[-30,-136],[-24,-134]],'#d0c0a7',.8);
-  // Right shoulder pauldron: overlapping plates, rivets and worn edges.
-  shape([[6,-168],[19,-171],[30,-162],[32,-147],[25,-136],[13,-139],[6,-150]],metal,'#15191e',1.2);
-  shape([[11,-164],[20,-166],[27,-159],[25,-151],[16,-149],[10,-155]],darkMetal,'#9d927f',.8);
-  stroke([[13,-162],[21,-161],[24,-156]],'#d5c5a6',.9);
-  ellipse(15,-156,1.1,1.1,'#e6cf9c');ellipse(25,-159,1.1,1.1,'#e6cf9c');
-  // Chest plate with raised central ridge, leather straps and brass buckle.
-  shape([[-17,-166],[-4,-174],[10,-169],[17,-155],[14,-132],[4,-116],[-6,-119],[-17,-137],[-22,-153]],metal,'#181b20',1.25);
-  shape([[-12,-161],[-4,-166],[6,-162],[10,-149],[4,-132],[-4,-128],[-13,-141]],darkMetal,'#928a7e',.8);
-  shape([[-7,-160],[-2,-163],[2,-149],[-1,-135],[-5,-139]],'#a7a092');
-  stroke([[-14,-157],[-11,-145],[-7,-137]],'#c7bba7',1);
-  stroke([[9,-158],[11,-148],[6,-139]],'#b1a99c',.9);
-  stroke([[-17,-163],[10,-133]],'#221b19',4);stroke([[-17,-163],[10,-133]],gold,1.3);
-  rounded(-3,-151,8,9,1,gold,'#33261a');rounded(-1,-149,4,5,1,'#292725');
-  // Several little scratches and rivets on the armor.
-  stroke([[-9,-154],[-6,-152]],'#f0d9ad',.8);stroke([[2,-143],[5,-141]],'#d3c9b7',.7);
-  ellipse(-14,-149,1.1,1.1,'#e5d09d');ellipse(11,-151,1.1,1.1,'#e5d09d');
-  // Neck, scarf, face and natural hair silhouette.
-  shape([[-7,-184],[7,-184],[7,-168],[0,-163],[-7,-168]],skin,'#3a2522',.8);
-  shape([[-13,-204],[-8,-216],[4,-218],[13,-210],[14,-194],[8,-181],[0,-177],[-9,-183],[-14,-194]],skin,'#2c211f',1);
-  shape([[-8,-204],[-2,-210],[7,-205],[5,-193],[0,-187],[-7,-191]],'#d6a184');
-  shape([[-16,-207],[-13,-219],[-4,-225],[7,-223],[16,-214],[16,-204],[9,-210],[3,-213],[-3,-208],[-9,-210],[-11,-201],[-15,-198]],hair,'#20191a',1);
-  if(char.hairstyle==='medium'||char.hairstyle==='long'||char.hairstyle==='braids'){
-    shape([[-15,-207],[-18,-197],[-16,-184],[-10,-182],[-10,-198]],hair,'#241b1b',.8);
-    shape([[12,-209],[17,-200],[15,-185],[9,-183],[9,-197]],hair,'#241b1b',.8);
+  // Back of the legs and boots.
+  p([[15,43],[22,43],[21,56],[19,61],[12,61],[13,57]],outline);
+  p([[25,43],[32,42],[34,56],[37,60],[36,62],[26,62],[25,57]],outline);
+  r(15,45,6,12,c.pants||'#38332e');r(26,45,6,12,c.pants||'#38332e');
+  r(16,47,4,1,'#ffffff12');r(27,47,4,1,'#ffffff12');
+  p([[13,58],[20,58],[20,62],[22,65],[11,65],[10,63]],outline);
+  p([[26,58],[34,58],[36,62],[38,64],[37,66],[25,66],[24,63]],outline);
+  r(12,62,8,2,'#48392e');r(27,62,9,2,'#48392e');r(13,64,7,1,'#95734d');r(28,64,8,1,'#95734d');
+  // Body underlayer.
+  p([[16,21],[24,20],[30,22],[33,30],[31,44],[27,48],[17,47],[13,43],[12,30]],outline);
+  p([[17,22],[24,21],[29,23],[31,31],[29,43],[26,46],[18,45],[15,42],[14,30]],coat);
+  r(17,26,2,13,'#ffffff12');r(27,28,2,11,'#00000020');
+  // Arms and leather gloves.
+  p([[14,24],[11,25],[9,33],[11,39],[15,39],[17,34]],outline);
+  p([[14,26],[12,27],[11,33],[12,37],[14,36],[16,32]],coat);
+  p([[30,24],[33,25],[36,32],[35,38],[31,38],[29,33]],outline);
+  p([[31,26],[33,27],[34,32],[33,36],[31,35],[30,32]],coat);
+  r(11,35,4,4,shade);r(31,35,4,4,shade);
+  // Shoulder and chest pieces vary with outfit but keep a consistent fantasy silhouette.
+  if(c.outfit==='guard'||c.outfit==='royal'||c.outfit==='noble'){
+    p([[14,23],[18,22],[20,26],[17,29],[13,27]],outline);
+    p([[15,24],[18,23],[19,26],[16,27]],'#89877d');
+    p([[28,22],[32,24],[33,27],[30,29],[27,26]],outline);
+    p([[29,23],[31,25],[31,27],[29,26]],'#a39a88');
   }
-  if(char.hairstyle==='long'){
-    shape([[-16,-194],[-11,-191],[-9,-168],[-15,-171],[-19,-184]],hair,'#211a1b',.8);
-    shape([[12,-194],[8,-190],[9,-168],[15,-174],[17,-185]],hair,'#211a1b',.8);
+  if(c.outfit==='mage'){
+    p([[15,25],[31,25],[30,47],[24,51],[18,47]],'#392b53');
+    r(22,27,3,17,trim);r(21,31,5,1,'#b9a4d0');
+  } else {
+    p([[17,23],[23,22],[29,24],[29,35],[25,40],[18,37],[15,30]],outline);
+    p([[18,24],[23,23],[28,25],[28,34],[24,38],[19,36],[16,30]],(c.outfit==='guard'||c.outfit==='royal')?'#4a5054':coat);
+    if(c.outfit==='traveler'||c.outfit==='ranger'){
+      p([[18,25],[22,24],[24,28],[21,32],[17,31]],'#5a4938');
+      r(19,26,2,3,'#8a6944');r(21,31,4,5,'#322c27');
+    } else {
+      p([[18,25],[23,24],[27,26],[27,33],[24,36],[19,34]],'#31373c');
+      p([[20,26],[23,25],[25,27],[24,33],[21,34],[19,30]],'#62666a');
+      l(20,27,23,33,'#c2b8a7',1);
+      r(24,28,2,2,trim);r(20,35,6,1,trim);
+    }
+    // diagonal leather strap + metal clasp
+    l(17,25,27,37,'#30231d',3);l(17,25,27,37,trim,1);
+    r(22,30,3,3,'#d1ad68');r(23,31,1,1,'#483522');
+    // belt and buckle
+    r(17,39,12,3,'#3b2a20');r(18,39,10,1,'#936b3d');r(22,39,3,3,'#d2b16e');r(23,40,1,1,'#4a3721');
+    // skirt tabs / leather tassets
+    p([[16,41],[21,42],[20,49],[16,47]],'#343039');p([[25,42],[29,41],[29,47],[26,49]],'#292a30');
+    r(17,43,3,1,trim);r(26,43,2,1,trim);
   }
-  if(char.hairstyle==='ponytail'){shape([[11,-209],[18,-205],[23,-197],[19,-189],[14,-197]],hair,'#211a1b',.8);}
-  if(char.hairstyle==='braids'){stroke([[-16,-196],[-17,-187],[-13,-180]],hair,3);stroke([[15,-196],[15,-188],[12,-180]],hair,3);}
-  if(char.hairstyle==='mohawk')shape([[-7,-220],[-4,-233],[2,-235],[7,-221],[3,-216],[-4,-216]],hair,'#20191a',.8);
-  // Brow, eyes, nose, cheek shadow and beard.
-  stroke([[-8,-202],[-2,-203]],'#33231f',1.8);stroke([[4,-202],[9,-201]],'#33231f',1.8);
-  ellipse(-5,-199,1.6,1.1,'#241f20');ellipse(6,-198,1.6,1.1,'#241f20');
-  stroke([[1,-198],[0,-191],[3,-190]],'#8d5844',.9);
-  stroke([[-10,-195],[-7,-192]],'#e0af90',.7);
-  if(char.gender==='masculino'){shape([[-8,-190],[-3,-188],[3,-189],[7,-192],[6,-184],[1,-181],[-5,-183]],'#493029');stroke([[-3,-185],[2,-184]],'#8d5a43',.7);}
-  // The scarf overlaps the armor collar.
-  shape([[-11,-181],[-7,-188],[0,-187],[8,-190],[15,-183],[10,-175],[2,-179],[-5,-176],[-13,-177]],'#81343a','#2f1d20',1);
-  shape([[-7,-184],[0,-183],[5,-185],[1,-181],[-5,-180]],'#bf6a5b');
-  // Wearable headgear and accessories.
-  if(char.headwear==='hood')shape([[-18,-209],[-15,-221],[-4,-226],[9,-223],[17,-214],[18,-199],[11,-193],[9,-210],[0,-216],[-9,-208],[-12,-194]],cloak||'#34333a','#211a1d',1);
-  if(char.headwear==='helmet'){shape([[-17,-207],[-16,-221],[-6,-227],[8,-224],[17,-214],[14,-204],[7,-202],[7,-209],[-7,-209],[-7,-201],[-14,-202]],metal,'#1b1f24',1.2);stroke([[-14,-209],[12,-209]],'#d2c4ac',1.2);}
-  if(char.headwear==='crown'){shape([[-13,-219],[-15,-228],[-6,-222],[0,-235],[6,-222],[14,-228],[12,-218]],gold,'#4c3721',1);ellipse(0,-226,1.8,1.8,'#8d3436');}
-  if(char.headwear==='circlet'){stroke([[-13,-218],[13,-218]],gold,2.5);ellipse(0,-219,2.2,2.2,'#7796a6');}
-  if(char.headwear==='wizardHat'){shape([[-20,-220],[-14,-225],[-5,-242],[4,-243],[13,-225],[21,-220]],'#373047','#181720',1);stroke([[-14,-222],[15,-222]],gold,1.5);}
-  if(char.accessory==='glasses'){ctx.strokeStyle='#d1b574';ctx.lineWidth=1.3;ctx.strokeRect(-10,-202,8,5);ctx.strokeRect(3,-202,8,5);stroke([[-2,-200],[3,-200]],gold,1);}
-  if(char.accessory==='eyepatch'){shape([[2,-204],[11,-204],[10,-197],[2,-197]],'#201b1a','#b99b6a',.7);stroke([[4,-205],[8,-210]],'#362725',.8);}
-  if(char.accessory==='earrings'){ellipse(-14,-188,1.6,2,gold);ellipse(14,-188,1.6,2,gold);}
-  if(char.accessory==='necklace'){stroke([[-9,-174],[0,-168],[9,-174]],gold,1.2);shape([[-2,-169],[2,-169],[3,-164],[0,-162],[-3,-165]],gold,'#5c4428',.7);}
-  if(char.outfit==='guard'){stroke([[-21,-155],[-20,-138]],o.trim,2);stroke([[23,-155],[25,-144]],o.trim,2);}
-  if(char.outfit==='mage'){stroke([[-12,-173],[0,-168],[12,-173]],o.trim,1.7);}
-  if(char.outfit==='noble'||char.outfit==='royal'){shape([[-2,-174],[3,-174],[2,-166],[-2,-166]],o.trim);}
-  // Weapon silhouette and edge-lighting.
-  if(char.weapon==='sword'){
-    shape([[24,-140],[28,-143],[48,-89],[43,-87]],'#b9c1c4','#34373c',.8);stroke([[28,-136],[44,-91]],'#eee4cf',1);
-    shape([[19,-147],[33,-143],[32,-139],[19,-143]],gold,'#38291b',.8);shape([[23,-144],[29,-142],[26,-129],[22,-131]],'#67452e','#211a16',.7);
-  }else if(char.weapon==='staff'){stroke([[37,-196],[43,-20]],'#61452f',4);stroke([[37,-196],[43,-20]],gold,1);ellipse(36,-199,5,5,'#7aa2b8');ellipse(35,-200,2,2,'#d6e1d9');}
-  else if(char.weapon==='bow'){ctx.strokeStyle='#a67a49';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(43,-196);ctx.quadraticCurveTo(63,-130,43,-67);ctx.stroke();stroke([[43,-196],[43,-67]],'#d6c8ab',.8);}
-  // Restore a clean edge around the boots and set a soft gold ground glint.
-  stroke([[-34,-10],[-13,-8],[14,-8],[32,-10]],'#12151a',1);
-  ctx.restore();
-  ctx.fillStyle='#0009';ctx.beginPath();ctx.ellipse(150,333,50,5,0,0,Math.PI*2);ctx.fill();
-  const ground=ctx.createLinearGradient(35,0,265,0);ground.addColorStop(0,'#d0ae6d00');ground.addColorStop(.5,'#d0ae6d36');ground.addColorStop(1,'#d0ae6d00');ctx.fillStyle=ground;ctx.fillRect(25,340,250,1);
-  $('previewName').textContent=char.name||t('empty');$('previewCaption').textContent=t('preview');
+  // Neck, face, ears and pixel-cut hairstyle.
+  r(20,18,7,6,skin);r(21,19,5,4,'#d7a17c');
+  p([[17,9],[19,6],[26,6],[30,10],[30,18],[27,23],[20,22],[16,18]],outline);
+  p([[18,10],[20,8],[26,8],[28,11],[28,18],[25,21],[21,20],[18,17]],skin);
+  r(17,14,2,4,skin);r(28,14,2,4,skin);
+  r(20,14,2,1,'#29201c');r(25,14,2,1,'#29201c');
+  r(21,15,1,1,'#f2d7b6');r(26,15,1,1,'#f2d7b6');
+  r(23,15,2,3,'#9a6246');r(22,18,4,1,'#683d31');
+  if(c.gender==='masculino'){p([[20,18],[22,19],[25,18],[27,18],[26,21],[23,22],[20,20]],'#493029');r(22,20,3,1,'#9a6348');}
+  // hair is shaped from chunky locks; each option remains customizable.
+  p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
+  p([[17,12],[18,9],[20,7],[25,7],[28,9],[29,12],[27,11],[25,9],[23,11],[21,10],[19,12],[18,15],[17,15]],hair);
+  if(c.hairstyle==='medium'||c.hairstyle==='long'||c.hairstyle==='braids'){
+    r(16,12,2,7,hair);r(28,11,2,7,hair);
+  }
+  if(c.hairstyle==='long'){r(16,17,2,9,hair);r(28,17,2,9,hair);r(17,24,2,2,hair);r(27,24,2,2,hair);}
+  if(c.hairstyle==='ponytail'){r(29,12,3,3,hair);r(31,14,2,7,hair);r(30,20,3,2,hair);}
+  if(c.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
+  if(c.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
+  // Scarf wraps the neck; selected cloak colour does not affect its burgundy accent.
+  p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');
+  r(20,20,6,1,'#bd6757');
+  // Equipment details, armor wear and shoulder straps.
+  if(c.outfit==='guard'){
+    r(17,26,2,6,'#777d79');r(28,27,2,5,'#8d928a');r(18,29,2,1,'#c9c0aa');r(27,30,2,1,'#c9c0aa');
+  }
+  if(c.outfit==='royal'||c.outfit==='noble'){r(23,24,2,3,trim);r(22,26,4,1,'#f1d895');}
+  if(c.accessory==='glasses'){r(19,14,4,2,'#d4b56d');r(24,14,4,2,'#d4b56d');r(23,14,1,1,'#d4b56d');r(20,15,2,1,'#252329');r(25,15,2,1,'#252329');}
+  if(c.accessory==='eyepatch'){r(24,13,4,3,'#20191a');r(25,14,2,1,'#c3a066');}
+  if(c.accessory==='earrings'){r(17,18,1,2,'#d3ad61');r(28,18,1,2,'#d3ad61');}
+  if(c.accessory==='necklace'){r(20,23,7,1,trim);r(23,24,2,2,'#d8ba70');}
+  // Optional headwear layers on top of the hair.
+  if(c.headwear==='hood'){p([[15,13],[16,8],[19,5],[26,5],[30,9],[31,15],[28,17],[27,10],[23,8],[19,10],[18,17]],cape||'#34343c');}
+  if(c.headwear==='helmet'){p([[16,12],[17,7],[20,5],[26,5],[29,8],[30,13],[27,14],[27,11],[19,11],[19,14]],'#888d90');r(18,10,11,2,'#c0b8a9');r(20,12,7,1,'#303238');}
+  if(c.headwear==='crown'){r(18,7,11,2,'#d9b85d');p([[18,7],[19,4],[21,7],[23,3],[25,7],[28,4],[29,7]],'#d9b85d');r(23,5,2,1,'#9a3d3d');}
+  if(c.headwear==='circlet'){r(18,8,11,1,'#d9b85d');r(23,7,2,2,'#79a2b7');}
+  if(c.headwear==='wizardHat'){p([[15,8],[18,7],[20,2],[24,1],[27,7],[31,8]],'#413453');r(17,7,13,2,'#3c304c');r(22,7,3,1,trim);}
+  // Weapon is part of the editable appearance.
+  if(c.weapon==='sword'){
+    l(34,34,42,56,'#14161a',4);l(35,34,42,55,'#b9c4c6',2);l(36,35,41,51,'#f4ead0',1);
+    r(32,33,7,2,'#d4b16a');r(35,35,2,5,'#69462c');r(34,39,4,2,'#c69d59');
+  }else if(c.weapon==='staff'){
+    l(36,22,38,61,'#271e19',4);l(36,22,38,61,'#a37b49',2);r(34,20,5,3,'#8eb2bf');r(35,21,3,1,'#e3e0cb');
+  }else if(c.weapon==='bow'){
+    l(37,27,39,57,'#6a4329',2);l(36,27,38,57,'#d3c3a0',1);r(35,29,3,2,'#6a4329');r(38,53,3,2,'#6a4329');
+  }
+  // Small metal glints and pixel contours finish the sprite.
+  r(19,27,2,1,'#d4c7af');r(25,31,1,2,'#d4c7af');r(21,34,2,1,'#aeb0ae');
+  $('previewName').textContent=c.name||t('empty');$('previewCaption').textContent=t('preview');
 }
 function confirmCreator(){
  const input=$('characterName');const name=(input.value||'').trim().slice(0,16);
