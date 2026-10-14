@@ -1275,7 +1275,7 @@ function drawNamedNPC(x,y,shirt,skin,hat,prop){
 const NPC_APPEARANCES={
  mara:{name:'Mara',gender:'feminino',outfit:'mage',cloak:'ivory',hair:'silver',skin:'olive',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'staff',outfitColor:'default',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
  ivo:{name:'Ivo',gender:'masculino',outfit:'noble',cloak:'red',hair:'brown',skin:'warm',hairstyle:'medium',headwear:'none',accessory:'necklace',weapon:'none',outfitColor:'crimson',faceShape:'round',eyeColor:'brown',facialHair:'mustache'},
- toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
+ toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'none',accessory:'none',weapon:'none',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
  elira:{name:'Elira',gender:'feminino',outfit:'ranger',cloak:'green',hair:'red',skin:'pale',hairstyle:'braids',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'emerald',faceShape:'oval',eyeColor:'green',facialHair:'none'},
  brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'blue',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hood',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
  sabela:{name:'Sabela',gender:'feminino',outfit:'noble',cloak:'red',hair:'black',skin:'warm',hairstyle:'long',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'crimson',faceShape:'oval',eyeColor:'brown',facialHair:'none'},
@@ -1751,7 +1751,7 @@ function drawBrumaforteMap(){
   // Creatures, NPCs and player remain on their original interaction coordinates.
   for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);}
   drawNPCActor('mara',230,333,'none');drawNPCActor('ivo',350,333,'tray');
-  NPC_APPEARANCES.toren.weapon='none';drawNPCActor('toren',747,315,'hammer');
+  drawNPCActor('toren',747,315,'hammer');
   drawNPCActor('elira',455,456,'basket');
   drawNPCActor('brann',248,452,'rod');
   drawNPCActor('sabela',565,315,'tray');
@@ -1861,7 +1861,7 @@ function drawForestMap(){
   text('BOSQUE VELADO',18,164,12,'#f0e8bd');
   drawNPCName('LIORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN',315,393,g.sideQuests.arven);
   text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
-  text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
+  const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
  }
  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
@@ -1893,7 +1893,7 @@ function drawLakeMap(){
  drawNPCActor('yara',270,419,'none');drawNPCActor('neris',457,388,'none');
  if(gameSettings.showLabels){
   text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA',270,357,g.sideQuests.yara);text('NERIS',457,326,8,'#f7f1c9','center');
-  text('ATRACADOURO',622,318,8,'#f8e8b7','center');text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
+  text('ATRACADOURO',622,318,8,'#f8e8b7','center');const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
  }
  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
