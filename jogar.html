@@ -1712,7 +1712,7 @@ function drawNameplate(name,x,y,color='#f5edc5',size=9){
 function drawNPCName(name,x,y,status){
  if(!gameSettings.showLabels)return;
  const color=status==='complete'?'#b6e68a':status==='active'?'#ffd06b':'#f5edc5';
- const width=drawNameplate(name,x,y+13,color,8.5);
+ const width=drawNameplate(name,x,y+19,color,8.5);
  if(status&&status!=='none')drawNameplate(status==='complete'?'✓':status==='active'?'!':'?',x+width/2+9,y-17,color,8.5);
 }
 
@@ -1999,7 +1999,7 @@ function drawPlayer(x,y,rawAppearance,motion){
  if(!drawPlayer.poseCache)drawPlayer.poseCache=new Map();
  const poseKey=cacheKey+'|'+dir+'|'+(moving?'walk'+step:'idle');let pose=drawPlayer.poseCache.get(poseKey);
  if(!pose){pose=buildAnimatedPlayerFrame(sprite,a,dir,step,moving);drawPlayer.poseCache.set(poseKey,pose);if(drawPlayer.poseCache.size>220)drawPlayer.poseCache.delete(drawPlayer.poseCache.keys().next().value);}
- const height=38,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
+ const height=32,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
  const dx=Math.round(x-width/2),dy=Math.round(y-height+bob);ctx.save();ctx.imageSmoothingEnabled=false;
  if(dir==='left'){ctx.translate(dx+width,dy);ctx.scale(-1,1);ctx.drawImage(pose,0,0,width,height);}
  else ctx.drawImage(pose,dx,dy,width,height);
@@ -2180,7 +2180,7 @@ function drawBrumaforteMap(){
     drawNPCName('ELIRA · HERBORISTA',455,393,g.sideQuests.elira);
     drawNPCName('BRANN · PESCADOR',248,389,g.sideQuests.brann);
     drawNPCName('SABELA · ESTALAJADEIRA',565,252,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
-    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-48,'#f4d49a',8);
+    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-42,'#f4d49a',8);
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
@@ -2422,7 +2422,7 @@ function drawAction(){
   drawFieldCreature(x,m.y,m);
  }
  drawPlayer(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
- drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-48,'#f2d49a',8);
+ drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-42,'#f2d49a',8);
  text('MINA ANTIGA',18,190,10,'#e5e7bb');
  rect(790,186,150,32,'#1c3336');rect(799,199,132,5,'#3b5149');rect(799,199,Math.max(3,(p.x/worldW)*132),5,'#d6be71');text('MAPA DA MINA',799,195,8,'#e3dfad');
 }
