@@ -149,7 +149,17 @@ A direção ativa agora é exploração top-down, personagens pequenos em pixel 
 A equipe e as capturas são guardadas no salvamento local, e os saves antigos são migrados para um parceiro inicial quando necessário. O criador de personagem também foi refeito para combinar com a arte de portátil: roupas simples, boné e acessórios discretos, prévia pixelada e uma interface verde-clara em blocos. A sintaxe JavaScript foi verificada; ainda é necessário testar a experiência completa no navegador em desktop e celular. Este protótipo continua single-player e local: contas partilhadas, troca entre pessoas e estado sincronizado exigem backend.
 
 
-## Reboot 3.0 — personagens portáteis e exploração 16-bit
+## Reboot 3.0 — sprites portáteis e visual clássico
+
+A atualização consolida a identidade visual da aventura:
+
+- **Protagonista em quatro direções:** sprite compacto de 16×24 pixels, ciclo de caminhada curto, roupa casual, cabelo, tom de pele e acessórios.
+- **NPCs na mesma escala:** moradores usam o mesmo sistema de desenho e têm paletas próprias, pequenos acessórios e objetos de profissão.
+- **Criador de personagem alinhado:** prévia em sprite 16-bit, roupas identificadas como peças cotidianas (jaqueta, uniforme, camiseta, colete e roupa de trilha) e controles visuais na mesma paleta verde-clara.
+- **Exploração portátil:** movimento sem diagonal, caminhos e árvores em blocos, bússola e áreas externas/mina com cores mais claras.
+- **Jogo permanece uma aventura de criaturas:** Folhote, Braseco, Gotil, captura, equipe, encontros por turnos e a história econômica de Brumaforte continuam. Não há uso de sprites ou personagens de Pokémon; a referência é apenas a linguagem geral dos portáteis clássicos.
+
+Sintaxe e estrutura foram verificadas estaticamente. A experiência publicada ainda precisa ser testada em uma sessão completa no navegador.
 
 Esta atualização reforça a direção de aventura vista de cima inspirada nos jogos portáteis clássicos, usando arte original do projeto:
 
