@@ -104,7 +104,7 @@ Brumaforte agora tem quatro moradores adicionais com aparência, nome e função
 Também foi desenhada uma estalagem de telhado vermelho, uma cabana de madeira, caminhos de acesso, placas e colisões para as construções. Os estados das três missões secundárias são gravados no save local e retrocompatíveis com jornadas anteriores. Os materiais das profissões continuam no armazenamento local do espaço de salvamento; estes sistemas ainda não são sincronizados entre jogadores.
 
 
-## Reboot 1.0 — mundo, evolução e histórias
+## Histórico: Reboot 1.0 — mundo, evolução e histórias (direção substituída pelo Reboot 2.0)
 
 O cliente recebeu uma grande atualização local:
 - **Duas regiões novas:** Bosque Velado e Lago Silencioso, cada uma com cenário, caminhos, água, segredos e moradores próprios. O mapa do mundo abre com o botão **Regiões** ou pela tecla **G**; o progresso do personagem libera o acesso.
