@@ -668,6 +668,8 @@ function beginCreator(slot,mode){
  const record=readSlot(slot);
  creatorDraft=mode==='edit'&&record&&record.character?Object.assign(defaultCharacter(),record.character):defaultCharacter();
   if(creatorDraft.outfit==='none'||!OUTFITS[creatorDraft.outfit])creatorDraft.outfit='traveler';
+  if(!['none','cap','hood','circlet'].includes(creatorDraft.headwear))creatorDraft.headwear='none';
+  creatorDraft.weapon='none';
  const storedGender=String(creatorDraft.gender||'masculino').trim().toLowerCase();
  creatorDraft.gender=['feminino','female','woman','mulher','f'].includes(storedGender)?'feminino':'masculino';
  if(creatorDraft.gender==='feminino'){creatorDraft.facialHair='none';if(creatorDraft.faceShape==='angular')creatorDraft.faceShape='oval';}
