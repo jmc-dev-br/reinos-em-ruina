@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="540" viewBox="0 0 1880 540">
+<defs>
+ <linearGradient id="floor" x2="0" y2="1"><stop stop-color="#799a67"/><stop offset=".58" stop-color="#52764a"/><stop offset="1" stop-color="#38583e"/></linearGradient>
+ <linearGradient id="path" x2="0" y2="1"><stop stop-color="#e0cc9b"/><stop offset="1" stop-color="#9b855d"/></linearGradient>
+ <linearGradient id="stone" x2="0" y2="1"><stop stop-color="#a5aa8f"/><stop offset="1" stop-color="#5e7162"/></linearGradient>
+ <radialGradient id="light"><stop stop-color="#f8d77d" stop-opacity=".45"/><stop offset="1" stop-color="#f8d77d" stop-opacity="0"/></radialGradient>
+ <pattern id="groundTexture" width="51" height="41" patternUnits="userSpaceOnUse"><path d="M5 14l4 -3m28 20l5 -4m-14 -19l3 -3" fill="none" stroke="#c0ca91" stroke-width="1.5" opacity=".22"/><circle cx="20" cy="9" r="1.5" fill="#c9cf9a" opacity=".25"/></pattern>
+ <g id="pillar"><ellipse cx="0" cy="46" rx="49" ry="13" fill="#1a2c25" opacity=".35"/><path d="M-39 41L-34 2H34L39 41Z" fill="#344d43"/><path d="M-32 36L-29 8H29L32 36Z" fill="url(#stone)"/><path d="M-42 4L-36 -9H36L42 4L35 10H-35Z" fill="#7e8872" stroke="#3d5349" stroke-width="4"/><path d="M-36 4H36M-30 15H30M-33 27L-15 25M13 31L29 29" stroke="#c6c6a1" stroke-width="3" opacity=".8"/><path d="M-9 8L-12 38M19 9L17 35" stroke="#4a5b4e" stroke-width="3"/></g>
+ <g id="crystal"><path d="M0 -19L12 -3L8 18L-7 19L-13 0Z" fill="#63b6b6" stroke="#315a59" stroke-width="3"/><path d="M0 -15L2 1L-6 15L-7 0Z" fill="#c5edcf"/><path d="M3 -10L9 -2L6 13L0 2Z" fill="#86d8d4"/></g>
+</defs>
+<rect width="1880" height="540" fill="url(#floor)"/><rect width="1880" height="540" fill="url(#groundTexture)"/>
+<!-- broad winding stone path -->
+<path d="M-40 359C245 311 440 388 670 356S1050 337 1255 359S1570 388 1920 342" fill="none" stroke="#304d3d" stroke-width="138" opacity=".72"/><path d="M-40 352C245 304 440 381 670 349S1050 330 1255 352S1570 381 1920 335" fill="none" stroke="url(#path)" stroke-width="116"/><path d="M-40 352C245 304 440 381 670 349S1050 330 1255 352S1570 381 1920 335" fill="none" stroke="#eadbb0" stroke-width="2" stroke-dasharray="12 24" opacity=".42"/>
+<!-- ancient stone ruins and layered columns -->
+<g transform="translate(215 188)"><use href="#pillar"/><use href="#pillar" x="57" y="4"/><use href="#pillar" x="114" y="-1"/><path d="M-50 3H171L153 -19H-32Z" fill="#61756a" stroke="#334f43" stroke-width="5"/><path d="M-33 -14H153M-12 -20H137" stroke="#bbc3a0" stroke-width="4"/></g>
+<g transform="translate(682 224)"><use href="#pillar"/><use href="#pillar" x="45" y="-4"/></g>
+<g transform="translate(1205 445)"><use href="#pillar"/><use href="#pillar" x="58" y="-10"/></g>
+<g transform="translate(1668 218)"><use href="#pillar"/><use href="#pillar" x="58" y="1"/></g>
+<!-- rocks and ferns -->
+<g fill="#5e7256" stroke="#a0a987" stroke-width="2"><path d="M121 460l7 -19l14 -5l12 10l-3 16Z"/><path d="M477 493l5 -17l16 -7l12 12l-5 15Z"/><path d="M858 180l10 -19l14 1l8 15l-5 12Z"/><path d="M977 467l6 -17l16 -3l12 14l-3 14Z"/><path d="M1418 174l8 -20l15 -3l10 13l-4 16Z"/></g>
+<g fill="none" stroke-linecap="round"><path d="M94 240l-10 -30m12 28l13 -35m-12 38l23 -23m-20 25l-1 -42M451 460l-10 -30m12 28l13 -35m-12 38l23 -23m-20 25l-1 -42M1003 246l-10 -30m12 28l13 -35m-12 38l23 -23m-20 25l-1 -42M1463 438l-10 -30m12 28l13 -35m-12 38l23 -23m-20 25l-1 -42" stroke="#336f41" stroke-width="5"/><path d="M94 221l-1 -10m16 11l4 -12m-7 18l12 -7M451 441l-1 -10m16 11l4 -12m-7 18l12 -7M1003 227l-1 -10m16 11l4 -12m-7 18l12 -7M1463 419l-1 -10m16 11l4 -12m-7 18l12 -7" stroke="#91b96b" stroke-width="4"/></g>
+<!-- glowing crystals and lamps -->
+<g><use href="#crystal" x="330" y="283"/><use href="#crystal" x="812" y="397" transform="translate(812 397) scale(1.3) translate(-812 -397)"/><use href="#crystal" x="1390" y="281"/><use href="#crystal" x="1775" y="405"/></g>
+<g><ellipse cx="260" cy="239" rx="92" ry="85" fill="url(#light)"/><ellipse cx="790" cy="239" rx="92" ry="85" fill="url(#light)"/><ellipse cx="1320" cy="239" rx="92" ry="85" fill="url(#light)"/><ellipse cx="1760" cy="239" rx="92" ry="85" fill="url(#light)"/></g>
+<g transform="translate(260 235)"><path d="M-7 28V-6H7V28Z" fill="#72513b"/><path d="M-11 -4H11V2H-11Z" fill="#b7a073"/><path d="M-8 -7L0 -19L8 -7Z" fill="#dbb46a"/><circle cy="-8" r="6" fill="#ffe4a1"/><circle cy="-8" r="18" fill="#f8d77d" opacity=".18"/></g>
+<g transform="translate(790 235)"><path d="M-7 28V-6H7V28Z" fill="#72513b"/><path d="M-11 -4H11V2H-11Z" fill="#b7a073"/><path d="M-8 -7L0 -19L8 -7Z" fill="#dbb46a"/><circle cy="-8" r="6" fill="#ffe4a1"/><circle cy="-8" r="18" fill="#f8d77d" opacity=".18"/></g>
+<g transform="translate(1320 235)"><path d="M-7 28V-6H7V28Z" fill="#72513b"/><path d="M-11 -4H11V2H-11Z" fill="#b7a073"/><path d="M-8 -7L0 -19L8 -7Z" fill="#dbb46a"/><circle cy="-8" r="6" fill="#ffe4a1"/><circle cy="-8" r="18" fill="#f8d77d" opacity=".18"/></g>
+<g transform="translate(1760 235)"><path d="M-7 28V-6H7V28Z" fill="#72513b"/><path d="M-11 -4H11V2H-11Z" fill="#b7a073"/><path d="M-8 -7L0 -19L8 -7Z" fill="#dbb46a"/><circle cy="-8" r="6" fill="#ffe4a1"/><circle cy="-8" r="18" fill="#f8d77d" opacity=".18"/></g>
+<!-- distant entrance and ledger altar -->
+<g transform="translate(80 347)"><ellipse cy="33" rx="37" ry="10" fill="#173b2b" opacity=".4"/><path d="M-27 31V-9Q-27 -28 0 -28Q27 -28 27 -9V31Z" fill="#263d35" stroke="#536e59" stroke-width="6"/><path d="M-16 31V-8Q-16 -18 0 -18Q16 -18 16 -8V31Z" fill="#1e5c58"/><path d="M-7 28V-6H7V28Z" fill="#87c8b0"/><path d="M-33 -12H33M-25 -29H25" stroke="#c7b68b" stroke-width="7"/></g>
+<g transform="translate(1780 362)"><ellipse cy="23" rx="46" ry="12" fill="#19372d" opacity=".35"/><path d="M-38 25H38L31 11H-31Z" fill="#58675c" stroke="#2f4a3c" stroke-width="4"/><path d="M-26 10H26L20 -3H-20Z" fill="#887d5e"/><path d="M-19 -4L-15 -22H15L19 -4Z" fill="#a99b73" stroke="#5c604c" stroke-width="3"/><path d="M-22 -22H22" stroke="#d8c99a" stroke-width="4"/><circle cy="-29" r="8" fill="#70c5b4"/><circle cy="-29" r="3" fill="#e2fff0"/></g>
+<rect width="1880" height="540" fill="#132d21" opacity=".045"/>
+</svg>
