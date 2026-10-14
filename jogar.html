@@ -181,7 +181,7 @@ body{position:fixed;inset:0}
       <button class="btn" id="potionBtn">✚ Usar poção <span class="kbd">H</span></button>
       <button class="btn" id="saveBtn">↓ Salvar</button>
       <button class="btn" id="loadBtn">↑ Carregar save</button><input id="loadFile" type="file" accept="application/json,.json" hidden />
-      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="dailyBtn" title="Recompensa de entrada diária">🎁 Diário</button><button class="btn" id="professionsBtn" title="Coletar e fabricar recursos">⚒ Profissões</button><button class="btn" id="achievementsBtn" title="Ver conquistas do aventureiro">🏅 Conquistas</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
+      <button class="btn" id="activityBtn" title="Escolher atividade para o tempo longe do jogo">⌛ Atividade</button><button class="btn" id="dailyBtn" title="Recompensa de entrada diária">🎁 Diário</button><button class="btn" id="professionsBtn" title="Coletar e fabricar recursos">⚒ Profissões</button><button class="btn" id="achievementsBtn" title="Ver conquistas do aventureiro">🏅 Conquistas</button><button class="btn" id="characterBtn" title="Atributos e talentos do herói">✦ Personagem</button><button class="btn" id="resetBtn">↻ Reiniciar</button><button class="btn" id="menuBtn" title="Abrir controles e configurações">☰ Menu <span class="kbd">Esc</span></button>
     </div>
     <div class="mobilehelp" aria-label="Controles de toque">
       <button class="btn" data-hold="ArrowLeft">←</button><button class="btn" data-hold="ArrowUp">↑ / pular</button><button class="btn" data-hold="ArrowDown">↓</button><button class="btn" data-hold="ArrowRight">→</button><button class="btn" id="mobileAttack">⚔ Ataque</button><button class="btn" id="mobileInteract">✦ Usar</button>
@@ -403,7 +403,7 @@ function stopAmbientMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=
 function playFirstInteractionAudio(){if(gameSettings.soundEnabled){getAudioContext();if(gameSettings.musicEnabled)startAmbientMusic();}}
 document.addEventListener('pointerdown',playFirstInteractionAudio,{passive:true});
 
-const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:330,y:367,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -417,15 +417,16 @@ let modalType=null;
 function notify(text,duration=3.2){const t=$('toast');t.textContent=text;t.classList.add('show');g.toastTimer=duration;}
 function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(80,Math.min(880,g.mapPlayer.x)):128; $('sceneTitle').textContent='BRUMAFORTE · VILA INICIAL';$('sceneSub').textContent='Explore, converse e descubra o caminho para as ruínas.';$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4); updateUI();}
 function xpToNext(){return g.level*100;}
-function addXP(n){g.xp+=n;let leveled=false;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);leveled=true;}if(leveled)notify(`NÍVEL ${g.level}! Vida máxima aumentou e você recuperou um pouco de vida.`,4);}
+function addXP(n){g.xp+=n;let levels=0;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);g.attributePoints=(g.attributePoints||0)+1;g.skillPoints=(g.skillPoints||0)+1;levels++;}if(levels){playSfx('win');notify(`NÍVEL ${g.level}! +${levels} ponto(s) de atributo e talento. Abra Personagem para evoluir.`,4.5);persistProgress();}}
 function allMobs(){return g.scene==='map'?g.slimes:g.ruinMobs;}
 function attack(){
  if(g.attackCD>0)return;g.attackCD=.3;
  const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;
  for(const mob of allMobs()){if(!mob.alive)continue;const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}
  if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);playSfx('ui');return;}
- target.hp=(target.hp===undefined?1:target.hp)-35;
- spawnCombatText('-35',target.x,target.y-22,'#ff8e75');playSfx('hit');triggerScreenShake(target.hp<=0?5:2.2,target.hp<=0?.2:.11);
+ const damage=35+Math.max(0,(g.attributes?.strength||1)-1)*4+Math.max(0,(g.skillRanks?.powerStrike||0))*3;
+ target.hp=(target.hp===undefined?1:target.hp)-damage;
+ spawnCombatText('-'+damage,target.x,target.y-22,'#ff8e75');playSfx('hit');triggerScreenShake(target.hp<=0?5:2.2,target.hp<=0?.2:.11);
  if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}
  target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;spawnCombatText('+'+target.xp+' XP',target.x,target.y-38,'#f2d16f');spawnCombatText('+3 cobre',target.x,target.y-51,'#9fe28f');playSfx('coin');addXP(0);
  notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);
@@ -753,10 +754,10 @@ function playTacticalCard(id){
  const card=cards[id];if(!card||b.energy<card.cost)return;
  if(id==='potion'&&(g.potions<1||g.hp>=g.maxHp)){notify(g.potions<1?'Você não tem poções.':'Sua vida já está cheia.',2);renderTacticalBattle();return;}
  b.energy-=card.cost;
- if(id==='quick'){b.enemyHp-=12;b.log='Golpe preciso: 12 de dano por 1 energia.';spawnCombatText('-12',b.mob.x,b.mob.y-24,'#ffb27e');playSfx('hit');triggerScreenShake(2.4,.12);}
- else if(id==='heavy'){b.enemyHp-=24;b.log='Estocada pesada: 24 de dano por 2 energias.';spawnCombatText('-24!',b.mob.x,b.mob.y-30,'#ffd06d');playSfx('hit');triggerScreenShake(5,.2);}
- else if(id==='guard'){b.block+=15;b.log='Guarda de pedra: até 15 pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
- else if(id==='potion'){g.potions--;const healed=Math.min(30,g.maxHp-g.hp);g.hp+=healed;spawnCombatText('+'+healed+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-40,'#7ee59d');playSfx('heal');b.log='Poção: você recuperou '+healed+' pontos de vida.';}
+ if(id==='quick'){const damage=12+Math.max(0,(g.attributes?.strength||1)-1)*2+Math.max(0,g.skillRanks?.powerStrike||0)*3;b.enemyHp-=damage;b.log='Golpe preciso: '+damage+' de dano por 1 energia.';spawnCombatText('-12',b.mob.x,b.mob.y-24,'#ffb27e');playSfx('hit');triggerScreenShake(2.4,.12);}
+ else if(id==='heavy'){const damage=24+Math.max(0,(g.attributes?.strength||1)-1)*3+Math.max(0,g.skillRanks?.powerStrike||0)*4;b.enemyHp-=damage;b.log='Estocada pesada: '+damage+' de dano por 2 energias.';spawnCombatText('-24!',b.mob.x,b.mob.y-30,'#ffd06d');playSfx('hit');triggerScreenShake(5,.2);}
+ else if(id==='guard'){const guard=15+Math.max(0,(g.attributes?.defense||1)-1)*3+Math.max(0,g.skillRanks?.stoneGuard||0)*4;b.block+=guard;b.log='Guarda de pedra: até '+guard+' pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
+ else if(id==='potion'){g.potions--;const healed=Math.min(30+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4,g.maxHp-g.hp);g.hp+=healed;spawnCombatText('+'+healed+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-40,'#7ee59d');playSfx('heal');b.log='Poção: você recuperou '+healed+' pontos de vida.';}
  b.mob.hp=Math.max(0,b.enemyHp);
  if(b.enemyHp<=0){finishTacticalVictory();return;}
  updateUI();renderTacticalBattle();
@@ -764,8 +765,10 @@ function playTacticalCard(id){
 function endTacticalTurn(){
  const b=tacticalBattle;if(!b||b.finished)return;
  const raw=8+Math.floor(Math.random()*7)+(b.turn>3?2:0);
- const damage=Math.max(0,raw-b.block);b.block=0;g.hp=Math.max(0,g.hp-damage);
- b.log=(b.mob.name||'A criatura')+' atacou: '+damage+' de dano após bloqueio.';
+ const defense=Math.max(0,(g.attributes?.defense||1)-1)*2;
+ const enraged=!!b.mob.boss&&b.enemyHp<=b.enemyMax*.45;
+ const damage=Math.max(0,raw+ (b.mob.boss?4:0)+(enraged?6:0)-defense-b.block);b.block=0;g.hp=Math.max(0,g.hp-damage);
+ b.log=(b.mob.name||'A criatura')+(enraged?' entrou em FÚRIA e atacou: ':' atacou: ')+damage+' de dano após bloqueio.';
  if(g.hp<=0){finishTacticalDefeat();return;}
  b.turn++;b.energy=3;updateUI();persistProgress();renderTacticalBattle();
 }
@@ -943,9 +946,9 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function usePotion(){
  if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}
  if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
- g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
+ g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
 }
-function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
  try{
   const data=saveData();
@@ -971,7 +974,20 @@ function normalizeSave(d){
  const merged=Object.assign(defaults,d);
  merged.character=normalizeAppearance(d.character||defaults.character);
  merged.economy=Object.assign({},defaults.economy,d.economy||{});
- merged.sideQuests=Object.assign({toren:'locked',elira:'locked',brann:'locked'},d.sideQuests||{});
+ merged.region=['brumaforte','bosque','lago'].includes(d.region)?d.region:'brumaforte';
+ merged.attributes=Object.assign({},defaults.attributes,d.attributes||{});
+ merged.skillRanks=Object.assign({},defaults.skillRanks,d.skillRanks||{});
+ merged.attributePoints=Math.max(0,Number(d.attributePoints)||0);merged.skillPoints=Math.max(0,Number(d.skillPoints)||0);
+ merged.worldClock=Object.assign({},defaults.worldClock,d.worldClock||{});
+ merged.worldClock.minuteOfDay=((Number(merged.worldClock.minuteOfDay)||480)%1440+1440)%1440;
+ merged.worldClock.totalMinutes=Math.max(0,Number(merged.worldClock.totalMinutes)||0);
+ merged.weatherState=Object.assign({},defaults.weatherState,d.weatherState||{});
+ if(!['clear','rain','leaves','fog'].includes(merged.weatherState.kind))merged.weatherState.kind='clear';
+ merged.weatherState.remaining=Math.max(5,Number(merged.weatherState.remaining)||75);
+ merged.regionMobs=Object.assign({},defaults.regionMobs,d.regionMobs||{});
+ for(const zone of ['bosque','lago'])if(!Array.isArray(merged.regionMobs[zone]))merged.regionMobs[zone]=defaults.regionMobs[zone];
+ merged.storyFlags=Object.assign({},defaults.storyFlags,d.storyFlags||{});
+ merged.sideQuests=Object.assign({toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},d.sideQuests||{});
  if(!d.questVersion){
   if(merged.economy.decision>0){merged.questStep=5;merged.questRewarded=true;merged.ledgerFound=true;}
   else if(merged.questStep===3&&merged.questRewarded){merged.questStep=4;merged.ledgerFound=true;}
