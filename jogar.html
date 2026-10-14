@@ -158,6 +158,13 @@ body{position:fixed;inset:0}
 .dialogue-portrait-fallback{width:48px;height:72px;display:grid;place-items:center;background:#344635;color:#e5cf8c;font-size:22px;flex:0 0 48px}
 .dialogue-personality-copy{min-width:0}.dialogue-personality-copy strong{display:block;color:#ecd7a0;font-size:12px}.dialogue-personality-copy small{display:block;color:#c3d1b5;font-size:10px;line-height:1.4;margin-top:4px}.dialogue-personality-copy p{color:#91a48d;font-size:10px;line-height:1.45;margin:5px 0 0}
 
+
+.region-card{display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center;width:100%;padding:10px;margin:7px 0;text-align:left;background:#17221a;border:1px solid #40563b;color:#e7edcf;border-radius:3px}
+.region-card.current{border-color:#d6bc75;background:#202a1d}.region-card:disabled{opacity:.5;cursor:not-allowed}
+.region-art{height:62px;display:grid;place-items:center;border:1px solid #60764e;font-size:28px;image-rendering:pixelated}
+.region-brumaforte{background:linear-gradient(135deg,#69985b,#c4c78b)}.region-bosque{background:linear-gradient(135deg,#1e4738,#6f8a50)}.region-lago{background:linear-gradient(135deg,#274e62,#6ba29a)}
+.region-copy{min-width:0}.region-copy strong{display:block;font-size:12px;color:#e9d69d}.region-copy small{display:block;font-size:10px;line-height:1.4;color:#aebea4;margin:4px 0}.region-copy em{font-style:normal;font-size:9px;color:#9dbe80}.region-arrow{font-size:18px;color:#dfc478}
+
 </style>
 </head>
 <body>
@@ -427,7 +434,7 @@ function stopAmbientMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=
 function playFirstInteractionAudio(){if(gameSettings.soundEnabled){getAudioContext();if(gameSettings.musicEnabled)startAmbientMusic();}}
 document.addEventListener('pointerdown',playFirstInteractionAudio,{passive:true});
 
-const originalState=()=>({character:defaultAppearance(),scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:330,y:367,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
+const originalState=()=>({character:defaultAppearance(),scene:'map',region:'brumaforte',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,attributePoints:0,skillPoints:0,attributes:{strength:1,defense:1,vitality:1,wisdom:1},skillRanks:{powerStrike:0,stoneGuard:0,fieldMedic:0},worldClock:{minuteOfDay:480,totalMinutes:0},weatherState:{kind:'clear',remaining:75},regionMobs:{bosque:[{x:820,y:350,alive:true,name:'Lobo da Névoa',xp:130,hp:140,maxHp:140,type:'mistwolf',boss:true,revealed:false},{x:610,y:310,alive:true,name:'Limo Musgoso',xp:32,hp:32,type:'slime'}],lago:[{x:760,y:353,alive:true,name:'Leviatã de Vidro',xp:190,hp:190,maxHp:190,type:'leviathan',boss:true,revealed:false},{x:560,y:300,alive:true,name:'Sombra Salina',xp:38,hp:38,type:'slime'}]},storyFlags:{forestLore:false,lakeLore:false},coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],sideQuests:{toren:'locked',elira:'locked',brann:'locked',liora:'locked',yara:'locked'},slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:115,hp:125,maxHp:125,type:'knight',boss:true,phase:1}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
 const lessons=[
  {tag:'LIÇÃO 01 / FUNDAMENTOS',title:'O que é dinheiro?',body:'Dinheiro é uma ferramenta de troca, unidade de conta e forma de guardar valor. No Brasil, o real (BRL) é a moeda oficial. No reino, cobre, prata e ouro são moedas fictícias criadas apenas para esta aventura.',tip:'Uma moeda não vale só pelo material: a confiança nas regras e no sistema também importa.'},
@@ -439,10 +446,14 @@ const lessons=[
 ];
 let modalType=null;
 function notify(text,duration=3.2){const t=$('toast');t.textContent=text;t.classList.add('show');g.toastTimer=duration;}
-function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(80,Math.min(880,g.mapPlayer.x)):128; $('sceneTitle').textContent='BRUMAFORTE · VILA INICIAL';$('sceneSub').textContent='Explore, converse e descubra o caminho para as ruínas.';$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4); updateUI();}
+function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=scene==='map'?Math.max(18,Math.min(942,g.mapPlayer.x)):128;const zone=REGION_META[g.region]||REGION_META.brumaforte;$('sceneTitle').textContent=zone.title;$('sceneSub').textContent=zone.subtitle;$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='RUÍNAS DA MOEDA PARTIDA';$('sceneSub').textContent='Combate lateral · pule plataformas, lute e procure os antigos registros.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à visão de cima.':'Você entrou nas ruínas em visão lateral.',2.4);updateUI();}
 function xpToNext(){return g.level*100;}
 function addXP(n){g.xp+=n;let levels=0;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);g.attributePoints=(g.attributePoints||0)+1;g.skillPoints=(g.skillPoints||0)+1;levels++;}if(levels){playSfx('win');notify(`NÍVEL ${g.level}! +${levels} ponto(s) de atributo e talento. Abra Personagem para evoluir.`,4.5);persistProgress();}}
-function allMobs(){return g.scene==='map'?g.slimes:g.ruinMobs;}
+function allMobs(){
+ if(g.scene!=='map')return g.ruinMobs;
+ const mobs=regionMobList(g.region);
+ return mobs.filter(m=>m.alive&&m.revealed!==false);
+}
 function attack(){
  if(g.attackCD>0)return;g.attackCD=.3;
  const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;
@@ -491,6 +502,18 @@ function interact(){
  if(modalType)return;
  if(g.scene==='map'){
   const p=g.mapPlayer;
+  if(g.region==='bosque'){
+   if(Math.hypot(p.x-180,p.y-366)<70){talkLiora();return;}
+   if(Math.hypot(p.x-315,p.y-455)<70){talkArven();return;}
+   const boss=currentRegionBoss('bosque');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<64){openDialogue('Lobo da Névoa','A criatura rosna com a voz de alguém que você conhece. Não é uma fala — é uma armadilha.','Chegue perto e use J para atacar ou Cartas táticas para preparar a defesa.');return;}
+   notify('Siga as trilhas e converse com Liora ou Arven. O altar fica no leste.',2.5);return;
+  }
+  if(g.region==='lago'){
+   if(Math.hypot(p.x-270,p.y-419)<72){talkYara();return;}
+   if(Math.hypot(p.x-457,p.y-388)<72){talkNeris();return;}
+   const boss=currentRegionBoss('lago');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<68){openDialogue('Leviatã de Vidro','A carapaça reflete golpes como espelhos. Entre cada investida, uma rachadura brilha por um instante.','Chegue perto e use J para atacar ou Cartas táticas; a criatura fica mais perigosa abaixo de metade da vida.');return;}
+   notify('Explore a margem e procure Yara ou Neris no atracadouro.',2.5);return;
+  }
   const dM=Math.hypot(p.x-230,p.y-333),dShop=Math.hypot(p.x-350,p.y-333),dGate=Math.hypot(p.x-850,p.y-325);
   const dToren=Math.hypot(p.x-747,p.y-315),dElira=Math.hypot(p.x-455,p.y-456),dBrann=Math.hypot(p.x-248,p.y-452),dSabela=Math.hypot(p.x-565,p.y-315);
   if(dM<65){talkMara();return;}
@@ -1467,7 +1490,7 @@ function drawPlayer(x,y,rawAppearance,motion){
  ctx.restore();
 }
 function drawSlime(x,y,color='#5d9d70',scale=1){rect(x-12*scale,y-6*scale,24*scale,13*scale,color);rect(x-8*scale,y-10*scale,16*scale,5*scale,color);rect(x-4*scale,y-13*scale,8*scale,4*scale,color);rect(x-6*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x+4*scale,y-7*scale,3*scale,3*scale,'#f0df9b');rect(x-9*scale,y+7*scale,5*scale,3*scale,'#2c5140');rect(x+4*scale,y+7*scale,5*scale,3*scale,'#2c5140');}
-function drawMap(){
+function drawBrumaforteMap(){
   // Brumaforte in classic handheld-RPG style: tile grass, chalk paths, tiny buildings and trees.
   const tile=16;
   const hash=(x,y)=>{const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n);};
@@ -1582,7 +1605,7 @@ function drawMap(){
   if(gameSettings.showLabels)text('RUÍNAS',854,270,9,'#39533b','center');
 
   // Creatures, NPCs and player remain on their original interaction coordinates.
-  for(const m of g.slimes)if(m.alive)drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);
+  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);}
   drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
   drawNPCActor('toren',747,315,'hammer');
   drawNPCActor('elira',455,456,'basket');
@@ -1599,6 +1622,192 @@ function drawMap(){
     text((g.character.name||'AVENTUREIRO').slice(0,18).toUpperCase(),g.mapPlayer.x,g.mapPlayer.y-42,7,'#f4f1c8','center');
   }
   const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+}
+
+
+const REGION_META={
+ brumaforte:{title:'BRUMAFORTE · VILA INICIAL',subtitle:'Acolha os rumores, ajude os moradores e prepare sua jornada.',name:'Brumaforte',unlock:'Sempre disponível',level:1,description:'Uma vila que tenta sobreviver à escassez e descobrir quem desviou os carregamentos.'},
+ bosque:{title:'BOSQUE VELADO · FRONTEIRA',subtitle:'A névoa imita vozes e as árvores escondem rastros antigos.',name:'Bosque Velado',unlock:'Nível 2 ou investigação avançada',level:2,description:'Trilhas esquecidas, um altar rachado e a criatura que aprendeu a usar vozes humanas.'},
+ lago:{title:'LAGO SILENCIOSO · MARÉ PRATEADA',subtitle:'Atracadouros apodrecidos e segredos que sobem das águas.',name:'Lago Silencioso',unlock:'Nível 4 ou capítulo I concluído',level:4,description:'Um lago que devolve objetos perdidos — e às vezes chama seus donos pelo nome.'}
+};
+function isRegionUnlocked(id){
+ if(id==='brumaforte')return true;
+ if(id==='bosque')return g.level>=2||g.questStep>=2;
+ if(id==='lago')return g.level>=4||g.questStep>=5;
+ return false;
+}
+function regionMobList(id){return id==='brumaforte'?g.slimes:(g.regionMobs&&g.regionMobs[id])||[];}
+function currentRegionBoss(id){return regionMobList(id).find(m=>m.boss)||null;}
+function drawWorldTree(x,y,scale=1,variant=0){
+ ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
+ ctx.fillStyle='#293d2e55';ctx.beginPath();ctx.ellipse(1,10,17,7,0,0,Math.PI*2);ctx.fill();
+ rect(-4,4,8,17,'#6c4b30');rect(-6,9,12,5,'#8a613a');
+ const dark=variant%2?'#243e31':'#2b4734',mid=variant%2?'#3e6641':'#426f43',light=variant%2?'#6d9650':'#77a45a';
+ rect(-13,-10,26,20,dark);rect(-9,-16,18,8,dark);rect(-17,-5,5,12,dark);rect(12,-6,5,13,dark);
+ rect(-10,-11,20,18,mid);rect(-7,-16,14,6,mid);rect(-9,-12,7,5,light);rect(1,-8,7,5,variant%2?'#5b8b49':'#5e9148');
+ rect(-13,-2,4,5,'#365b3a');rect(6,2,5,4,dark);
+ ctx.restore();
+}
+function drawMistWolfBoss(x,y,m){
+ const pulse=Math.sin(performance.now()/175)*1.5,scale=1.35;
+ rect(x-25,y+13,53,5,'#24362f65');
+ // Long shadow, four legs and a high-shouldered spectral wolf silhouette.
+ poly([[x-27,y-9],[x-18,y-22],[x-4,y-27],[x+13,y-23],[x+28,y-9],[x+23,y+6],[x+9,y+10],[x-13,y+8],[x-27,y+3]],'#20292b');
+ poly([[x-24,y-11],[x-17,y-21],[x-3,y-25],[x+13,y-21],[x+24,y-8],[x+20,y+3],[x+7,y+8],[x-12,y+6],[x-24,y+1]],'#607579');
+ poly([[x-11,y-22],[x-15,y-38],[x-3,y-29],[x+4,y-23]],'#293a3c');
+ poly([[x+8,y-23],[x+17,y-38],[x+19,y-20],[x+12,y-15]],'#293a3c');
+ poly([[x-9,y-20],[x-12,y-33],[x-4,y-27]],'#94aeb0');poly([[x+10,y-22],[x+15,y-32],[x+15,y-20]],'#94aeb0');
+ poly([[x+18,y-14],[x+31,y-10],[x+24,y+1],[x+11,y+1]],'#56696c');
+ rect(x+14,y-18+pulse,4,3,'#e1d78f');rect(x+22,y-15+pulse,4,3,'#e1d78f');
+ rect(x-20,y+1,5,13,'#2e3b3b');rect(x-5,y+4,5,13,'#354747');rect(x+10,y+4,5,13,'#354747');rect(x+21,y+1,5,13,'#2e3b3b');
+ for(let i=0;i<4;i++){const px=x-17+i*13,py=y-31-Math.sin(performance.now()/380+i*1.3)*5;rect(px,py,3,3,'#b0ccce88');}
+ drawBossBar(m,x,y-49,116);
+}
+function drawLeviathanBoss(x,y,m){
+ const pulse=Math.sin(performance.now()/230)*2;
+ ctx.save();ctx.fillStyle='#172a3466';ctx.beginPath();ctx.ellipse(x,y+12,42,15,0,0,Math.PI*2);ctx.fill();
+ poly([[x-38,y+3],[x-27,y-12],[x-13,y-22],[x+1,y-19],[x+20,y-29],[x+34,y-16],[x+28,y+2],[x+14,y+13],[x-12,y+13]],'#1c3f4d');
+ poly([[x-32,y],[x-24,y-11],[x-10,y-18],[x+2,y-15],[x+20,y-24],[x+29,y-13],[x+23,y],[x+10,y+8],[x-13,y+8]],'#4d8790');
+ poly([[x+14,y-23],[x+21,y-41],[x+28,y-22]],'#2a5865');
+ poly([[x-24,y-11],[x-39,y-25],[x-32,y-7]],'#2a5865');
+ rect(x+19,y-17+pulse,4,4,'#fae3a0');rect(x+27,y-14+pulse,3,3,'#e9be73');
+ for(let i=0;i<6;i++)line(x-24+i*8,y+9,x-25+i*8,y+15+Math.sin(performance.now()/200+i)*2,'#88bdc2',2);
+ ctx.restore();drawBossBar(m,x,y-48,110);
+}
+function drawBossBar(m,x,y,width=92){
+ const max=Math.max(1,m.maxHp||m.hp||100),hp=Math.max(0,m.hp??max);
+ rect(x-width/2-2,y-3,width+4,9,'#18211e');
+ rect(x-width/2,y,width,5,'#3f4540');
+ rect(x-width/2,y,width*Math.max(0,Math.min(1,hp/max)),5,'#c95d52');
+ text((m.name||'CHEFE').toUpperCase(),x,y-8,8,'#ffe0b0','center');
+}
+function drawWorldBoss(x,y,m){
+ if(m.type==='mistwolf')drawMistWolfBoss(x,y,m);
+ else if(m.type==='leviathan')drawLeviathanBoss(x,y,m);
+ else drawSlime(x,y,'#a4a58d',1.55);
+}
+function drawForestMap(){
+ const tile=16;
+ rect(0,0,W,H,'#54794a');
+ for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){
+  const n=rand01(Math.floor(x/tile)*41+Math.floor(y/tile)*73);
+  rect(x,y,tile,tile,n>.78?'#5d854f':n>.38?'#557a47':n>.15?'#4e7443':'#4a6d40');
+  if(n>.86){rect(x+3,y+4,2,4,'#91a866');rect(x+9,y+10,2,2,'#c1b876');}
+ }
+ // Forest trail, edged by roots and mossy stones.
+ ctx.save();ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#3d5038';ctx.lineWidth=72;ctx.beginPath();ctx.moveTo(-10,463);ctx.quadraticCurveTo(195,447,331,403);ctx.quadraticCurveTo(450,355,536,340);ctx.quadraticCurveTo(701,313,981,282);ctx.stroke();
+ ctx.strokeStyle='#b5a078';ctx.lineWidth=62;ctx.beginPath();ctx.moveTo(-10,463);ctx.quadraticCurveTo(195,447,331,403);ctx.quadraticCurveTo(450,355,536,340);ctx.quadraticCurveTo(701,313,981,282);ctx.stroke();
+ ctx.strokeStyle='#d0bd8f';ctx.lineWidth=49;ctx.beginPath();ctx.moveTo(-10,463);ctx.quadraticCurveTo(195,447,331,403);ctx.quadraticCurveTo(450,355,536,340);ctx.quadraticCurveTo(701,313,981,282);ctx.stroke();ctx.restore();
+ // A glade pool and a ribbon of water.
+ ctx.save();ctx.fillStyle='#304f3d';ctx.beginPath();ctx.ellipse(810,112,87,48,-.2,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#4f9090';ctx.beginPath();ctx.ellipse(810,108,77,39,-.2,0,Math.PI*2);ctx.fill();
+ for(let i=0;i<6;i++)line(760+i*15,105+Math.sin(visualFX.worldSeconds+i)*12,773+i*15,104+Math.sin(visualFX.worldSeconds+i)*12,'#91c2ad',1);
+ ctx.restore();
+ for(let x=-15;x<W+24;x+=39){drawWorldTree(x,42,.9,(Math.floor(x/39)+20)%2);drawWorldTree(x+14,522,.87,Math.floor(x/39)%2);}
+ for(const [x,y,z,v] of [[36,139,.86,0],[92,220,.78,1],[154,178,.82,0],[236,131,.74,1],[302,206,.84,0],[379,126,.78,1],[434,226,.72,0],[500,161,.78,1],[572,213,.84,0],[639,146,.75,1],[709,190,.79,0],[754,253,.78,1],[891,188,.85,0],[926,352,.82,1],[686,440,.8,0],[794,456,.88,1]])drawWorldTree(x,y,z,v);
+ // Forgotten shrine and warning stones.
+ poly([[696,160],[722,126],[752,160],[752,196],[696,196]],'#28362c');poly([[704,158],[724,135],[744,158],[744,191],[704,191]],'#7d8c6c');rect(717,169,14,22,'#314739');rect(720,171,8,20,'#243329');
+ for(const [x,y] of [[665,204],[682,211],[751,214],[777,205],[770,227]]){rect(x-5,y-4,11,8,'#5c6652');rect(x-2,y-6,4,3,'#969a76');}
+ // Moss, mushrooms and fireflies.
+ for(let i=0;i<25;i++){const x=24+rand01(i+7)*900,y=130+rand01(i+79)*365;rect(x,y,3,2,i%3===0?'#9cae65':'#789c58');}
+ for(let i=0;i<5;i++){const fx=128+i*164+Math.sin(visualFX.worldSeconds+i)*7,fy=176+Math.sin(visualFX.worldSeconds*1.4+i*2)*22;circle(fx,fy,2,'#e7dc86');}
+ for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*3+m.x)*2,'#779c66',1.15);}
+ drawNPCActor('liora',180,366,'staff');drawNPCActor('arven',315,455,'bow');
+ if(gameSettings.showLabels){
+  text('BOSQUE VELADO',18,164,12,'#f0e8bd');
+  drawNPCName('LIORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN',315,393,g.sideQuests.arven);
+  text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
+  text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
+ }
+ const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+}
+function drawLakeMap(){
+ const tile=16;
+ rect(0,0,W,H,'#88a76d');
+ for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){const n=rand01(Math.floor(x/tile)*29+Math.floor(y/tile)*57);rect(x,y,tile,tile,n>.65?'#90b777':n>.25?'#83ad70':'#7ca468');}
+ // Deep blue lake takes the right half of the map, with a stepped shoreline.
+ ctx.save();ctx.fillStyle='#234b50';ctx.beginPath();ctx.moveTo(558,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(523,H);ctx.lineTo(545,449);ctx.lineTo(590,378);ctx.lineTo(580,297);ctx.lineTo(612,228);ctx.lineTo(583,156);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#326c70';ctx.beginPath();ctx.moveTo(576,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(544,H);ctx.lineTo(566,442);ctx.lineTo(609,376);ctx.lineTo(600,300);ctx.lineTo(634,224);ctx.lineTo(602,155);ctx.closePath();ctx.fill();
+ for(let i=0;i<14;i++){const x=626+((visualFX.worldSeconds*18+i*37)%342),y=24+((i*47+Math.sin(visualFX.worldSeconds+i)*9)%482);line(x,y,x+7,y-1,'#78aa9f',1);line(x+3,y+3,x+12,y+2,'#4c8b86',1);}
+ ctx.restore();
+ // Sandy road and wooden pier.
+ ctx.save();ctx.lineCap='round';ctx.strokeStyle='#ac936a';ctx.lineWidth=54;ctx.beginPath();ctx.moveTo(-10,448);ctx.quadraticCurveTo(195,440,355,411);ctx.quadraticCurveTo(457,386,560,359);ctx.stroke();ctx.strokeStyle='#d5c294';ctx.lineWidth=42;ctx.beginPath();ctx.moveTo(-10,448);ctx.quadraticCurveTo(195,440,355,411);ctx.quadraticCurveTo(457,386,560,359);ctx.stroke();ctx.restore();
+ rect(548,328,160,26,'#5d482f');rect(554,332,150,18,'#906d45');for(let x=558;x<704;x+=14)line(x,333,x,350,'#4b3828',2);
+ rect(612,351,11,64,'#5d482f');rect(636,351,11,64,'#5d482f');rect(660,351,11,64,'#5d482f');
+ // Fishing hut, bell post and water reeds.
+ poly([[120,270],[150,235],[222,235],[253,270]],'#293c31');poly([[128,266],[154,242],[218,242],[245,266]],'#8b7651');
+ rect(132,268,108,48,'#b5ba86');rect(145,279,18,18,'#355858');rect(183,277,22,39,'#6a4e34');
+ rect(134,316,104,5,'#6a5338');
+ for(let i=0;i<16;i++){const x=558+i*22,y=380+(i%4)*26;line(x,y,x-2,y-10,'#507c52',2);line(x+2,y,x+5,y-12,'#67945a',2);}
+ for(let i=0;i<7;i++)drawWorldTree(-4+i*33,36,.82,i%2);
+ for(let i=0;i<8;i++)drawWorldTree(34+i*35,520,.78,i%2);
+ for(const [x,y,z,v] of [[52,152,.7,0],[287,164,.78,1],[357,236,.7,0],[431,142,.74,1],[477,281,.65,0],[365,489,.77,1],[463,471,.72,0]])drawWorldTree(x,y,z,v);
+ // A tide marker and driftwood make the coastline readable.
+ for(const [x,y] of [[526,300],[540,286],[560,275],[578,259],[595,241]]){circle(x,y,3,'#a1a586');circle(x-1,y-1,1,'#d1cc9c');}
+ rect(483,330,48,8,'#6e5135');rect(486,326,3,4,'#c4ad79');rect(521,326,3,4,'#c4ad79');
+ for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*2.8+m.x)*1.8,'#7b9d75',1.15);}
+ drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'bow');
+ if(gameSettings.showLabels){
+  text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA',270,357,g.sideQuests.yara);text('NERIS',457,326,8,'#f7f1c9','center');
+  text('ATRACADOURO',622,318,8,'#f8e8b7','center');text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
+ }
+ const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+}
+function drawMap(){if(g.region==='bosque')drawForestMap();else if(g.region==='lago')drawLakeMap();else drawBrumaforteMap();}
+function enterRegion(id){
+ if(!isRegionUnlocked(id)){const meta=REGION_META[id];notify('Região bloqueada: '+meta.unlock+'.',3.5);return;}
+ g.region=id;const spawns={brumaforte:{x:128,y:334},bosque:{x:78,y:446},lago:{x:88,y:450}};
+ g.mapPlayer.x=spawns[id].x;g.mapPlayer.y=spawns[id].y;g.scene='map';closeModal();setScene('map');persistProgress();updateUI();
+ const entryText={brumaforte:'Brumaforte: casas, mercado e conselhos esperam por você.',bosque:'Bosque Velado: siga as pegadas e procure Liora antes de avançar.',lago:'Lago Silencioso: fale com Yara e Neris para entender a maré prateada.'};
+ notify(entryText[id]||'Nova região descoberta.',4);
+}
+function openWorldMap(){
+ const body='<div class="menu-intro">O reino cresce conforme você aprende, explora e ajuda seus habitantes. Áreas bloqueadas mostram o que falta para chegar até elas.</div>'+
+ Object.entries(REGION_META).map(([id,z])=>{
+  const unlocked=isRegionUnlocked(id),current=g.region===id;
+  return '<button class="region-card '+(current?'current':'')+'" data-region="'+id+'" '+(!unlocked?'disabled':'')+'><span class="region-art region-'+id+'"><span>'+(id==='brumaforte'?'⌂':id==='bosque'?'♧':'≈')+'</span></span><span class="region-copy"><strong>'+escapeHtml(z.name)+(current?' · LOCAL':'')+'</strong><small>'+escapeHtml(z.description)+'</small><em>'+(current?'Você está aqui':unlocked?'Explorar região':'Bloqueado · '+escapeHtml(z.unlock))+'</em></span><span class="region-arrow">'+(unlocked?'→':'🔒')+'</span></button>';
+ }).join('');
+ showModal('worldMap','Mapa do mundo',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{if(!button.disabled)enterRegion(button.dataset.region);}));
+}
+function talkLiora(){
+ const q=g.sideQuests.liora,boss=currentRegionBoss('bosque');
+ if(q==='locked'){
+  g.sideQuests.liora='active';g.storyFlags.forestLore=true;if(boss)boss.revealed=true;persistProgress();updateUI();
+  openDialogue('Liora, rastreadora do Bosque Velado','Não siga as vozes entre as árvores. A névoa repete as últimas palavras de quem se perdeu aqui. Minha irmã ouviu a própria voz chamá-la e nunca voltou. O Lobo da Névoa guarda o altar — e algo que ela deixou para trás.','Missão de história: derrote o Lobo da Névoa e volte a Liora.');return;
+ }
+ if(q==='active'&&boss&&!boss.alive){
+  g.sideQuests.liora='complete';g.coins+=50;addXP(130);updateUI();persistProgress();checkAchievements();playSfx('win');
+  openDialogue('Liora, rastreadora do Bosque Velado','A névoa está se desfazendo. Encontrei o pingente da minha irmã entre as pedras do altar. Não consigo trazer tudo de volta, mas hoje o bosque deixou de mentir. Obrigada por não ter seguido a voz.','História concluída: +50 cobres fictícios, +130 XP. O acesso ao lago fica mais próximo.');return;
+ }
+ openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Ele muda de comportamento quando perde metade da resistência.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e use cartas de defesa quando ele entrar em fúria.'));
+}
+function talkArven(){
+ const state=g.sideQuests.arven,data=professionsData();
+ if(state==='locked'){
+  g.sideQuests.arven='active';persistProgress();
+  openDialogue('Arven, vigia da trilha','Eu desenho mapas porque a memória falha quando o medo chega. Preciso de duas ervas para marcar uma rota segura: o cheiro delas confunde os cães da névoa. Posso mostrar uma passagem pelo lado norte quando você trouxer as folhas.','Missão secundária: entregue 2 ervas a Arven.');return;
+ }
+ if(state==='active'&&data.materials.herb>=2){
+  data.materials.herb-=2;saveProfessions(data);g.sideQuests.arven='complete';g.coins+=14;addXP(35);updateUI();persistProgress();
+  openDialogue('Arven, vigia da trilha','Agora sim. Esta passagem evita o terreno onde a névoa fica mais espessa. Não é um mapa bonito, mas é um mapa honesto — e isso vale mais.','Missão concluída: +14 cobres fictícios e +35 XP.');return;
+ }
+ openDialogue('Arven, vigia da trilha',state==='complete'?'A rota norte está marcada. Se precisar escolher entre a rota mais curta e a rota segura, lembre-se de que tempo também é um recurso.':'Ainda preciso de duas ervas para terminar o mapa. Elira conhece cada planta deste reino.','Objetivo: '+(state==='complete'?'explore o altar e observe a trilha.':'reúna 2 ervas na profissão Herbologia.'));
+}
+function talkYara(){
+ const q=g.sideQuests.yara,boss=currentRegionBoss('lago');
+ if(q==='locked'){
+  g.sideQuests.yara='active';g.storyFlags.lakeLore=true;if(boss)boss.revealed=true;persistProgress();updateUI();
+  openDialogue('Yara, cartógrafa das marés','A bússola que encontrei não aponta para o norte. Aponta para algo perdido sob o lago. Ontem, a água devolveu uma moeda que só será cunhada daqui a cem anos. O Leviatã de Vidro subiu atrás dela. Preciso que você o enfrente antes que alcance o atracadouro.','Missão de história: derrote o Leviatã de Vidro e volte a Yara.');return;
+ }
+ if(q==='active'&&boss&&!boss.alive){
+  g.sideQuests.yara='complete';g.coins+=75;addXP(190);g.potions++;updateUI();persistProgress();checkAchievements();playSfx('win');
+  openDialogue('Yara, cartógrafa das marés','A água voltou a refletir o céu, não os anos que ainda não chegaram. A bússola parou de girar — e agora aponta para uma costa que não aparece em nenhum mapa. Você abriu uma nova pergunta para o reino.','História concluída: +75 cobres fictícios, +190 XP e +1 poção.');return;
+ }
+ openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Sua carapaça de vidro devolve golpes; use uma carta defensiva e espere a abertura.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'derrote o Leviatã de Vidro.'));
+}
+function talkNeris(){
+ openDialogue('Neris, arquivista dos naufrágios',g.storyFlags.lakeLore?'Yara voltou a confiar na bússola. Entre os nomes que cataloguei há um navio que nunca saiu do porto, mas consta como naufragado três vezes.':'Guardo os nomes de todos os barcos que não voltaram. Não porque a lista seja útil, mas porque ninguém deveria desaparecer duas vezes: primeiro da água, depois da memória.','História local: registros incompletos podem apagar pessoas — ou encobrir uma fraude.');
 }
 
 function drawKnight(x,y,camera){const sx=x-camera;rect(sx-9,y-32,18,23,'#414b4d');rect(sx-8,y-37,16,8,'#9ca3a0');rect(sx-6,y-33,12,6,'#20292b');rect(sx-10,y-7,7,15,'#343a3c');rect(sx+3,y-7,7,15,'#343a3c');rect(sx-11,y-25,5,15,'#9d9b88');rect(sx+6,y-26,5,8,'#b8b6a5');rect(sx-3,y-30,3,2,'#e7a66b');}
