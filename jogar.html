@@ -232,17 +232,166 @@ const playerMotion={vx:0,vy:0,dir:'down',moving:false,phase:0,idleTime:0};
 let jumpQueued=false;
 const SETTINGS_KEY='reinos_ruina_settings_v1';
 function readGameSettings(){
-  const defaults={showGrid:false,showLabels:true,walkSpeed:'normal'};
+  const defaults={showGrid:false,showLabels:true,walkSpeed:'normal',dynamicLighting:true,weatherMode:'auto',effectsEnabled:true,soundEnabled:true,musicEnabled:false};
   try{
     const saved=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
-    return {showGrid:typeof saved.showGrid==='boolean'?saved.showGrid:defaults.showGrid,
+    return {
+      showGrid:typeof saved.showGrid==='boolean'?saved.showGrid:defaults.showGrid,
       showLabels:typeof saved.showLabels==='boolean'?saved.showLabels:defaults.showLabels,
-      walkSpeed:['slow','normal','fast'].includes(saved.walkSpeed)?saved.walkSpeed:defaults.walkSpeed};
+      walkSpeed:['slow','normal','fast'].includes(saved.walkSpeed)?saved.walkSpeed:defaults.walkSpeed,
+      dynamicLighting:typeof saved.dynamicLighting==='boolean'?saved.dynamicLighting:defaults.dynamicLighting,
+      weatherMode:['auto','rain','leaves','off'].includes(saved.weatherMode)?saved.weatherMode:defaults.weatherMode,
+      effectsEnabled:typeof saved.effectsEnabled==='boolean'?saved.effectsEnabled:defaults.effectsEnabled,
+      soundEnabled:typeof saved.soundEnabled==='boolean'?saved.soundEnabled:defaults.soundEnabled,
+      musicEnabled:typeof saved.musicEnabled==='boolean'?saved.musicEnabled:defaults.musicEnabled
+    };
   }catch(err){return defaults;}
 }
 let gameSettings=readGameSettings();
 function saveGameSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(gameSettings));}catch(err){}}
 function speedFactor(){return gameSettings.walkSpeed==='slow'?.8:gameSettings.walkSpeed==='fast'?1.35:1;}
+
+const visualFX={particles:[],floating:[],shakeTime:0,shakePower:0,weather:'clear',weatherUntil:Date.now()+45000,worldSeconds:0};
+function rand01(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+function initializeParticles(){
+ if(visualFX.particles.length)return;
+ for(let i=0;i<58;i++)visualFX.particles.push({x:rand01(i+2)*W,y:rand01(i+83)*H,speed:65+rand01(i+170)*110,size:1+Math.floor(rand01(i+220)*2),drift:-28+rand01(i+300)*56,seed:i});
+}
+function spawnCombatText(label,x,y,color='#f0cc76'){
+ visualFX.floating.push({label:String(label),x,y,color,life:1.0,maxLife:1.0,scene:g.scene,seed:Math.random()*10});
+ if(visualFX.floating.length>24)visualFX.floating.shift();
+}
+function triggerScreenShake(power=3,duration=.16){visualFX.shakePower=Math.max(visualFX.shakePower,power);visualFX.shakeTime=Math.max(visualFX.shakeTime,duration);}
+function updateAmbient(dt){
+ visualFX.worldSeconds+=dt;
+ visualFX.shakeTime=Math.max(0,visualFX.shakeTime-dt);
+ if(visualFX.shakeTime===0)visualFX.shakePower=0;
+ for(const item of visualFX.floating){item.life-=dt;item.y-=20*dt;}
+ visualFX.floating=visualFX.floating.filter(item=>item.life>0);
+ initializeParticles();
+ if(gameSettings.weatherMode==='auto'){
+  if(Date.now()>visualFX.weatherUntil){
+   const options=['clear','rain','leaves'];
+   const current=options.indexOf(visualFX.weather);
+   visualFX.weather=options[(current+1+Math.floor(Math.random()*2))%options.length];
+   visualFX.weatherUntil=Date.now()+90000+Math.random()*90000;
+  }
+ }else visualFX.weather=gameSettings.weatherMode;
+ for(const p of visualFX.particles){
+  if(visualFX.weather==='rain'){p.x+=p.drift*dt;p.y+=p.speed*1.55*dt;}
+  else if(visualFX.weather==='leaves'){p.x+=(Math.sin(visualFX.worldSeconds*1.7+p.seed)*18+p.drift*.35)*dt;p.y+=p.speed*.28*dt;}
+  else {p.x+=p.drift*.12*dt;p.y+=p.speed*.04*dt;}
+  if(p.y>H+4){p.y=-4;p.x=rand01(p.seed+visualFX.worldSeconds)*W;}
+  if(p.x>W+5)p.x=-5;if(p.x<-5)p.x=W+4;
+ }
+}
+function drawEnvironmentOverlay(){
+ const hour=new Date().getHours(),minute=new Date().getMinutes();
+ const night=hour>=20||hour<6,twilight=(hour>=18&&hour<20)||(hour>=6&&hour<8);
+ if(gameSettings.dynamicLighting){
+  if(night){ctx.fillStyle='rgba(11,20,48,.43)';ctx.fillRect(0,0,W,H);}
+  else if(twilight){ctx.fillStyle='rgba(68,54,76,.16)';ctx.fillRect(0,0,W,H);}
+  if(night&&g.scene==='map'){
+   for(const [x,y,r] of [[100,242,34],[166,242,32],[310,236,38],[392,236,38],[720,225,30],[778,225,28]]){
+    const glow=ctx.createRadialGradient(x,y,1,x,y,r);
+    glow.addColorStop(0,'rgba(255,202,104,.30)');glow.addColorStop(1,'rgba(255,185,75,0)');
+    ctx.fillStyle=glow;ctx.fillRect(x-r,y-r,r*2,r*2);
+   }
+  }
+ }
+ if(g.scene==='map'){
+  // Gentle water glints in the village pond.
+  for(let i=0;i<4;i++){
+   const x=61+((visualFX.worldSeconds*11+i*17)%57),y=399+Math.sin(visualFX.worldSeconds*1.6+i)*13;
+   rect(x,y,5+(i%2)*3,1,'rgba(206,238,205,.65)');
+  }
+ }
+ if(gameSettings.effectsEnabled&&visualFX.weather==='rain'){
+  ctx.strokeStyle='rgba(194,217,235,.53)';ctx.lineWidth=1;
+  for(const p of visualFX.particles){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-3,p.y+7);ctx.stroke();}
+  if(g.scene==='map'){ctx.fillStyle='rgba(31,51,66,.08)';ctx.fillRect(0,0,W,H);}
+ }else if(gameSettings.effectsEnabled&&visualFX.weather==='leaves'){
+  for(const p of visualFX.particles){
+   rect(p.x,p.y,p.size+2,p.size, p.seed%3===0?'#d5a45d':p.seed%3===1?'#a86e43':'#7d9c55');
+   rect(p.x+1,p.y,p.size,1,'#edd08a');
+  }
+ }
+ if(gameSettings.effectsEnabled){
+  const textItems=visualFX.floating;
+  const camera=g.scene==='action'?Math.max(0,Math.min(1900-W,g.actionPlayer.x-330)):0;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 12px ui-monospace,monospace';
+  for(const item of textItems){
+   if(item.scene!==g.scene)continue;
+   ctx.globalAlpha=Math.max(0,Math.min(1,item.life/item.maxLife));
+   const x=item.x-camera,y=item.y-(1-item.life)*18;
+   ctx.lineWidth=3;ctx.strokeStyle='#11150f';ctx.strokeText(item.label,x,y);ctx.fillStyle=item.color;ctx.fillText(item.label,x,y);
+  }
+  ctx.globalAlpha=1;
+ }
+ ctx.textAlign='left';ctx.textBaseline='alphabetic';
+ if(gameSettings.dynamicLighting){
+  const label=night?'NOITE':twilight?'CREPÚSCULO':'DIA';
+  const weather=visualFX.weather==='rain'?'CHUVA':visualFX.weather==='leaves'?'VENTO':'TEMPO LIMPO';
+  rect(W-147,140,138,24,'rgba(12,17,14,.72)');
+  text(label+' · '+String(hour).padStart(2,'0')+':'+String(minute).padStart(2,'0'),W-140,150,8,'#e9e0bd');
+  text(weather,W-140,160,7,'#b8cda5');
+ }
+}
+function renderWithEffects(){
+ ctx.clearRect(0,0,W,H);
+ ctx.save();
+ if(gameSettings.effectsEnabled&&visualFX.shakeTime>0){
+  const m=visualFX.shakeTime/.16,p=visualFX.shakePower*m;
+  ctx.translate((Math.random()-.5)*p,(Math.random()-.5)*p);
+ }
+ if(g.scene==='map')drawMap();else drawAction();
+ if(gameSettings.effectsEnabled)drawEnvironmentOverlay();
+ ctx.restore();
+}
+let gameAudio=null,musicTimer=null,musicStep=0;
+function getAudioContext(){
+ if(!gameSettings.soundEnabled)return null;
+ try{
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return null;
+  if(!gameAudio)gameAudio=new Ctx();
+  if(gameAudio.state==='suspended')gameAudio.resume();
+  return gameAudio;
+ }catch(err){return null;}
+}
+function tone(freq,duration=.11,wave='triangle',volume=.035,endFreq=null){
+ const ac=getAudioContext();if(!ac)return;
+ try{
+  const osc=ac.createOscillator(),gain=ac.createGain(),now=ac.currentTime;
+  osc.type=wave;osc.frequency.setValueAtTime(freq,now);
+  if(endFreq!==null)osc.frequency.exponentialRampToValueAtTime(Math.max(30,endFreq),now+duration);
+  gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.012);gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+  osc.connect(gain);gain.connect(ac.destination);osc.start(now);osc.stop(now+duration+.02);
+ }catch(err){}
+}
+function playSfx(kind){
+ if(!gameSettings.soundEnabled)return;
+ if(kind==='hit'){tone(180,.12,'sawtooth',.055,80);tone(92,.09,'square',.025,55);}
+ else if(kind==='heal'){tone(440,.13,'sine',.025,660);setTimeout(()=>tone(660,.16,'sine',.02,880),75);}
+ else if(kind==='coin'){tone(740,.08,'triangle',.03,920);setTimeout(()=>tone(980,.14,'triangle',.02,1180),65);}
+ else if(kind==='magic'){tone(320,.18,'sine',.03,640);setTimeout(()=>tone(540,.2,'triangle',.02,980),80);}
+ else if(kind==='win'){tone(523,.12,'triangle',.035);setTimeout(()=>tone(659,.12,'triangle',.03),90);setTimeout(()=>tone(784,.2,'triangle',.03),180);}
+ else if(kind==='ui')tone(500,.035,'square',.008,430);
+}
+function startAmbientMusic(){
+ if(!gameSettings.soundEnabled||!gameSettings.musicEnabled)return;
+ if(musicTimer)clearInterval(musicTimer);
+ const notes=[196,246.94,293.66,246.94,174.61,220,261.63,220];
+ musicTimer=setInterval(()=>{
+  if(!gameSettings.soundEnabled||!gameSettings.musicEnabled)return;
+  const base=notes[musicStep++%notes.length]*(g.scene==='action'?0.75:1);
+  tone(base,.38,'sine',.009,base*.98);
+  if(musicStep%4===1)tone(base*1.5,.28,'triangle',.005,base*1.45);
+ },620);
+}
+function stopAmbientMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null;}}
+function playFirstInteractionAudio(){if(gameSettings.soundEnabled){getAudioContext();if(gameSettings.musicEnabled)startAmbientMusic();}}
+document.addEventListener('pointerdown',playFirstInteractionAudio,{passive:true});
 
 const originalState=()=>({character:defaultAppearance(),scene:'map',mapPlayer:{x:128,y:334},actionPlayer:{x:70,y:430,vy:0,onGround:true,face:1},hp:100,maxHp:100,xp:0,level:1,coins:25,potions:0,kills:0,questStep:0,questRewarded:false,ledgerFound:false,questVersion:2,financeIndex:0,economy:{treasury:120,trust:55,priceIndex:100,debt:0,foodDays:3,decision:0,decisionName:'Nenhuma decisão',receiptHash:'',txHash:'',onchain:false},inventory:[],slimes:[{x:400,y:344,alive:true,name:'Limo do Prado',xp:25},{x:580,y:287,alive:true,name:'Limo do Prado',xp:25},{x:690,y:390,alive:true,name:'Besouro Sombrio',xp:40}],ruinMobs:[{x:360,y:438,alive:true,name:'Limo das Ruínas',xp:25,hp:25,type:'slime'},{x:610,y:438,alive:true,name:'Esqueleto Errante',xp:50,hp:50,type:'skeleton'},{x:890,y:438,alive:true,name:'Morcego Antigo',xp:35,hp:35,type:'bat'},{x:1190,y:438,alive:true,name:'Limo das Ruínas',xp:30,hp:30,type:'slime'},{x:1525,y:438,alive:true,name:'Guardião Oco',xp:75,hp:75,type:'knight'}],attackCD:0,invuln:0,toastTimer:0,lastTime:0,dialogueOpen:false});
 let g=originalState();
@@ -260,7 +409,19 @@ function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playe
 function xpToNext(){return g.level*100;}
 function addXP(n){g.xp+=n;let leveled=false;while(g.xp>=xpToNext()){g.xp-=xpToNext();g.level++;g.maxHp+=10;g.hp=Math.min(g.maxHp,g.hp+20);leveled=true;}if(leveled)notify(`NÍVEL ${g.level}! Vida máxima aumentou e você recuperou um pouco de vida.`,4);}
 function allMobs(){return g.scene==='map'?g.slimes:g.ruinMobs;}
-function attack(){if(g.attackCD>0)return;g.attackCD=.3;let p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;for(const mob of allMobs()){if(!mob.alive)continue;let d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);return;}target.hp=(target.hp===undefined?1:target.hp)-35;if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;addXP(0);notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);if(g.questStep===1&&g.kills>=3){g.questStep=g.ledgerFound?3:2;notify(g.ledgerFound?'Você reuniu as pistas. Volte a Mara em Brumaforte!':'Você derrotou três criaturas. Agora encontre o livro-razão no fundo das ruínas.',4);}updateUI();persistProgress();}
+function attack(){
+ if(g.attackCD>0)return;g.attackCD=.3;
+ const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;
+ for(const mob of allMobs()){if(!mob.alive)continue;const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}
+ if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);playSfx('ui');return;}
+ target.hp=(target.hp===undefined?1:target.hp)-35;
+ spawnCombatText('-35',target.x,target.y-22,'#ff8e75');playSfx('hit');triggerScreenShake(target.hp<=0?5:2.2,target.hp<=0?.2:.11);
+ if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}
+ target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;spawnCombatText('+'+target.xp+' XP',target.x,target.y-38,'#f2d16f');spawnCombatText('+3 cobre',target.x,target.y-51,'#9fe28f');playSfx('coin');addXP(0);
+ notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);
+ if(g.questStep===1&&g.kills>=3){g.questStep=g.ledgerFound?3:2;notify(g.ledgerFound?'Você reuniu as pistas. Volte a Mara em Brumaforte!':'Você derrotou três criaturas. Agora encontre o livro-razão no fundo das ruínas.',4);}
+ updateUI();persistProgress();
+}
 function talkMara(){
  if(g.questStep===0){
   g.questStep=g.kills>=3?(g.ledgerFound?3:2):1;
@@ -521,10 +682,10 @@ function playTacticalCard(id){
  const card=cards[id];if(!card||b.energy<card.cost)return;
  if(id==='potion'&&(g.potions<1||g.hp>=g.maxHp)){notify(g.potions<1?'Você não tem poções.':'Sua vida já está cheia.',2);renderTacticalBattle();return;}
  b.energy-=card.cost;
- if(id==='quick'){b.enemyHp-=12;b.log='Golpe preciso: 12 de dano por 1 energia.';}
- else if(id==='heavy'){b.enemyHp-=24;b.log='Estocada pesada: 24 de dano por 2 energias.';}
- else if(id==='guard'){b.block+=15;b.log='Guarda de pedra: até 15 pontos de dano bloqueados no próximo ataque.';}
- else if(id==='potion'){g.potions--;const healed=Math.min(30,g.maxHp-g.hp);g.hp+=healed;b.log='Poção: você recuperou '+healed+' pontos de vida.';}
+ if(id==='quick'){b.enemyHp-=12;b.log='Golpe preciso: 12 de dano por 1 energia.';spawnCombatText('-12',b.mob.x,b.mob.y-24,'#ffb27e');playSfx('hit');triggerScreenShake(2.4,.12);}
+ else if(id==='heavy'){b.enemyHp-=24;b.log='Estocada pesada: 24 de dano por 2 energias.';spawnCombatText('-24!',b.mob.x,b.mob.y-30,'#ffd06d');playSfx('hit');triggerScreenShake(5,.2);}
+ else if(id==='guard'){b.block+=15;b.log='Guarda de pedra: até 15 pontos de dano bloqueados no próximo ataque.';playSfx('magic');}
+ else if(id==='potion'){g.potions--;const healed=Math.min(30,g.maxHp-g.hp);g.hp+=healed;spawnCombatText('+'+healed+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-40,'#7ee59d');playSfx('heal');b.log='Poção: você recuperou '+healed+' pontos de vida.';}
  b.mob.hp=Math.max(0,b.enemyHp);
  if(b.enemyHp<=0){finishTacticalVictory();return;}
  updateUI();renderTacticalBattle();
@@ -540,7 +701,7 @@ function endTacticalTurn(){
 function finishTacticalVictory(){
  const b=tacticalBattle;if(!b||b.finished)return;
  b.finished=true;b.mob.hp=0;b.mob.alive=false;
- const xp=b.mob.xp||25;g.xp+=xp;g.coins+=3;g.kills++;addXP(0);
+ const xp=b.mob.xp||25;g.xp+=xp;g.coins+=3;g.kills++;spawnCombatText('+'+xp+' XP',b.mob.x,b.mob.y-38,'#f2d16f');spawnCombatText('+3 cobre',b.mob.x,b.mob.y-50,'#9fe28f');playSfx('win');triggerScreenShake(4,.16);addXP(0);
  if(g.questStep===1&&g.kills>=3)g.questStep=g.ledgerFound?3:2;
  updateUI();persistProgress();tacticalBattle=null;closeModal();
  notify((b.mob.name||'Criatura')+' derrotado! +'+xp+' XP · +3 cobre fictício.',4);
@@ -588,20 +749,41 @@ function openGameMenu(){
             <option value="fast" ${gameSettings.walkSpeed==='fast'?'selected':''}>Rápida</option>
           </select>
         </label>
+        <label class="setting-row"><span><strong>Luz dia/noite</strong><small>Adapta a tonalidade à hora local do computador.</small></span><input id="settingLighting" type="checkbox" ${gameSettings.dynamicLighting?'checked':''}></label>
+        <label class="setting-row setting-speed"><span><strong>Clima animado</strong><small>Escolha chuva, folhas ao vento, alternância ou tempo limpo.</small></span>
+          <select id="settingWeather">
+            <option value="auto" ${gameSettings.weatherMode==='auto'?'selected':''}>Dinâmico</option>
+            <option value="rain" ${gameSettings.weatherMode==='rain'?'selected':''}>Chuva</option>
+            <option value="leaves" ${gameSettings.weatherMode==='leaves'?'selected':''}>Folhas</option>
+            <option value="off" ${gameSettings.weatherMode==='off'?'selected':''}>Desligado</option>
+          </select>
+        </label>
+        <label class="setting-row"><span><strong>Efeitos visuais</strong><small>Ativa tremor, partículas e números de combate.</small></span><input id="settingEffects" type="checkbox" ${gameSettings.effectsEnabled?'checked':''}></label>
+        <label class="setting-row"><span><strong>Efeitos sonoros</strong><small>Sons sintetizados de golpes, cura, magia e moedas.</small></span><input id="settingSound" type="checkbox" ${gameSettings.soundEnabled?'checked':''}></label>
+        <label class="setting-row"><span><strong>Trilha ambiente</strong><small>Melodia procedural leve; só toca após uma interação.</small></span><input id="settingMusic" type="checkbox" ${gameSettings.musicEnabled?'checked':''}></label>
         <div class="menu-note"><strong>Salvar:</strong> o botão Salvar guarda o avanço da aventura. Estas preferências são guardadas automaticamente neste navegador.</div>
       </section>
     </div>`;
   showModal('gameMenu','Menu da jornada',body,[
-    {label:'Restaurar padrões',action:()=>{gameSettings={showGrid:false,showLabels:true,walkSpeed:'normal'};saveGameSettings();openGameMenu();}},
+    {label:'Restaurar padrões',action:()=>{gameSettings={showGrid:false,showLabels:true,walkSpeed:'normal',dynamicLighting:true,weatherMode:'auto',effectsEnabled:true,soundEnabled:true,musicEnabled:false};saveGameSettings();stopAmbientMusic();openGameMenu();}},
     {label:'Salvar progresso',action:()=>{closeModal();saveGame();}},
     {label:'Voltar à aventura (Esc)',action:()=>closeModal(),primary:true}
   ]);
   $('settingGrid').addEventListener('change',e=>{gameSettings.showGrid=e.target.checked;saveGameSettings();render();});
   $('settingLabels').addEventListener('change',e=>{gameSettings.showLabels=e.target.checked;saveGameSettings();render();});
   $('settingSpeed').addEventListener('change',e=>{gameSettings.walkSpeed=e.target.value;saveGameSettings();});
+  $('settingLighting').addEventListener('change',e=>{gameSettings.dynamicLighting=e.target.checked;saveGameSettings();render();});
+  $('settingWeather').addEventListener('change',e=>{gameSettings.weatherMode=e.target.value;visualFX.weatherUntil=Date.now()+60000;saveGameSettings();render();});
+  $('settingEffects').addEventListener('change',e=>{gameSettings.effectsEnabled=e.target.checked;saveGameSettings();render();});
+  $('settingSound').addEventListener('change',e=>{gameSettings.soundEnabled=e.target.checked;saveGameSettings();if(e.target.checked)getAudioContext();else stopAmbientMusic();});
+  $('settingMusic').addEventListener('change',e=>{gameSettings.musicEnabled=e.target.checked;saveGameSettings();if(e.target.checked)startAmbientMusic();else stopAmbientMusic();});
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function usePotion(){if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}g.potions--;g.hp=Math.min(g.maxHp,g.hp+35);persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();}
+function usePotion(){
+ if(g.potions<=0){notify('Você não tem poções. Compre uma no mercador (T) perto da praça.',2.7);return;}
+ if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
+ g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
+}
 function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
  try{
@@ -1130,7 +1312,7 @@ text('RUÍNAS DA MOEDA PARTIDA',18,109,14,'#e2d2ae');text('A · D andar   ESPAÇ
 // minimap and health-boss hint
 rect(790,88,150,48,'#111819dd');rect(801,103,126,5,'#424849');rect(801,103,Math.max(3,(g.actionPlayer.x/1900)*126),5,'#dda762');text('MAPA DAS RUÍNAS',801,98,9,'#c2c5b9');circle(801+(g.actionPlayer.x/1900)*126,105,3,'#fff0be');
 }
-function render(){ctx.clearRect(0,0,W,H);if(g.scene==='map')drawMap();else drawAction();}
+function render(){renderWithEffects();}
 
 function mapBlocked(x,y){
  const boxes=[[45,148,181,128],[254,136,216,141],[678,157,159,121],[646,396,171,119],[103,345,100,79],[487,399,142,87],[29,383,121,57],[824,278,61,85]];
@@ -1138,6 +1320,7 @@ function mapBlocked(x,y){
 }
 function approach(current,target,rate,dt){return current+(target-current)*Math.min(1,rate*dt);}
 function update(dt){
+ updateAmbient(dt);
  g.attackCD=Math.max(0,g.attackCD-dt);g.invuln=Math.max(0,g.invuln-dt);
  g.toastTimer=Math.max(0,g.toastTimer-dt);playerMotion.idleTime+=dt;
  if(g.toastTimer===0)$('toast').classList.remove('show');
@@ -1182,6 +1365,7 @@ function update(dt){
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
 function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
+document.addEventListener('pointerover',e=>{if(gameSettings.soundEnabled&&e.target&&e.target.closest&&e.target.closest('button'))playSfx('ui');});
 $('menuBtn').onclick=openGameMenu;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
