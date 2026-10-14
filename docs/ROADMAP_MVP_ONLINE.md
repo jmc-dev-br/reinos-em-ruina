@@ -1,24 +1,24 @@
 # Reinos em Ruína — Roadmap do MVP Online
 
-Este documento transforma a direção do projeto em etapas entregáveis. O nome **Reinos em Ruína** e o capítulo inicial **A Moeda Partida** permanecem. A visão principal é um RPG medieval de exploração e comércio em que decisões econômicas alteram o reino; combate tático, atividades de ausência e sistemas comunitários serão incorporados por fases.
+Este documento registra as etapas do projeto **Reinos em Ruína** e do capítulo **A Moeda Partida**. A direção ativa é uma aventura de exploração em pixel art vista de cima, inspirada na leitura clara dos jogos portáteis clássicos, com criaturas originais, encontros por turnos e educação financeira integrada à história.
 
 ## Direção de produto
 
-- **Mundo:** fantasia medieval em recuperação, com regiões, ruínas, rotas comerciais e uma vila que muda conforme suas decisões.
-- **Loop do jogador:** explorar → investigar → combate tático → receber recursos → melhorar equipamentos → decidir a política do reino → desbloquear novas regiões.
-- **Identidade:** educação financeira embutida na história; juros, orçamento, dívida, inflação, fraude e investimento aparecem como consequências, não como perguntas de prova.
-- **Combate:** cartas por turnos com 3 pontos de energia por turno. O jogador escolhe ataque, defesa e cura; estratégia e preparação devem valer mais que reflexos rápidos.
-- **Economia:** cobre é moeda fictícia. Nenhuma monetização pode vender poder de combate ou prometer retorno financeiro.
-- **Referência visual:** mapas top-down em blocos e construções legíveis, combinados a uma interface escura, limpa e responsiva.
+- **Mundo:** Brumaforte, Bosque Velado, Lago Silencioso e Mina Antiga, todos explorados em visão superior.
+- **Loop do jogador:** explorar → conhecer moradores → encontrar criaturas → duelar por turnos → capturar/treinar parceiros → resolver missões e decisões econômicas → abrir novas regiões.
+- **Identidade:** personagens pequenos em pixel art, NPCs reconhecíveis, criaturas originais, cenários tile-based e interface de portátil clássico.
+- **Combate:** encontros por turnos com movimentos de dano fixo, cura, troca de parceiro, fuga e captura quando a criatura selvagem está enfraquecida.
+- **Economia:** cobre é moeda fictícia. Juros, orçamento, dívida, inflação, fraude e investimento aparecem por meio das missões e consequências.
+- **Online:** a versão atual continua single-player; trocas entre jogadores, sincronização e validação de recompensas exigem servidor.
 
 ## Fase 1 — MVP jogável no navegador
 
 ### Já presente no protótipo
-- Mapa top-down de Brumaforte e entrada para as ruínas em visão lateral.
+- Mapas de Brumaforte, Bosque Velado, Lago Silencioso e Mina Antiga em exploração top-down.
 - Criador de personagem e opções de aparência.
 - Capítulo da Moeda Partida, personagens, criaturas, missões e escolhas econômicas.
 - Vida, nível, XP, cobre fictício, poções, loja, caderno financeiro e salvamento local.
-- Combate tático experimental com quatro cartas: Golpe Preciso, Estocada Pesada, Guarda de Pedra e Poção de Ervas.
+- Encontros por turnos com criaturas, movimentos próprios, parceiros, cura, captura e equipe de até seis criaturas.
 - Atividades locais de ausência: Treinar Força (+12 XP/h) ou Trabalhar na Taverna (+5 cobres/h), com limite de 8 horas por ciclo. A simulação depende do relógio e do armazenamento do navegador e não é resistente a trapaças.
 - Menu de controles e configurações.
 
@@ -135,7 +135,7 @@ Personagens novos:
 ### Migração e teste
 A migração de save fornece defaults para os novos atributos, relógio, clima, regiões e estados de missão, mantendo personagens antigos. A sintaxe JavaScript do script principal foi conferida após o reboot; o próximo passo de QA é testar no navegador todas as rotas de região, diálogos, turn-in de missão, pontos de atributo/talento e combate contra chefes em desktop e celular.
 
-## Reboot 1.1 — classes, dificuldade e combate previsível
+## Histórico — Reboot 1.1 (direção de classes substituída pelo Reboot 2.0)
 
 - **Classes disponíveis:** Guerreiro (vida e defesa), Patrulheiro (alcance), Arcanista (explosão em área) e Guardião (escudo e vida extra). Cada uma define valores base e um poder desbloqueado no nível 2.
 - **Dano determinístico:** os danos base vêm de tabelas por classe/inimigo e são modificados de forma explícita por dificuldade, atributos, perícias e fúria de chefe. Não há rolagem aleatória de dano em combate de exploração ou no turno tático.
@@ -146,6 +146,28 @@ A migração de save fornece defaults para os novos atributos, relógio, clima, 
 - **Migração de salvamentos:** classe, dificuldade e escudo persistem; salvamentos legados recebem defaults sem apagar missões ou progresso existente.
 
 **QA pendente:** a sintaxe JavaScript e verificações estáticas passaram, mas ainda é necessário validar uma sessão completa de jogo e ajustar os números após testes práticos em desktop e celular.
+
+## Reboot 2.0 — aventura 16-bit e criaturas
+
+A direção ativa abandona o combate lateral e a ênfase em classes de RPG em favor de uma aventura de exploração top-down em pixel art, com inspiração geral nos jogos portáteis antigos. Personagens e criaturas são criações próprias do projeto.
+
+### Exploração e personagens
+- As quatro áreas jogáveis usam visão superior: Brumaforte, Bosque Velado, Lago Silencioso e Mina Antiga. A mina foi convertida de plataformas laterais para um mapa com caminhos, paredes quebradas, plantas, lampiões, altar e livro-razão.
+- O protagonista e os NPCs usam sprites menores e nomes destacados. Os moradores mantêm aparência, função, histórias, missões e diálogos próprios.
+- A arte dos parceiros e criaturas é desenhada em pixel art pelo cliente, para não depender de emojis na interface de equipe e no duelo.
+
+### Parceiros, encontros e progressão
+- Ao iniciar uma nova jornada, escolha Folhote, Braseco ou Gotil como primeiro parceiro.
+- As criaturas selvagens incluem Musguito, Casquim, Vesperto, Ossoeco e Guardito, além dos encontros únicos Brumilobo e Prismaré.
+- Os encontros são por turnos: movimentos com dano fixo, barra de vida, cura, troca de parceiro, fuga e captura por Laço de Semente quando a criatura fica suficientemente enfraquecida. Chefes únicos de história não são capturáveis.
+- A equipe aceita até seis criaturas; vitória concede experiência e as criaturas sobem de nível. O Centro de Amizade recupera a vida da equipe por cobres fictícios.
+- Salvamentos existentes são migrados com um parceiro inicial padrão; novas jornadas mostram a seleção inicial. A equipe capturada, os níveis e o parceiro ativo ficam no save local.
+
+### Critérios de teste para concluir o reboot
+1. Validar movimento, colisões e retorno entre mina e vila.
+2. Confirmar escolha inicial, seleção de equipe, captura, fuga, derrota, cura, evolução e salvamento/carregamento.
+3. Testar diálogos, missões de NPCs, chefes de história e decisões econômicas em desktop e celular.
+4. Conferir que nenhum texto ou botão ainda apresenta o antigo sistema de combate lateral como comportamento ativo.
 
 ## Fronteira entre protótipo e mundo online
 O clima é visual local e não representa um evento sincronizado. Recompensas, conquistas, materiais, chefes e decisões ainda são locais ao navegador. Para contas multiplataforma, rankings públicos, guildas, comércio, eventos sincronizados e coop/PvP, usar autenticação e estado autoritativo no servidor; não confiar no navegador para validar itens ou recompensas.
