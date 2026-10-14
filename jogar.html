@@ -232,6 +232,22 @@ html,body{background:#1a3036;color:#f4f0d0;font-family:ui-monospace,Consolas,mon
 .class-stat,#classBtn,#difficultyBtn,#powerBtn{display:none!important}
 #attackBtn{background:#e8cb76}
 @media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.canvashead{top:139px}.brand p{font-size:7px}.modal{border-width:2px}}
+.retro-copy{padding:11px 13px;background:#cbdca7;border:2px solid #7e9d60;color:#304743;margin-bottom:11px;font-size:11px;line-height:1.55}
+.retro-copy strong{display:block;font:800 11px ui-monospace,monospace;letter-spacing:.08em;color:#29464b}.retro-copy p{margin:5px 0 0!important;color:#405953!important;font-size:11px!important}
+.starter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.starter-card{min-width:0;display:grid;justify-items:center;text-align:center;gap:6px;padding:12px 8px;border:2px solid #728d56;background:#d8e4b6;color:#2d4645;font-family:ui-monospace,monospace}.starter-card:hover{border-color:#c9a653;background:#f0e4af}.starter-portrait{display:grid;place-items:center;width:62px;height:62px;background:#b7d295;border:2px solid #526f55;font-size:34px;box-shadow:inset 0 -5px #8cad72}.starter-card strong{font-size:12px}.starter-card small{font:10px/1.45 ui-monospace,monospace;color:#4b6356}.starter-card em{font:800 8px ui-monospace,monospace;color:#8d633c;font-style:normal}
+.party-strip{display:flex;flex-wrap:wrap;gap:7px;padding:9px;margin:9px 0;background:#d4e0b2;border:1px solid #829d61;color:#38514a;font:10px ui-monospace,monospace}.party-strip span{flex:1 1 110px}.party-strip b{color:#263f44}
+.party-list{display:grid;gap:7px}.party-card{display:grid;grid-template-columns:43px 1fr 16px;gap:9px;align-items:center;text-align:left;padding:8px;border:2px solid #859e64;background:#dfe9bf;color:#324b47;font-family:ui-monospace,monospace}.party-card.selected{border-color:#be984d;background:#f0e4af;box-shadow:inset 0 0 0 1px #cba858}.party-sprite{display:grid;place-items:center;width:42px;height:42px;background:#b8d59b;border:1px solid #8cab67;font-size:24px}.party-details{min-width:0}.party-details strong{display:block;font-size:11px}.party-details small{display:block;margin:3px 0;font-size:9px;color:#52675a}.party-details em{display:block;margin-top:4px;font-size:9px;line-height:1.4;color:#65775b;font-style:normal}.party-hp{display:block;height:4px;background:#9da98b;overflow:hidden}.party-hp i{display:block;height:100%;background:#6da567}.party-arrow{font-weight:900;color:#426247}
+.retro-duel{font-family:ui-monospace,monospace;color:#304647}.duel-kicker{padding:8px 10px;background:#cbdba6;border:2px solid #80995f;color:#334d47;font-size:10px;font-weight:900;letter-spacing:.1em}
+.duel-field{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:195px;margin:9px 0;padding:12px;background:linear-gradient(180deg,#c5dca2 0%,#dce7ba 55%,#eee7be 100%);border:2px solid #8ca568;overflow:hidden}
+.duel-field:before{content:'';position:absolute;left:0;right:0;top:48%;height:50px;background:radial-gradient(ellipse at center,#b5ca89 0,transparent 70%);pointer-events:none}
+.wild-side,.partner-side{position:relative;display:flex;flex-direction:column;gap:5px;min-width:0}.wild-side{align-items:flex-end;text-align:right}.partner-side{align-items:flex-start;text-align:left;justify-content:flex-end}
+.wild-status,.partner-status{position:relative;z-index:2;width:min(100%,210px);padding:7px;background:#f4edcd;border:2px solid #566f56;box-shadow:3px 3px #7f9860}.wild-status strong,.partner-status strong{display:block;font-size:10px;overflow-wrap:anywhere}.wild-status small,.partner-status small{display:block;font-size:9px;color:#526554;margin-top:3px}
+.duel-hp{height:6px;margin:5px 0 3px;background:#9aa78d;border:1px solid #62765c}.duel-hp i{display:block;height:100%;background:#72a95e}
+.duel-creature{position:relative;z-index:1;display:grid;place-items:center;width:82px;height:82px;border-radius:50%;background:#a1c580;border:2px solid #668953;box-shadow:inset 0 -7px #729e5a,0 7px #6f855b;font-size:46px;image-rendering:pixelated;align-self:center;margin:auto 0}.duel-creature.wild{background:#cad9a2;box-shadow:inset 0 -7px #9fb879,0 7px #93a56f;align-self:flex-start}.duel-creature.partner{align-self:flex-end}
+.duel-message{min-height:35px;padding:9px 10px;background:#f1edc8;border:2px solid #8ca36a;color:#344c46;font-size:10px;line-height:1.45}
+.classic-moves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.classic-move{position:relative;min-width:0;text-align:left;display:grid;grid-template-columns:23px 1fr;gap:5px;align-items:start;padding:8px;border:2px solid #6e8b57;background:#d6e4b1;color:#304743;font-family:ui-monospace,monospace}.classic-move:hover{background:#f0e4af;border-color:#c9a653}.move-index{grid-row:span 2;display:grid;place-items:center;width:20px;height:20px;background:#a5c486;color:#2a4541;border:1px solid #71905b;font-size:10px;font-weight:900}.classic-move strong{font-size:10px}.classic-move small{font-size:9px;line-height:1.45;color:#526657}
+.classic-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}.classic-action{padding:8px;border:2px solid #7b9560;background:#e6e9bf;color:#344947;font:800 10px ui-monospace,monospace;text-align:left}.classic-action small{display:block;margin-top:4px;font:9px/1.4 ui-monospace,monospace;color:#61715c}.classic-action:hover:not(:disabled){background:#f3e6a9;border-color:#cba755}.classic-action:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:560px){.starter-grid{grid-template-columns:1fr}.starter-card{grid-template-columns:44px 1fr;grid-template-rows:auto auto;text-align:left;justify-items:start;align-items:center}.starter-portrait{grid-row:span 2;width:42px;height:42px;font-size:25px}.starter-card small,.starter-card em{grid-column:2}.duel-field{min-height:160px;gap:6px;padding:7px}.duel-creature{width:62px;height:62px;font-size:34px}.wild-status,.partner-status{padding:5px}.wild-status strong,.partner-status strong{font-size:9px}.classic-move{padding:6px}.classic-move small{font-size:8px}.classic-action{padding:6px;font-size:9px}}
 </style>
 </head>
 <body>
@@ -682,15 +698,17 @@ function interact(){
    if(Math.hypot(p.x-180,p.y-366)<70){talkLiora();return;}
    if(Math.hypot(p.x-315,p.y-455)<70){talkArven();return;}
    if(Math.hypot(p.x-722,p.y-178)<78){talkForestShrine();return;}
-   const boss=currentRegionBoss('bosque');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<64){openDialogue('Lobo da Névoa','A criatura rosna com a voz de alguém que você conhece. Não é uma fala — é uma armadilha.','Chegue perto e use J para atacar ou Cartas táticas para preparar a defesa.');return;}
-   notify('Siga as trilhas e converse com Liora ou Arven. O altar fica no leste.',2.5);return;
+   const boss=currentRegionBoss('bosque');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<76){openTacticalBattle();return;}
+   if(nearestWildCreature(72)){openTacticalBattle();return;}
+   notify('Siga as trilhas e converse com Liora ou Arven. Aproxime-se das criaturas e pressione J para duelar.',2.5);return;
   }
   if(g.region==='lago'){
    if(Math.hypot(p.x-270,p.y-419)<72){talkYara();return;}
    if(Math.hypot(p.x-457,p.y-388)<72){talkNeris();return;}
    if(Math.hypot(p.x-620,p.y-345)<72){talkLakeWreck();return;}
-   const boss=currentRegionBoss('lago');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<68){openDialogue('Leviatã de Vidro','A carapaça reflete golpes como espelhos. Entre cada investida, uma rachadura brilha por um instante.','Chegue perto e use J para atacar ou Cartas táticas; a criatura fica mais perigosa abaixo de metade da vida.');return;}
-   notify('Explore a margem e procure Yara ou Neris no atracadouro.',2.5);return;
+   const boss=currentRegionBoss('lago');if(boss&&boss.revealed&&boss.alive&&Math.hypot(p.x-boss.x,p.y-boss.y)<78){openTacticalBattle();return;}
+   if(nearestWildCreature(72)){openTacticalBattle();return;}
+   notify('Explore a margem e procure Yara ou Neris no atracadouro. Aproxime-se das criaturas para duelar.',2.5);return;
   }
   const dM=Math.hypot(p.x-230,p.y-333),dShop=Math.hypot(p.x-350,p.y-333),dGate=Math.hypot(p.x-850,p.y-325);
   const dToren=Math.hypot(p.x-747,p.y-315),dElira=Math.hypot(p.x-455,p.y-456),dBrann=Math.hypot(p.x-248,p.y-452),dSabela=Math.hypot(p.x-565,p.y-315);
@@ -701,7 +719,8 @@ function interact(){
   if(dBrann<63){talkBrann();return;}
   if(dSabela<63){openTavern();return;}
   if(dGate<78){setScene('action');g.actionPlayer.x=70;g.actionPlayer.y=430;return;}
-  notify('Procure Mara, Ivo no mercado, Toren na ferraria, Elira no jardim, Brann no lago ou Sabela na taverna.',2.8);
+  if(nearestWildCreature(72)){openTacticalBattle();return;}
+  notify('Procure Mara, Ivo no mercado, Toren na ferraria, Elira no jardim, Brann no lago ou Sabela na taverna. Aproxime-se das criaturas para iniciar duelos.',2.8);
  }else{
   if(g.actionPlayer.x<95){setScene('map');g.mapPlayer.x=825;g.mapPlayer.y=325;return;}
   if(g.actionPlayer.x>1700){
@@ -714,7 +733,8 @@ function interact(){
    }
    showModal('relic','Livro-razão da mina','<div class="eyebrow">PROVA ARQUIVADA</div><h3>As contas não fecham</h3><p>Você já guardou este registro. As duplicações e desvios continuam anotados no seu diário.</p><div class="modalnote">Progresso da investigação: '+Math.min(g.kills,3)+' / 3 criaturas derrotadas.</div>',[{label:'Voltar às ruínas',action:()=>closeModal(),primary:true}]);return;
   }
-  notify('Explore mais as ruínas. O livro-razão está no extremo direito, perto do fim do caminho.',2.4);
+  if(nearestWildCreature(72)){openTacticalBattle();return;}
+  notify('Explore mais a mina. O livro-razão está no extremo direito, perto do altar.',2.4);
  }
 }
 function openShop(){const potionCost=Math.max(3,Math.round(5*g.economy.priceIndex/100));const mapCost=Math.max(2,Math.round(3*g.economy.priceIndex/100));const body='<p>“Tudo aqui custa cobre do reino. Nada nesta loja representa dinheiro real.”</p><div class="shoprow"><div><strong>Poção de ervas</strong><span>Recupera 35 pontos de vida, até o máximo.</span></div><div style="text-align:right"><div class="shopprice">'+potionCost+' cobre</div><button class="btn primary" id="buyPotion">Comprar</button></div></div><div class="shoprow"><div><strong>Mapa da estrada</strong><span>Uma dica sobre onde encontrar criaturas.</span></div><div style="text-align:right"><div class="shopprice">'+mapCost+' cobre</div><button class="btn" id="buyMap">Comprar</button></div></div><div class="modalnote">O índice de preços da vila é '+g.economy.priceIndex+'. O preço do mercador acompanha a simulação. Nenhuma quantia tem valor real.</div>';showModal('shop','Mercador de Brumaforte',body,[{label:'Fechar',action:()=>closeModal()}]);setTimeout(()=>{const bp=$('buyPotion'),bm=$('buyMap');if(bp)bp.onclick=()=>{if(g.coins<potionCost){notify('Você não tem cobre suficiente.');return;}g.coins-=potionCost;g.potions++;updateUI();persistProgress();notify('Poção adicionada ao inventário. Pressione H para usar.',2.5);};if(bm)bm.onclick=()=>{if(g.coins<mapCost){notify('Você não tem cobre suficiente.');return;}g.coins-=mapCost;updateUI();persistProgress();closeModal();openDialogue('Mapa da estrada','“Limos verdes costumam aparecer perto do caminho e das paredes quebradas. Se pretende lutar, aproxime-se antes de atacar.”','Dica comprada por '+mapCost+' cobres fictícios.');};},30);}
@@ -2107,7 +2127,7 @@ function drawBrumaforteMap(){
   if(gameSettings.showLabels)text('RUÍNAS',854,270,9,'#39533b','center');
 
   // Creatures, NPCs and player remain on their original interaction coordinates.
-  for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(performance.now()/300+m.x)*1.5,m.name.includes('Besouro')?'#7a9256':'#629e62',m.name.includes('Besouro')?1.05:1);}
+  for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
   drawNPCActor('mara',230,333,'staff');drawNPCActor('ivo',350,333,'tray');
   drawNPCActor('toren',747,315,'hammer');
   drawNPCActor('elira',455,456,'basket');
@@ -2213,7 +2233,7 @@ function drawForestMap(){
  // Moss, mushrooms and fireflies.
  for(let i=0;i<25;i++){const x=24+rand01(i+7)*900,y=130+rand01(i+79)*365;rect(x,y,3,2,i%3===0?'#9cae65':'#789c58');}
  for(let i=0;i<5;i++){const fx=128+i*164+Math.sin(visualFX.worldSeconds+i)*7,fy=176+Math.sin(visualFX.worldSeconds*1.4+i*2)*22;circle(fx,fy,2,'#e7dc86');}
- for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*3+m.x)*2,'#779c66',1.15);}
+ for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
  drawNPCActor('liora',180,366,'bow');drawNPCActor('arven',315,455,'sword');
  if(gameSettings.showLabels){
   text('BOSQUE VELADO',18,164,12,'#f0e8bd');
@@ -2247,7 +2267,7 @@ function drawLakeMap(){
  // A tide marker and driftwood make the coastline readable.
  for(const [x,y] of [[526,300],[540,286],[560,275],[578,259],[595,241]]){circle(x,y,3,'#a1a586');circle(x-1,y-1,1,'#d1cc9c');}
  rect(483,330,48,8,'#6e5135');rect(486,326,3,4,'#c4ad79');rect(521,326,3,4,'#c4ad79');
- for(const m of allMobs())if(m.alive){if(m.boss)drawWorldBoss(m.x,m.y,m);else drawSlime(m.x,m.y+Math.sin(visualFX.worldSeconds*2.8+m.x)*1.8,'#7b9d75',1.15);}
+ for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
  drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'book');
  if(gameSettings.showLabels){
   text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,357,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,326,'none');
@@ -2429,7 +2449,7 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){openTacticalBattle();return;}if(key==='KeyQ'){openTacticalBattle();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
+function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&key==='Space'){return;}if(key==='KeyJ'){openTacticalBattle();return;}if(key==='KeyQ'){openTacticalBattle();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{const button=e.target&&e.target.closest?e.target.closest('button'):null;if(gameSettings.soundEnabled&&button&&!(e.relatedTarget&&button.contains(e.relatedTarget)))playSfx('ui');});
 $('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCreatureTeam;$('classBtn').onclick=openClassMenu;$('difficultyBtn').onclick=openDifficultyMenu;$('powerBtn').onclick=useClassPower;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=openTacticalBattle;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
@@ -2443,7 +2463,7 @@ if(gameParams.get('new')==='1'){
  const record=readActiveSlot();g.character=normalizeAppearance(record&&record.character||g.character);
  notify('Bem-vindo ao reino. Fale com Mara perto da praça: aproxime-se e pressione E.',5);
 }
-settleOfflineActivity(true);updateUI();render();requestAnimationFrame(loop);
+settleOfflineActivity(true);updateUI();render();if(!g.starterChosen)openStarterSelection();requestAnimationFrame(loop);
 })();
 </script>
 </body>
