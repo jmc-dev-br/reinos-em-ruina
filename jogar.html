@@ -268,13 +268,38 @@ html,body{background:#243d37;color:#e4ecc7;font-family:ui-monospace,SFMono-Regul
 .retro-copy,.starter-card,.party-card,.duel-kicker,.duel-field,.wild-status,.partner-status,.duel-message,.classic-action,.move-card,.capture-card{border-radius:0;box-shadow:2px 2px 0 #90a879}.creature-portrait,.duel-creature{image-rendering:pixelated;border-radius:0;box-shadow:inset 0 -4px #79995f,2px 2px 0 #506e49}
 @media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:5px 6px}.stat .label{font-size:7px}.stat .value{font-size:10px}.actionrow{padding:5px;gap:4px}.actionrow .btn{font-size:8px;box-shadow:1px 1px 0 #a2b68a}.canvashead{top:139px}.modal{max-height:91vh}.modalbody{padding:12px}.modalhead{padding:11px}.modalfoot{padding:8px 11px}}
 @media(max-height:620px) and (min-width:761px){.top{min-height:43px}.stats{top:47px}.canvashead{top:99px}}
+
+/* REBOOT 3.0 — classic handheld look, coherent pixel characters and warmer menus */
+:root{--bg:#b8d6a0;--panel:#e4ebc3;--panel2:#cddfac;--line:#698b55;--ink:#2d4a43;--muted:#556e55;--gold:#c49b45;--orange:#bd7050;--green:#75a95e;--red:#c95b52}
+html,body{background:#78a968;color:#2d4a43;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.top{background:#dce9bb;border-bottom:3px solid #668c51;box-shadow:0 3px 0 #3f6a49;color:#2d4a43}
+.brand .mark{background:#f0d782;border:2px solid #577b4c;color:#315247;box-shadow:2px 2px 0 #73945a}
+.brand h1{color:#2e5144;text-shadow:none;letter-spacing:.04em}.brand p{color:#58794f}.buildtag{border:2px solid #7e9c5c;background:#c8dfa6;color:#395945}
+.stat{background:#e8edc9;border:2px solid #78985a;box-shadow:2px 2px 0 #72945d;color:#2d4a43}.stat .label{color:#61784f}.stat .value{color:#2d4a43}
+.gamecard{border:3px solid #4f784a;box-shadow:3px 3px 0 #3d6645;background:#98c17b}
+.canvashead{background:#e3edbf;border:2px solid #76995a;box-shadow:2px 2px 0 #6a8b52}
+.location{color:#2f5145}.subhead{color:#607850}.dot{background:#75a960;box-shadow:0 0 0 2px #b7d59b}
+.actionrow,.mobilehelp{background:#d9e8b5;border-color:#719457;box-shadow:0 -2px 0 #729257}
+.btn{background:#eef0d0;border:2px solid #789457;color:#2e4a43;box-shadow:2px 2px 0 #b1c592}.btn:hover{background:#fff1bd;border-color:#caa54f;color:#2b473e}.btn.primary{background:#b6d58f;border-color:#5d874d;color:#2b493d;box-shadow:2px 2px 0 #7ca362}.btn.active{background:#f4df91;border-color:#b48d3e;color:#614b2a}
+.kbd{background:#cfe1aa;color:#35543f;border-color:#849f64}
+.toast{background:#f3f0d1;border-color:#729057;color:#314d42;box-shadow:3px 3px 0 #5b7b4b}
+.modalback{background:#244a3ab8;backdrop-filter:none}.modal{background:#eaf0cb;border:3px solid #597e4b;box-shadow:4px 4px 0 #2e563c;color:#2d4a43}.modalhead,.modalfoot{background:#cfe1a7;border-color:#7b9b59}.modalhead h2{color:#2d4a43;letter-spacing:.02em}.modalbody h3{color:#2f5948}.modalbody p{color:#465e4b}.modalnote{background:#d6e5b0;border-color:#b09046;color:#3c5742}
+.retro-copy,.starter-card,.party-card,.duel-kicker,.duel-field,.wild-status,.partner-status,.duel-message,.classic-action{box-shadow:2px 2px 0 #94ad76}
+.worldmap-intro{background:#dce8b8;border:2px solid #7a9858;color:#395541}.worldmap-intro strong{color:#2e5644}.worldmap-intro p{color:#536c50}
+.atlas-schematic{border:2px solid #678951;background:linear-gradient(180deg,#a6d4df 0 37%,#a9cb80 37% 100%);box-shadow:3px 3px 0 #8eaa68}
+.atlas-schematic:before,.atlas-schematic:after{border-color:#4f8c5b;opacity:.24}.atlas-route{border-color:#e7d49c}
+.atlas-node{background:#ecf0ce;border:2px solid #688b53;box-shadow:2px 2px 0 #719460}.atlas-node b{color:#588e52}.atlas-node strong{color:#2f4b40}.atlas-node small{color:#5c724f}
+.region-card{background:#e3ebc3!important;border:2px solid #78995b!important;color:#304c42}.region-card:hover:not(:disabled){background:#f5efc7!important;border-color:#c59e4b!important}.region-card.current{background:#f1e4a6!important;border-color:#b99845!important;box-shadow:inset 0 0 0 1px #c59e4b}
+.region-art{box-shadow:none!important;border:2px solid #668750!important}.region-art.region-brumaforte{background:linear-gradient(180deg,#91cfe0 0 35%,#7dbb68 35% 100%)!important}.region-art.region-bosque{background:linear-gradient(180deg,#87c1d4 0 35%,#477d4c 35% 100%)!important}.region-art.region-lago{background:linear-gradient(180deg,#a4d9e8 0 35%,#4b98b6 35% 100%)!important}
+.battle-intro{background:#d0e2a9;color:#314f42;border-color:#79975b}.battle-side{background:#e3ecc1;border-color:#77965b}.battle-side.enemy{background:#f0dfad;border-color:#bf8a53}.battle-side .battle-name{color:#2d4a43}.battle-side.enemy .battle-name{color:#88483c}.battle-log{background:#d9e6b6;color:#304a40}.battle-card{box-shadow:2px 2px 0 #a3ba86}.battle-card[data-card="classpower"]{background:#cfe4ad;border-color:#6c9855}
+@media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat .value{font-size:10px}.canvashead{top:139px}.actionrow .btn{font-size:8px;min-height:29px}}
 </style>
 </head>
 <body>
 <div class="shell">
   <header class="top">
-    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 2.0</p></div></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">✦ AVENTURA 16-BIT · CRIATURAS ORIGINAIS</div></div>
+    <div class="brand"><div class="mark">R</div><div><h1>REINOS EM RUÍNA</h1><p>A Moeda Partida · REBOOT 3.0</p></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><a class="buildtag" href="index.html" style="text-decoration:none;color:var(--gold)">← MENU PRINCIPAL</a><div class="buildtag">♧ PORTÁTIL 16-BIT · CRIATURAS ORIGINAIS</div></div>
   </header>
   <section class="stats" aria-label="Status do personagem">
     <div class="stat"><div class="label">Parceiro ativo</div><div class="value" id="lv">Nível 1</div><div class="xpbar"><div class="xpfill" id="xpfill"></div></div></div>
@@ -1658,16 +1683,16 @@ function drawNamedNPC(x,y,shirt,skin,hat,prop){
 }
 
 const NPC_APPEARANCES={
- mara:{name:'Mara',gender:'feminino',outfit:'mage',cloak:'ivory',hair:'silver',skin:'olive',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'staff',outfitColor:'default',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
- ivo:{name:'Ivo',gender:'masculino',outfit:'noble',cloak:'red',hair:'brown',skin:'warm',hairstyle:'medium',headwear:'none',accessory:'necklace',weapon:'none',outfitColor:'crimson',faceShape:'round',eyeColor:'brown',facialHair:'mustache'},
- toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'none',accessory:'none',weapon:'none',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
- elira:{name:'Elira',gender:'feminino',outfit:'ranger',cloak:'green',hair:'red',skin:'pale',hairstyle:'braids',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'emerald',faceShape:'oval',eyeColor:'green',facialHair:'none'},
- brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'blue',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hat',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
- sabela:{name:'Sabela',gender:'feminino',outfit:'noble',cloak:'red',hair:'black',skin:'warm',hairstyle:'long',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'crimson',faceShape:'oval',eyeColor:'brown',facialHair:'none'},
- liora:{name:'Liora',gender:'feminino',outfit:'ranger',cloak:'green',hair:'silver',skin:'olive',hairstyle:'ponytail',headwear:'hood',accessory:'earrings',weapon:'bow',outfitColor:'emerald',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
- arven:{name:'Arven',gender:'masculino',outfit:'guard',cloak:'green',hair:'blond',skin:'light',hairstyle:'short',headwear:'helmet',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'blue',facialHair:'goatee'},
- yara:{name:'Yara',gender:'feminino',outfit:'mage',cloak:'blue',hair:'blue',skin:'deep',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'staff',outfitColor:'sapphire',faceShape:'oval',eyeColor:'green',facialHair:'none'},
- neris:{name:'Neris',gender:'masculino',outfit:'ranger',cloak:'ivory',hair:'red',skin:'pale',hairstyle:'ponytail',headwear:'none',accessory:'glasses',weapon:'bow',outfitColor:'charcoal',faceShape:'round',eyeColor:'gray',facialHair:'mustache'}
+ mara:{name:'Mara',gender:'feminino',outfit:'noble',cloak:'none',hair:'silver',skin:'olive',hairstyle:'long',headwear:'none',accessory:'glasses',weapon:'none',outfitColor:'emerald',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
+ ivo:{name:'Ivo',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'warm',hairstyle:'medium',headwear:'cap',accessory:'none',weapon:'none',outfitColor:'crimson',faceShape:'round',eyeColor:'brown',facialHair:'mustache'},
+ toren:{name:'Toren',gender:'masculino',outfit:'guard',cloak:'none',hair:'silver',skin:'dark',hairstyle:'short',headwear:'cap',accessory:'none',weapon:'none',outfitColor:'charcoal',faceShape:'angular',eyeColor:'gray',facialHair:'shortBeard'},
+ elira:{name:'Elira',gender:'feminino',outfit:'ranger',cloak:'none',hair:'red',skin:'pale',hairstyle:'braids',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'emerald',faceShape:'oval',eyeColor:'green',facialHair:'none'},
+ brann:{name:'Brann',gender:'masculino',outfit:'traveler',cloak:'none',hair:'brown',skin:'tan',hairstyle:'short',headwear:'hat',accessory:'none',weapon:'none',outfitColor:'sapphire',faceShape:'round',eyeColor:'brown',facialHair:'stubble'},
+ sabela:{name:'Sabela',gender:'feminino',outfit:'noble',cloak:'none',hair:'black',skin:'warm',hairstyle:'long',headwear:'none',accessory:'earrings',weapon:'none',outfitColor:'crimson',faceShape:'oval',eyeColor:'brown',facialHair:'none'},
+ liora:{name:'Liora',gender:'feminino',outfit:'ranger',cloak:'none',hair:'silver',skin:'olive',hairstyle:'ponytail',headwear:'hood',accessory:'none',weapon:'none',outfitColor:'emerald',faceShape:'angular',eyeColor:'gray',facialHair:'none'},
+ arven:{name:'Arven',gender:'masculino',outfit:'guard',cloak:'none',hair:'blond',skin:'light',hairstyle:'short',headwear:'cap',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'angular',eyeColor:'blue',facialHair:'none'},
+ yara:{name:'Yara',gender:'feminino',outfit:'mage',cloak:'none',hair:'blue',skin:'deep',hairstyle:'long',headwear:'circlet',accessory:'necklace',weapon:'none',outfitColor:'sapphire',faceShape:'oval',eyeColor:'green',facialHair:'none'},
+ neris:{name:'Neris',gender:'masculino',outfit:'traveler',cloak:'none',hair:'red',skin:'pale',hairstyle:'short',headwear:'none',accessory:'glasses',weapon:'none',outfitColor:'charcoal',faceShape:'round',eyeColor:'gray',facialHair:'mustache'}
 };
 const NPC_PROFILES={
  mara:{display:'Mara · Guardiã de Brumaforte',personality:'Firme, cuidadosa e difícil de enganar.',history:'Foi escriba antes de proteger a vila. Lê recibos como outras pessoas leem rostos; raramente fala antes de ter provas.'},
@@ -1682,118 +1707,83 @@ const NPC_PROFILES={
  neris:{display:'Neris · Arquivista dos naufrágios',personality:'Reservado, metódico e gentil com quem faz boas perguntas.',history:'Catalogou nomes de barcos que jamais voltaram. Esconde um mapa que muda com as marés e teme que alguém o use para chamar algo do fundo.'}
 };
 function drawHandheldCharacter(x,y,rawAppearance,motion={},targetCtx){
- const c=targetCtx||ctx;
- const rect=(rx,ry,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(rx),Math.round(ry),Math.max(1,Math.round(w)),Math.max(1,Math.round(h)));};
- const poly=(pts,color)=>{c.beginPath();c.moveTo(Math.round(pts[0][0]),Math.round(pts[0][1]));for(let i=1;i<pts.length;i++)c.lineTo(Math.round(pts[i][0]),Math.round(pts[i][1]));c.closePath();c.fillStyle=color;c.fill();};
- const line=(x1,y1,x2,y2,color,width=1)=>{c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.moveTo(Math.round(x1),Math.round(y1));c.lineTo(Math.round(x2),Math.round(y2));c.stroke();};
- const circle=(cx,cy,r,color)=>{c.fillStyle=color;c.beginPath();c.arc(Math.round(cx),Math.round(cy),r,0,Math.PI*2);c.fill();};
- const a=normalizeAppearance(rawAppearance||g.character),dir=motion.dir||'down',moving=!!motion.moving,female=a.gender==='feminino';
- x=Math.round(x);y=Math.round(y);
- const skins={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
- const hairs={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
- const outfits={traveler:'#344b61',guard:'#586557',mage:'#59458a',noble:'#783c3c',ranger:'#35513b',royal:'#353f70'};
- const colors={default:outfits[a.outfit]||outfits.traveler,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
- const cloaks={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
- const skin=skins[a.skin]||skins.light,hair=hairs[a.hair]||hairs.brown;
- const coat=colors[a.outfitColor]||outfits[a.outfit]||outfits.traveler;
- const pants=({traveler:'#40372c',guard:'#373d39',mage:'#302744',noble:'#4a2d2d',ranger:'#292f29',royal:'#292d47'})[a.outfit]||'#40372c';
- const outline='#243b3c',trim=({traveler:'#c7a66a',guard:'#b5b3a0',mage:'#d1ad68',noble:'#dcbd7a',ranger:'#c79c5a',royal:'#e1c16d'})[a.outfit]||'#c7a66a';
- const cape=cloaks[a.cloak],stride=moving?(Math.floor((motion.phase||0))%2?2:-2):0,armSwing=moving?(stride>0?1:-1):0;
- c.save();c.imageSmoothingEnabled=false;
- c.fillStyle='rgba(24,44,35,.32)';c.beginPath();c.ellipse(x,y+1,6,2,0,0,Math.PI*2);c.fill();
- if(cape){
-  poly([[x-4,y-17],[x+4,y-17],[x+5,y-13],[x+4,y-8],[x+1,y-9],[x-2,y-8],[x-5,y-10],[x-5,y-14]],outline);
-  poly([[x-3,y-16],[x+3,y-16],[x+4,y-13],[x+3,y-9],[x,y-10],[x-3,y-9],[x-4,y-11],[x-4,y-14]],cape);
- }
- rect(x-4+stride,y-8,3,6,outline);rect(x+1-stride,y-8,3,6,outline);
- rect(x-3+stride,y-7,2,4,pants);rect(x+2-stride,y-7,2,4,pants);
- rect(x-4+stride,y-3,3,2,'#31342f');rect(x+1-stride,y-3,4,2,'#31342f');
- if(a.outfit==='ranger'||a.outfit==='traveler'){rect(x-6,y-15,2,6,outline);rect(x-5,y-14,2,4,cape||'#7d6442');}
- if(female){
-  rect(x-4,y-16,8,9,outline);rect(x-3,y-15,6,6,coat);rect(x-4,y-10,8,3,coat);
-  rect(x-6,y-15+armSwing,2,5,outline);rect(x+4,y-15-armSwing,2,5,outline);
-  rect(x-5,y-14+armSwing,1,3,coat);rect(x+4,y-14-armSwing,1,3,coat);
- }else{
-  rect(x-5,y-16,10,9,outline);rect(x-4,y-15,8,7,coat);
-  rect(x-6,y-15+armSwing,3,6,outline);rect(x+3,y-15-armSwing,3,6,outline);
-  rect(x-5,y-14+armSwing,2,4,coat);rect(x+3,y-14-armSwing,2,4,coat);
- }
- if(a.outfit==='guard'||a.outfit==='royal'){
-  rect(x-4,y-15,3,3,'#899b91');rect(x+1,y-15,3,3,'#899b91');rect(x-2,y-14,4,5,'#566a69');rect(x-1,y-13,2,3,trim);
- }else if(a.outfit==='mage'){rect(x-2,y-15,4,6,'#3a2d56');rect(x-1,y-14,2,4,trim);}
- else if(a.outfit==='noble'){poly([[x-3,y-15],[x,y-11],[x+3,y-15]],trim);rect(x-1,y-10,2,3,'#332f31');}
- else{rect(x-3,y-14,6,1,trim);rect(x-1,y-13,2,3,'#4c3627');}
- if(female&&['mage','noble','royal'].includes(a.outfit)){poly([[x-3,y-10],[x+3,y-10],[x+5,y-6],[x-5,y-6]],coat);rect(x-4,y-7,8,1,trim);}
- rect(x-2,y-9,4,2,'#45372b');rect(x-1,y-9,2,2,trim);
- rect(x-2,y-17,4,3,skin);rect(x-5,y-25,10,10,outline);rect(x-4,y-24,8,8,skin);
- if(dir==='up'){
-  rect(x-5,y-25,10,5,hair);rect(x-4,y-23,8,5,hair);
-  if(a.hairstyle==='long'||a.hairstyle==='ponytail'){rect(x-5,y-21,2,6,hair);rect(x+3,y-21,2,6,hair);}
-  if(a.hairstyle==='braids'){rect(x-6,y-21,2,5,hair);rect(x+4,y-21,2,5,hair);}
- }else{
-  rect(x-5,y-25,10,4,hair);rect(x-5,y-22,2,3,hair);rect(x+3,y-22,2,3,hair);
-  if(a.hairstyle==='medium')rect(x-4,y-23,8,2,hair);
-  if(a.hairstyle==='long'){rect(x-5,y-22,2,6,hair);rect(x+3,y-22,2,6,hair);}
-  if(a.hairstyle==='ponytail'){rect(x+4,y-22,3,3,hair);rect(x+5,y-20,2,3,hair);}
-  if(a.hairstyle==='braids'){rect(x-6,y-22,2,5,hair);rect(x+4,y-22,2,5,hair);rect(x-6,y-18,2,2,trim);rect(x+4,y-18,2,2,trim);}
-  if(a.hairstyle==='mohawk'){rect(x-1,y-27,3,4,hair);rect(x,y-28,2,2,hair);}
-  const eye=({brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'})[a.eyeColor]||'#5a3828';
-  if(dir==='down'){rect(x-3,y-20,2,2,'#f6edc9');rect(x+2,y-20,2,2,'#f6edc9');rect(x-2,y-20,1,2,eye);rect(x+3,y-20,1,2,eye);}
-  else if(dir==='left'){rect(x-3,y-20,2,2,'#f6edc9');rect(x-2,y-20,1,2,'#283638');}
-  else if(dir==='right'){rect(x+2,y-20,2,2,'#f6edc9');rect(x+3,y-20,1,2,'#283638');}
-  if(a.facialHair&&a.facialHair!=='none'&&a.gender!=='feminino'){
-   if(['stubble','shortBeard','goatee'].includes(a.facialHair))rect(x-2,y-17,5,2,hair);
-   if(a.facialHair==='mustache')rect(x-2,y-18,4,1,hair);
+ const target=targetCtx||ctx,a=normalizeAppearance(rawAppearance||g.character),dir=motion.dir||'down';
+ const moving=!!motion.moving,step=moving?(Math.floor((motion.phase||0)/1.7)%2):0;
+ if(!drawHandheldCharacter.cache)drawHandheldCharacter.cache=new Map();
+ const key=JSON.stringify([a,dir,step]);
+ let sprite=drawHandheldCharacter.cache.get(key);
+ if(!sprite){
+  sprite=document.createElement('canvas');sprite.width=16;sprite.height=24;
+  const c=sprite.getContext('2d');c.imageSmoothingEnabled=false;
+  const px=(x0,y0,w,h,color)=>{c.fillStyle=color;c.fillRect(x0,y0,w,h);};
+  const skins={pale:'#f3d2ad',light:'#dfb58c',tan:'#bd8157',warm:'#d09970',olive:'#aa7b53',dark:'#80513a',deep:'#624033'};
+  const hairs={brown:'#5b3928',black:'#26242a',blond:'#d2ad58',silver:'#c5c2b5',red:'#a74738',blue:'#4b75a7',purple:'#8657a5',pink:'#c56b85'};
+  const clothes={traveler:'#438bb7',guard:'#568e61',mage:'#a07ac1',noble:'#cf6467',ranger:'#579759',royal:'#526fb6'};
+  const accents={crimson:'#cf6467',emerald:'#579759',sapphire:'#4e8fbd',violet:'#9c73bc',charcoal:'#69777a'};
+  const skin=skins[a.skin]||skins.light,hair=hairs[a.hair]||hairs.brown;
+  const coat=a.outfitColor&&a.outfitColor!=='default'?(accents[a.outfitColor]||clothes[a.outfit]||clothes.traveler):(clothes[a.outfit]||clothes.traveler);
+  const pants='#42515a',boots='#3a4144',outline='#283c41',trim='#f3d57a';
+  const capeColors={red:'#b95258',green:'#4f8050',blue:'#47769b',ivory:'#c6bd93'};
+  const cape=capeColors[a.cloak],darkCoat='#354d51';
+  if(cape&&a.cloak!=='none'){px(4,8,8,9,outline);px(5,9,6,7,cape);px(6,10,4,4,'#ffffff18');}
+  if(a.outfit==='traveler'||a.outfit==='ranger'){px(2,10,3,6,outline);px(3,11,2,4,'#9a7047');px(3,12,1,2,'#d1b06e');}
+  const leftShift=step?1:0,rightShift=step?0:1;
+  px(4+leftShift,16,4,6,outline);px(5+leftShift,17,2,4,pants);
+  px(8+rightShift,16,4,6,outline);px(9+rightShift,17,2,4,pants);
+  px(4+leftShift,21,4,2,outline);px(5+leftShift,21,2,1,boots);
+  px(8+rightShift,21,4,2,outline);px(9+rightShift,21,2,1,boots);
+  px(3,9,10,8,outline);px(4,10,8,6,coat);
+  px(4,10,8,1,trim);px(7,11,2,4,darkCoat);px(7,11,1,3,trim);
+  px(2,10,3,6,outline);px(3,11,2,4,skin);
+  px(11,10,3,6,outline);px(11,11,2,4,skin);
+  if(a.gender==='feminino'&&['mage','noble','royal'].includes(a.outfit)){
+   px(3,15,10,3,outline);px(4,16,8,2,coat);px(4,16,8,1,trim);
+  }else{px(4,15,3,2,pants);px(9,15,3,2,pants);}
+  px(3,2,10,8,outline);px(4,3,8,6,skin);px(5,4,6,4,skin);
+  if(dir==='up'){
+   px(4,3,8,6,hair);px(3,4,2,4,hair);px(11,4,2,4,hair);px(5,8,6,1,skin);
+  }else{
+   px(4,2,8,3,hair);px(3,3,2,4,hair);px(11,3,2,4,hair);
+   if(a.hairstyle==='long'){px(3,5,2,4,hair);px(11,5,2,4,hair);}
+   if(a.hairstyle==='ponytail'){px(12,4,2,4,hair);px(13,6,2,3,hair);}
+   if(a.hairstyle==='braids'){px(3,5,2,4,hair);px(11,5,2,4,hair);px(3,8,2,2,trim);px(11,8,2,2,trim);}
+   if(a.hairstyle==='mohawk'){px(7,0,3,3,hair);px(8,0,1,2,trim);}
+   if(dir==='down'){
+    px(5,6,2,2,'#fff2d5');px(9,6,2,2,'#fff2d5');
+    const eye=({brown:'#593d2b',blue:'#3e73a4',green:'#457c54',gray:'#6b7778'})[a.eyeColor]||'#593d2b';
+    px(6,6,1,2,eye);px(10,6,1,2,eye);px(7,8,2,1,'#8e5141');
+   }else if(dir==='left'){px(5,6,2,2,'#fff2d5');px(5,6,1,2,'#293a3e');}
+   else if(dir==='right'){px(9,6,2,2,'#fff2d5');px(10,6,1,2,'#293a3e');}
+   if(a.facialHair&&a.facialHair!=='none'&&a.gender!=='feminino')px(6,8,4,1,hair);
   }
+  if(a.headwear==='cap'||a.headwear==='hat'){px(3,1,10,3,outline);px(4,1,8,2,coat);px(2,3,12,1,trim);}
+  else if(a.headwear==='hood'){px(2,2,12,7,outline);px(3,3,10,5,cape||coat);px(4,4,8,4,skin);px(5,6,2,2,'#fff2d5');px(9,6,2,2,'#fff2d5');}
+  else if(a.headwear==='helmet'){px(3,1,10,4,outline);px(4,1,8,3,'#849b9a');px(4,4,8,1,trim);}
+  else if(a.headwear==='wizardHat'){px(5,0,6,2,coat);px(6,0,4,3,coat);px(3,3,10,1,trim);}
+  else if(a.headwear==='crown'||a.headwear==='circlet'){px(4,2,8,1,trim);px(6,0,2,2,trim);px(9,1,2,1,'#fff0ad');}
+  if(a.accessory==='glasses'){px(4,6,4,2,'#d8f0df');px(9,6,4,2,'#d8f0df');px(8,6,1,1,'#51635b');}
+  else if(a.accessory==='eyepatch'){px(dir==='left'?4:10,6,3,2,'#35454a');}
+  else if(a.accessory==='earrings'){px(3,7,1,2,trim);px(12,7,1,2,trim);}
+  else if(a.accessory==='necklace'){px(7,9,2,2,trim);}
+  if(drawHandheldCharacter.cache.size>240)drawHandheldCharacter.cache.clear();
+  drawHandheldCharacter.cache.set(key,sprite);
  }
- if(a.headwear==='cap'){
-  rect(x-5,y-26,10,3,coat);rect(x-4,y-28,7,3,coat);rect(x+1,y-24,5,1,trim);
- }else if(a.headwear==='hood'){
-  poly([[x-6,y-23],[x-5,y-27],[x-2,y-28],[x+3,y-27],[x+6,y-23],[x+4,y-21],[x+3,y-25],[x-3,y-25],[x-4,y-21]],outline);
-  poly([[x-4,y-23],[x-3,y-26],[x+2,y-26],[x+4,y-23],[x+3,y-22],[x+2,y-24],[x-2,y-24],[x-3,y-22]],cape||coat);
- }else if(a.headwear==='helmet'){
-  rect(x-5,y-26,10,4,'#465657');rect(x-4,y-23,8,2,'#9aa8a0');rect(x-1,y-25,2,2,trim);
- }else if(a.headwear==='wizardHat'){
-  poly([[x-6,y-25],[x-2,y-30],[x+2,y-30],[x+6,y-25]],'#514272');rect(x-6,y-25,12,2,trim);rect(x,y-28,2,2,trim);
- }else if(a.headwear==='crown'){
-  rect(x-4,y-25,8,2,trim);rect(x-4,y-27,2,2,trim);rect(x-1,y-28,2,3,trim);rect(x+2,y-27,2,2,trim);
- }else if(a.headwear==='circlet'){rect(x-4,y-24,8,1,trim);rect(x-1,y-25,2,2,'#f2d98a');}
- if(a.accessory==='glasses'){rect(x-4,y-20,3,2,'#d5e3db');rect(x+1,y-20,3,2,'#d5e3db');rect(x-1,y-19,2,1,'#d5e3db');}
- else if(a.accessory==='eyepatch')rect(dir==='left'?x-4:x+2,y-20,3,2,'#272b2a');
- else if(a.accessory==='earrings'){rect(x-5,y-19,1,2,trim);rect(x+4,y-19,1,2,trim);}
- else if(a.accessory==='necklace'){rect(x-1,y-9,2,2,trim);}
- if(a.weapon==='sword'){line(x+5,y-8,x+7,y-17,'#c1d0cc',2);rect(x+5,y-10,3,1,trim);}
- else if(a.weapon==='staff'){line(x+6,y-6,x+8,y-21,'#855a35',2);circle(x+8,y-23,2,'#8ccac6');}
- else if(a.weapon==='bow'){line(x+5,y-15,x+8,y-9,'#98663c',1);line(x+8,y-9,x+10,y-15,'#98663c',1);}
- c.restore();
+ target.save();target.imageSmoothingEnabled=false;
+ target.fillStyle='rgba(35,60,45,.28)';target.beginPath();target.ellipse(Math.round(x),Math.round(y+1),6,2,0,0,Math.PI*2);target.fill();
+ target.drawImage(sprite,Math.round(x-8),Math.round(y-24));target.restore();
 }
 function drawNPCActor(id,x,y,prop='none'){
  const appearance=NPC_APPEARANCES[id];if(!appearance)return;
  const time=performance.now()/1000,phase={mara:.2,ivo:1.1,toren:2.3,elira:3.2,brann:4.1,sabela:5,liora:2.8,arven:1.7,yara:4.7,neris:.8}[id]||0;
- drawHandheldCharacter(x,y+Math.sin(time*1.35+phase)*.25,appearance,{dir:'down',moving:false,phase:0});
- ctx.save();
- if(id==='mara'){rect(x-4,y-24,8,2,'#dabb6a');rect(x-1,y-26,2,3,'#f1d88a');rect(x-4,y-14,8,5,'#4b5948');rect(x-2,y-13,4,2,'#e4c879');}
- else if(id==='ivo'){rect(x-6,y-25,12,2,'#8b6a42');rect(x-4,y-27,8,3,'#b89a63');rect(x+3,y-11,4,4,'#c4a16b');}
- else if(id==='toren'){rect(x-4,y-15,8,6,'#353b3a');rect(x-3,y-14,6,4,'#654b38');rect(x-3,y-15,6,1,'#c59d5a');}
- else if(id==='elira'){rect(x-4,y-26,2,2,'#e7d27a');rect(x-1,y-27,2,3,'#d88972');rect(x+2,y-26,2,2,'#99c56a');rect(x-4,y-13,2,3,'#7aa65c');}
- else if(id==='brann'){poly([[x-6,y-23],[x-4,y-27],[x+4,y-27],[x+6,y-23]],'#675239');rect(x-7,y-24,14,2,'#bda06c');}
- else if(id==='sabela'){rect(x-5,y-24,10,2,'#a94948');rect(x-6,y-19,2,2,'#eed080');rect(x+4,y-19,2,2,'#eed080');rect(x-4,y-10,8,2,'#a94948');}
- else if(id==='liora'){poly([[x-6,y-22],[x-5,y-26],[x-2,y-28],[x+3,y-27],[x+6,y-22],[x+3,y-24],[x-3,y-24]],'#264a36');rect(x-4,y-14,8,2,'#b4bc8a');}
- else if(id==='arven'){rect(x-8,y-14,4,6,'#a9b7a4');rect(x-7,y-13,2,4,'#d1c7a8');rect(x-7,y-12,2,2,'#6a8b68');}
- else if(id==='yara'){poly([[x-5,y-24],[x,y-27],[x+5,y-24],[x+3,y-21],[x-3,y-21]],'#3d78a0');rect(x+2,y-22,2,2,'#b7e0de');rect(x-4,y-14,8,2,'#3d78a0');}
- else if(id==='neris'){rect(x-5,y-23,4,2,'#d5e3db');rect(x+1,y-23,4,2,'#d5e3db');rect(x-1,y-22,2,1,'#d5e3db');rect(x+4,y-12,4,5,'#5b4634');rect(x+5,y-11,2,3,'#d3c18f');}
- if(prop==='hammer'){
-  const swing=Math.sin(time*3.4+phase)*.15;ctx.translate(x+5,y-10);ctx.rotate(swing);
-  rect(-1,-1,2,9,'#6f4c31');rect(-4,-5,8,4,'#a7ada7');rect(-3,-6,6,1,'#d8d4bd');ctx.restore();return;
- }
- if(prop==='basket'){rect(x-8,y-10,5,4,'#987449');rect(x-7,y-12,3,2,'#79a45c');rect(x-4,y-12,2,2,'#d4ca76');}
- else if(prop==='rod'){line(x+5,y-9,x+12,y-23,'#704c2e',1.5);line(x+12,y-23,x+16,y-27,'#d7e4d0',1);}
- else if(prop==='tray'){rect(x+4,y-15,8,2,'#7d5a38');rect(x+5,y-17,3,2,'#d6b777');rect(x+9,y-16,2,2,'#94a66b');}
- else if(prop==='staff'){line(x+6,y-6,x+8,y-23,'#775536',2);circle(x+8,y-25,2,'#86c5cc');circle(x+8,y-25,1,'#dbf4d4');}
- else if(prop==='bow'){line(x+5,y-15,x+9,y-20,'#98663c',1);line(x+9,y-20,x+10,y-12,'#98663c',1);}
- else if(prop==='book'){rect(x+5,y-14,6,5,'#382d25');rect(x+6,y-13,2,3,'#cfbc8a');rect(x+8,y-13,2,3,'#e2d6ad');}
- else if(prop==='sword'){line(x+5,y-9,x+9,y-21,'#b9c4c6',2);line(x+4,y-11,x+7,y-10,'#9f7448',2);}
- ctx.restore();
+ drawHandheldCharacter(x,y+Math.sin(time*1.35+phase)*.35,appearance,{dir:'down',moving:false,phase:0});
+ if(prop==='hammer'){rect(x+5,y-12,2,8,'#805a39');rect(x+3,y-15,6,3,'#a7b5a0');rect(x+4,y-16,4,1,'#eadb9b');}
+ else if(prop==='basket'){rect(x-8,y-9,6,5,'#9a7445');rect(x-7,y-11,3,2,'#5e9b5a');rect(x-4,y-11,2,2,'#d0c76f');}
+ else if(prop==='rod'){line(x+6,y-8,x+11,y-20,'#795532',1.5);line(x+11,y-20,x+14,y-24,'#d6e6d1',1);}
+ else if(prop==='tray'){rect(x+5,y-12,8,2,'#775838');rect(x+6,y-14,3,2,'#d8c27f');rect(x+10,y-13,2,2,'#85ac66');}
+ else if(prop==='staff'){line(x+6,y-5,x+8,y-20,'#775536',2);rect(x+7,y-22,3,3,'#8cc6c3');rect(x+8,y-21,1,1,'#e1f2bd');}
+ else if(prop==='bow'){line(x+5,y-15,x+8,y-20,'#98663c',1);line(x+8,y-20,x+9,y-12,'#98663c',1);}
+ else if(prop==='book'){rect(x+5,y-12,6,5,'#5d4933');rect(x+6,y-11,2,3,'#e0d1a0');rect(x+8,y-11,2,3,'#fff0c9');}
+ else if(prop==='sword'){line(x+5,y-8,x+8,y-18,'#b9c4c6',2);line(x+4,y-10,x+7,y-9,'#9f7448',2);}
 }
 function npcForDialogue(title){
  const t=String(title||'').toLowerCase();
@@ -1814,14 +1804,14 @@ function npcPortraitData(id){
 
 function drawNameplate(name,x,y,color='#f5edc5',size=9){
  if(!gameSettings.showLabels||!name)return 0;
- const label=String(name).toUpperCase().slice(0,30);
- ctx.save();ctx.font=`bold ${size}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;ctx.textAlign='center';ctx.textBaseline='alphabetic';
- const width=Math.ceil(ctx.measureText(label).width),left=x-width/2-5,top=y-size-5;
- ctx.fillStyle='rgba(8,13,12,.94)';ctx.fillRect(left,top,width+10,size+10);
- ctx.strokeStyle='rgba(194,210,165,.8)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left+2,top+1);ctx.lineTo(left+width+8,top+1);ctx.stroke();
- ctx.lineWidth=2.5;ctx.strokeStyle='#111510';ctx.strokeText(label,x,y);
- ctx.fillStyle=color;ctx.fillText(label,x,y);
- ctx.strokeStyle=color;ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(x-width/2,y+2);ctx.lineTo(x+width/2,y+2);ctx.stroke();
+ const label=String(name).toUpperCase().slice(0,24);
+ ctx.save();ctx.font='bold '+size+'px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';ctx.textAlign='center';ctx.textBaseline='alphabetic';
+ const width=Math.ceil(ctx.measureText(label).width),left=Math.round(x-width/2-4),top=Math.round(y-size-4);
+ ctx.fillStyle='#edf0c9';ctx.fillRect(left,top,width+8,size+8);
+ ctx.strokeStyle='#385b43';ctx.lineWidth=1;ctx.strokeRect(left+.5,top+.5,width+7,size+7);
+ ctx.lineWidth=2;ctx.strokeStyle='#f6f0cf';ctx.strokeText(label,x,y);
+ ctx.fillStyle='#304a43';ctx.fillText(label,x,y);
+ ctx.strokeStyle=color==='#f5edc5'?'#aa8a40':color;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x-width/2,y+2);ctx.lineTo(x+width/2,y+2);ctx.stroke();
  ctx.restore();return width;
 }
 function drawNPCName(name,x,y,status){
@@ -2291,14 +2281,14 @@ function drawBrumaforteMap(){
   if(gameSettings.showLabels){
     text('BRUMAFORTE',18,166,12,'#eaf2c8');
     text('MERCADO',136,286,8,'#f5f4cc','center');text('ESTALAGEM',362,285,8,'#f5f4cc','center');text('FERREIRO',758,285,8,'#f5f4cc','center');
-    drawNPCName('MARA · GUARDIÃ',230,269,'none');drawNPCName('IVO · MERCADOR',350,269,'none');
-    drawNPCName('TOREN · FERREIRO',747,252,g.sideQuests.toren);
-    drawNPCName('ELIRA · HERBORISTA',455,393,g.sideQuests.elira);
-    drawNPCName('BRANN · PESCADOR',248,389,g.sideQuests.brann);
-    drawNPCName('SABELA · ESTALAJADEIRA',565,252,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
+    drawNPCName('MARA · GUARDIÃ',230,322,'none');drawNPCName('IVO · MERCADOR',350,322,'none');
+    drawNPCName('TOREN · FERREIRO',747,304,g.sideQuests.toren);
+    drawNPCName('ELIRA · HERBORISTA',455,445,g.sideQuests.elira);
+    drawNPCName('BRANN · PESCADOR',248,441,g.sideQuests.brann);
+    drawNPCName('SABELA · ESTALAJADEIRA',565,304,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
     drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-28,'#f4d49a',8);
   }
-  const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+  const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 
 
@@ -2393,11 +2383,11 @@ function drawForestMap(){
  drawNPCActor('liora',180,366,'bow');drawNPCActor('arven',315,455,'sword');
  if(gameSettings.showLabels){
   text('BOSQUE VELADO',18,164,12,'#f0e8bd');
-  drawNPCName('LIORA · RASTREADORA',180,304,g.sideQuests.liora);drawNPCName('ARVEN · VIGIA',315,393,g.sideQuests.arven);
+  drawNPCName('LIORA · RASTREADORA',180,355,g.sideQuests.liora);drawNPCName('ARVEN · VIGIA',315,444,g.sideQuests.arven);
   text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
  }
- const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawLakeMap(){
  const tile=16;
@@ -2426,10 +2416,10 @@ function drawLakeMap(){
  for(const m of allMobs())if(m.alive)drawFieldCreature(m.x,m.y,m);
  drawNPCActor('yara',270,419,'staff');drawNPCActor('neris',457,388,'book');
  if(gameSettings.showLabels){
-  text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,357,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,326,'none');
+  text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,408,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,377,'none');
   text('ATRACADOURO',622,318,8,'#f8e8b7','center');const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
  }
- const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawMapCompass(){
  const x=914,y=232;ctx.save();ctx.globalAlpha=.92;
@@ -2588,9 +2578,11 @@ function update(dt){
  if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;
  if(keys.has('KeyW')||keys.has('ArrowUp'))dy--;
  if(keys.has('KeyS')||keys.has('ArrowDown'))dy++;
- const mag=Math.hypot(dx,dy)||1,rate=(dx||dy)?12:16;
- playerMotion.vx=approach(playerMotion.vx,dx/mag*135*speedFactor(),rate,dt);
- playerMotion.vy=approach(playerMotion.vy,dy/mag*135*speedFactor(),rate,dt);
+ // Classic handheld overworld movement: no diagonal drifting.
+ if(dx&&dy){if(Math.abs(dx)>=Math.abs(dy))dy=0;else dx=0;}
+ const mag=Math.hypot(dx,dy)||1,rate=(dx||dy)?18:22,walkSpeed=100*speedFactor();
+ playerMotion.vx=approach(playerMotion.vx,dx/mag*walkSpeed,rate,dt);
+ playerMotion.vy=approach(playerMotion.vy,dy/mag*walkSpeed,rate,dt);
  const minX=isMap?18:25,maxX=isMap?942:1855,minY=isMap?137:178,maxY=isMap?522:500;
  const nx=Math.max(minX,Math.min(maxX,p.x+playerMotion.vx*dt));
  if(!mapBlocked(nx,p.y))p.x=nx;else playerMotion.vx=0;
@@ -2598,7 +2590,7 @@ function update(dt){
  if(!mapBlocked(p.x,ny))p.y=ny;else playerMotion.vy=0;
  if(dx||dy){if(Math.abs(dx)>Math.abs(dy))playerMotion.dir=dx>0?'right':'left';else playerMotion.dir=dy>0?'down':'up';}
  playerMotion.moving=Math.hypot(playerMotion.vx,playerMotion.vy)>10;
- if(playerMotion.moving)playerMotion.phase+=dt*7.5;
+ if(playerMotion.moving)playerMotion.phase+=dt*5.5;
  updateEnemyCombat(dt);
  if(!playerMotion.moving)playerMotion.phase=0;
  render();
