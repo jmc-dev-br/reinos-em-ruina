@@ -206,17 +206,16 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 }
 
 
-/* Final correction: show the complete supplied menu image once; buttons are invisible hit targets. */
-body:has(#homeView.active) .backdrop{background:#0a0c12 url("assets/kingdom-menu-sharp.svg") center center/100% 100% no-repeat!important;image-rendering:crisp-edges;filter:contrast(1.04) saturate(1.05)}
+/* Correct final menu: no duplicate HTML artwork, no artificial sharpening, preserve 16:9 proportions. */
+body:has(#homeView.active) .backdrop{background:#07090f url("assets/kingdom-menu.webp") center center/contain no-repeat!important;image-rendering:auto;filter:none}
 body:has(#homeView.active) .backdrop:after,body:has(#homeView.active) .backdrop .stars,body:has(#homeView.active) .backdrop .fog,body:has(#homeView.active) .backdrop svg{display:none!important}
 body:has(#homeView.active) .topbar,body:has(#homeView.active) .footer{display:none!important}
 body:has(#homeView.active) .stage{position:relative;z-index:1;min-height:100vh;height:100vh;width:100%;padding:0!important;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #homeView{width:100%;height:100%;margin:0;padding:0}
 #homeView.active{display:block!important}
 #homeView .hero{display:block!important;width:100%;height:100%;margin:0;padding:0}
-#homeView .hero-copy{display:block!important;position:absolute;width:100%;height:100%;max-width:none;inset:0;margin:0;padding:0;transform:none!important;background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important}
-#homeView .hero-copy:before,#homeView .hero-copy:after,#homeView h1,#homeView .eyebrow,#homeView .lede,#homeView .description,#homeView .ornament,#homeView .primary-actions,#homeView #homeNote,#homeView .hero-art{display:none!important}
-.menu-hotspots{display:none;position:fixed;inset:0;z-index:12;width:100vw;height:100vh;pointer-events:none}
+#homeView .hero-copy,#homeView .hero-art{display:none!important}
+.menu-hotspots{display:none;position:fixed;z-index:12;pointer-events:none;width:min(100vw,177.7778vh);height:min(56.25vw,100vh);left:50%;top:50%;transform:translate(-50%,-50%)}
 #homeView.active .menu-hotspots{display:block}
 .menu-hotspots .hotspot{position:absolute;display:block;pointer-events:auto;margin:0;padding:0;background:transparent;border:0;border-radius:0;outline:0;box-shadow:none;color:transparent;overflow:hidden;font-size:0;line-height:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .menu-hotspots .hotspot span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -224,16 +223,13 @@ body:has(#homeView.active) .stage{position:relative;z-index:1;min-height:100vh;h
 .menu-hotspots .play-hotspot{left:39.25%;top:37.15%;width:21.8%;height:8.25%}
 .menu-hotspots .language-hotspot{left:39.9%;top:47.15%;width:20.1%;height:6.5%}
 .menu-hotspots .about-hotspot{left:39.9%;top:54.95%;width:20.1%;height:6.55%}
-.menu-hotspots .history-hotspot{left:39.9%;top:63.0%;width:20.1%;height:6.55%}
+.menu-hotspots .history-hotspot{left:39.9%;top:63%;width:20.1%;height:6.55%}
 .menu-hotspots .exit-hotspot{left:39.9%;top:71.95%;width:20.1%;height:6.6%}
 .menu-hotspots .pt-hotspot{left:87.7%;top:2.15%;width:4.5%;height:4.6%}
 .menu-hotspots .en-hotspot{left:93.3%;top:2.15%;width:4.35%;height:4.6%}
 @media(max-aspect-ratio:1.3){
- .backdrop{background-size:cover!important;background-position:center center!important}
- .menu-hotspots .play-hotspot{left:25%;width:50%}
- .menu-hotspots .language-hotspot,.menu-hotspots .about-hotspot,.menu-hotspots .history-hotspot,.menu-hotspots .exit-hotspot{left:27%;width:46%}
- .menu-hotspots .pt-hotspot{left:75%;width:9%}
- .menu-hotspots .en-hotspot{left:85%;width:9%}
+ body:has(#homeView.active) .backdrop{background-size:contain!important}
+ .menu-hotspots{width:min(100vw,177.7778vh);height:min(56.25vw,100vh)}
 }
 </style>
 </head>
