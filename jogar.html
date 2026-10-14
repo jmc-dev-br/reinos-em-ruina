@@ -337,7 +337,7 @@ function normalizeAppearance(value){
   hair:['brown','black','blond','silver','red','blue','purple','pink'].includes(v.hair)?v.hair:d.hair,
   skin:['pale','light','tan','warm','olive','dark','deep'].includes(v.skin)?v.skin:d.skin,
   hairstyle:['short','medium','long','ponytail','braids','mohawk'].includes(v.hairstyle)?v.hairstyle:d.hairstyle,
-  headwear:['none','hood','crown','wizardHat','helmet','circlet'].includes(v.headwear)?v.headwear:d.headwear,
+  headwear:['none','cap','hood','crown','wizardHat','helmet','circlet'].includes(v.headwear)?v.headwear:d.headwear,
   accessory:['none','glasses','eyepatch','earrings','necklace'].includes(v.accessory)?v.accessory:d.accessory,
   weapon:['sword','staff','bow','none'].includes(v.weapon)?v.weapon:d.weapon,
   outfitColor:['default','crimson','emerald','sapphire','violet','charcoal'].includes(v.outfitColor)?v.outfitColor:d.outfitColor,
@@ -1739,7 +1739,9 @@ function drawHandheldCharacter(x,y,rawAppearance,motion={},targetCtx){
    if(a.facialHair==='mustache')rect(x-2,y-18,4,1,hair);
   }
  }
- if(a.headwear==='hood'){
+ if(a.headwear==='cap'){
+  rect(x-5,y-26,10,3,coat);rect(x-4,y-28,7,3,coat);rect(x+1,y-24,5,1,trim);
+ }else if(a.headwear==='hood'){
   poly([[x-6,y-23],[x-5,y-27],[x-2,y-28],[x+3,y-27],[x+6,y-23],[x+4,y-21],[x+3,y-25],[x-3,y-25],[x-4,y-21]],outline);
   poly([[x-4,y-23],[x-3,y-26],[x+2,y-26],[x+4,y-23],[x+3,y-22],[x+2,y-24],[x-2,y-24],[x-3,y-22]],cape||coat);
  }else if(a.headwear==='helmet'){
