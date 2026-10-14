@@ -2033,9 +2033,9 @@ function npcPortraitData(id){
  if(!id||!NPC_APPEARANCES[id])return '';
  try{
   const portrait=document.createElement('canvas');portrait.width=64;portrait.height=64;
-  const c=portrait.getContext('2d');c.imageSmoothingEnabled=false;c.save();c.scale(2,2);
-  drawHandheldCharacter(16,28,NPC_APPEARANCES[id],{dir:'down',moving:false,phase:0},c);
-  c.restore();return portrait.toDataURL();
+  const c=portrait.getContext('2d');c.imageSmoothingEnabled=true;
+  drawPlayer(32,56,NPC_APPEARANCES[id],{dir:'down',moving:false,phase:0,idleTime:0},c);
+  return portrait.toDataURL();
  }catch(err){return '';}
 }
 
@@ -2122,7 +2122,7 @@ function buildAnimatedPlayerFrame(sprite,a,dir,step,moving){
  return frame;
 }
 
-function drawPlayer(x,y,rawAppearance,motion){
+function drawPlayer(x,y,rawAppearance,motion,targetCtx){
  const a=normalizeAppearance(rawAppearance||g.character);
  const female=['feminino','female','woman','mulher','f'].includes(String(a.gender||'').toLowerCase());if(female)a.facialHair='none';
  if(!drawPlayer.cache)drawPlayer.cache=new Map();
@@ -2343,10 +2343,10 @@ function drawPlayer(x,y,rawAppearance,motion){
  const poseKey=cacheKey+'|'+dir+'|'+(moving?'walk'+step:'idle');let pose=drawPlayer.poseCache.get(poseKey);
  if(!pose){pose=buildAnimatedPlayerFrame(sprite,a,dir,step,moving);drawPlayer.poseCache.set(poseKey,pose);if(drawPlayer.poseCache.size>220)drawPlayer.poseCache.delete(drawPlayer.poseCache.keys().next().value);}
  const height=42,width=height*2/3,bob=moving?(step===0?0:-1):Math.round(Math.sin((m.idleTime||0)*2.2)*.78);
- const dx=Math.round(x-width/2),dy=Math.round(y-height+bob);ctx.save();ctx.imageSmoothingEnabled=true;
- if(dir==='left'){ctx.translate(dx+width,dy);ctx.scale(-1,1);ctx.drawImage(pose,0,0,width,height);}
- else ctx.drawImage(pose,dx,dy,width,height);
- ctx.restore();
+ const target=targetCtx||ctx,dx=Math.round(x-width/2),dy=Math.round(y-height+bob);target.save();target.imageSmoothingEnabled=true;
+ if(dir==='left'){target.translate(dx+width,dy);target.scale(-1,1);target.drawImage(pose,0,0,width,height);}
+ else target.drawImage(pose,dx,dy,width,height);
+ target.restore();
 }
 function drawFieldCreature(x,y,m){
  const t=m.type||'slime',time=visualFX.worldSeconds||0,bob=Math.sin(time*2.4+(m.x||0)*.025)*1.2;
