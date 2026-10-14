@@ -1150,6 +1150,40 @@ function openCharacterProgression(){
  $('modalBody').querySelectorAll('[data-skill]').forEach(button=>button.addEventListener('click',()=>spendSkill(button.dataset.skill)));
 }
 
+function applyClass(id){
+ if(!CLASS_DEFS[id])return;
+ const current=CLASS_DEFS[g.classId]||CLASS_DEFS.warrior,next=CLASS_DEFS[id];
+ if(g.classId===id){closeModal();notify('Você já pertence à classe '+next.name+'.',2);return;}
+ const oldBonus=Number.isFinite(g.classHpBonusApplied)?g.classHpBonusApplied:current.hpBonus;
+ g.maxHp=Math.max(50,g.maxHp+next.hpBonus-oldBonus);g.hp=Math.max(1,Math.min(g.hp,g.maxHp));
+ g.classId=id;g.classHpBonusApplied=next.hpBonus;g.powerCooldown=0;g.powerShield=0;
+ closeModal();updateUI();persistProgress();playSfx('win');
+ notify('Classe alterada para '+next.name+'. Poder: '+next.powerName+'.',3.2);
+}
+function openClassMenu(){
+ const current=classProfile();
+ const cards=Object.entries(CLASS_DEFS).map(([id,c])=>{
+  const isCurrent=g.classId===id;
+  return '<button class="class-card '+(isCurrent?'current':'')+'" data-class="'+id+'"><span class="class-icon">'+c.icon+'</span><span><strong>'+c.name+(isCurrent?' · ATUAL':'')+'</strong><small>'+c.desc+'</small><span class="class-badges"><i class="class-badge">Vida '+(c.hpBonus>=0?'+':'')+c.hpBonus+'</i><i class="class-badge">'+c.style+'</i></span><em>'+c.powerIcon+' '+c.powerName+' · '+c.cooldown+'s de recarga</em></span></button>';
+ }).join('');
+ const body='<div class="worldmap-intro"><strong>Escolha como quer enfrentar o reino</strong><p>A classe altera a vida máxima, o dano fixo, a defesa e o poder especial. A aparência cosmética do personagem continua editável. Suas missões e conquistas permanecem.</p></div>'+
+ '<div class="class-power-summary"><span class="class-power-icon">'+current.powerIcon+'</span><span><strong>'+current.powerName+'</strong><small>'+current.passive+' · O poder desperta no nível 2. Use Q fora dos combates por cartas.</small></span></div>'+
+ '<div class="class-grid">'+cards+'</div><div class="menu-note">Guerreiro: corpo a corpo. Patrulheiro: alcance. Arcanista: dano em área. Guardião: escudo e resistência. Trocar de classe não apaga nível, itens ou missões.</div>';
+ showModal('classes','Classes de combate',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-class]').forEach(button=>button.addEventListener('click',()=>applyClass(button.dataset.class)));
+}
+function applyDifficulty(id){
+ if(!DIFFICULTY_DEFS[id])return;
+ g.difficulty=id;closeModal();updateUI();persistProgress();
+ notify('Dificuldade alterada: '+DIFFICULTY_DEFS[id].name+'. O dano fica previsível e depende da criatura, da classe, das perícias e da dificuldade.',3);
+}
+function openDifficultyMenu(){
+ const body='<div class="worldmap-intro"><strong>Defina o desafio da jornada</strong><p>Os ataques não usam rolagens aleatórias de dano: o resultado depende de valores fixos, classe, perícias e dificuldade.</p></div><div class="difficulty-grid">'+
+ Object.entries(DIFFICULTY_DEFS).map(([id,d])=>'<button class="difficulty-card '+(g.difficulty===id?'current':'')+'" data-difficulty="'+id+'"><strong>'+d.name+(g.difficulty===id?' ✓':'')+'</strong><small>'+d.desc+'</small><em>'+d.tone+'</em></button>').join('')+
+ '</div><div class="menu-note">Você pode alterar esta opção a qualquer momento. Seu progresso continua salvo.</div>';
+ showModal('difficulty','Dificuldade da aventura',body,[{label:'Voltar',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-difficulty]').forEach(button=>button.addEventListener('click',()=>applyDifficulty(button.dataset.difficulty)));
+}
 function openDailyReward(){
  const record=dailyRecord(),today=localDayKey(),available=record.day!==today;
  const nextStreak=record.day===today?Math.max(1,record.streak||1):dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
@@ -1252,7 +1286,7 @@ function usePotion(){
  if(g.hp>=g.maxHp){notify('Sua vida já está cheia. Guarde a poção para depois.',2.5);return;}
  g.potions--;const before=g.hp;g.hp=Math.min(g.maxHp,g.hp+35+Math.max(0,(g.attributes?.wisdom||1)-1)*3+Math.max(0,g.skillRanks?.fieldMedic||0)*4);spawnCombatText('+'+(g.hp-before)+' VIDA',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-28:g.actionPlayer.y-42,'#7ee59d');playSfx('heal');persistProgress();notify('Poção usada: +35 de vida.',2);updateUI();
 }
-function saveData(){return {character:normalizeAppearance(g.character),scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
+function saveData(){return {character:normalizeAppearance(g.character),classId:g.classId,classHpBonusApplied:g.classHpBonusApplied,difficulty:g.difficulty,powerShield:g.powerShield||0,scene:g.scene,region:g.region,mapPlayer:g.mapPlayer,actionPlayer:g.actionPlayer,hp:g.hp,maxHp:g.maxHp,xp:g.xp,level:g.level,attributePoints:g.attributePoints,skillPoints:g.skillPoints,attributes:g.attributes,skillRanks:g.skillRanks,worldClock:g.worldClock,weatherState:g.weatherState,regionMobs:g.regionMobs,storyFlags:g.storyFlags,coins:g.coins,potions:g.potions,kills:g.kills,questStep:g.questStep,questRewarded:g.questRewarded,ledgerFound:g.ledgerFound,questVersion:g.questVersion,financeIndex:g.financeIndex,economy:g.economy,sideQuests:g.sideQuests,slimes:g.slimes,ruinMobs:g.ruinMobs};}
 function persistProgress(){
  try{
   const data=saveData();
@@ -1277,6 +1311,15 @@ function normalizeSave(d){
  const defaults=originalState();
  const merged=Object.assign(defaults,d);
  merged.character=normalizeAppearance(d.character||defaults.character);
+ merged.classId=CLASS_DEFS[d.classId]?d.classId:'warrior';
+ merged.difficulty=DIFFICULTY_DEFS[d.difficulty]?d.difficulty:'normal';
+ if(typeof d.classHpBonusApplied!=='number'){
+  const migratedBonus=CLASS_DEFS[merged.classId].hpBonus;
+  merged.maxHp=Math.max(1,Number(merged.maxHp)||100)+migratedBonus;
+  merged.hp=Math.min(merged.maxHp,Math.max(1,Number(merged.hp)||100)+migratedBonus);
+  merged.classHpBonusApplied=migratedBonus;
+ }else merged.classHpBonusApplied=d.classHpBonusApplied;
+ merged.powerShield=Math.max(0,Number(d.powerShield)||0);merged.powerCooldown=0;
  merged.economy=Object.assign({},defaults.economy,d.economy||{});
  merged.region=['brumaforte','bosque','lago'].includes(d.region)?d.region:'brumaforte';
  merged.attributes=Object.assign({},defaults.attributes,d.attributes||{});
@@ -1330,6 +1373,10 @@ function updateUI(){
  $('hp').textContent='♥ '+g.hp+' / '+g.maxHp;
  $('hpfill').style.width=Math.max(0,g.hp/g.maxHp*100)+'%';
  $('coins').textContent='◈ '+g.coins+' cobre';$('potions').textContent='♜ '+g.potions;
+ const cp=classProfile(),df=difficultyProfile();$('classDifficulty').textContent=cp.icon+' '+cp.short+' · '+df.short;
+ $('powerBtn').innerHTML=(cp.powerIcon||'✦')+' '+(g.powerCooldown>0?g.powerCooldown.toFixed(1)+'s':'Poder')+' <span class="kbd">Q</span>';
+ $('powerBtn').title=cp.powerName+' · '+(g.level<2?'desbloqueia no nível 2':g.powerCooldown>0?'recarrega em '+g.powerCooldown.toFixed(1)+'s':'pronto para usar');
+ $('powerfill').style.width=(g.level<2?0:Math.max(0,100-(g.powerCooldown/cp.cooldown*100)))+'%';
  $('mapBtn').classList.toggle('active',g.scene==='map');$('ruinsBtn').classList.toggle('active',g.scene==='action');
  const labels=[
   ['MISSÃO NOVA','Fale com Mara perto da praça.','Chegue perto dela e pressione E.'],
@@ -2029,7 +2076,16 @@ function drawLakeMap(){
  }
  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
 }
-function drawMap(){if(g.region==='bosque')drawForestMap();else if(g.region==='lago')drawLakeMap();else drawBrumaforteMap();}
+function drawMapCompass(){
+ const x=914,y=232;ctx.save();ctx.globalAlpha=.92;
+ circle(x,y,22,'#171b18');ctx.strokeStyle='#c2a26a';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,22,0,Math.PI*2);ctx.stroke();
+ ctx.strokeStyle='#82704e';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.stroke();
+ poly([[x,y-16],[x+5,y],[x,y+3],[x-4,y]],'#e8d09a');poly([[x,y+16],[x+4,y],[x,y+3],[x-5,y]],'#7a4c42');
+ line(x-15,y,x+15,y,'#bba16d',1);line(x,y-15,x,y+15,'#bba16d',1);
+ text('N',x,y-27,7,'#e8d09a','center');text('S',x,y+32,7,'#c9b896','center');
+ ctx.restore();
+}
+function drawMap(){if(g.region==='bosque')drawForestMap();else if(g.region==='lago')drawLakeMap();else drawBrumaforteMap();drawMapCompass();}
 function enterRegion(id){
  if(!isRegionUnlocked(id)){const meta=REGION_META[id];notify('Região bloqueada: '+meta.unlock+'.',3.5);return;}
  g.region=id;const spawns={brumaforte:{x:128,y:334},bosque:{x:78,y:446},lago:{x:88,y:450}};
@@ -2038,10 +2094,10 @@ function enterRegion(id){
  notify(entryText[id]||'Nova região descoberta.',4);
 }
 function openWorldMap(){
- const body='<div class="menu-intro">O reino cresce conforme você aprende, explora e ajuda seus habitantes. Áreas bloqueadas mostram o que falta para chegar até elas.</div>'+
+ const body='<div class="worldmap-intro"><strong>Atlas das Terras Partidas</strong><p>Explore regiões com perigos, personagens e histórias próprios. Aventureiro: nível '+g.level+' · '+escapeHtml(classProfile().name)+' · dificuldade '+escapeHtml(difficultyProfile().name)+'.</p></div>'+
  Object.entries(REGION_META).map(([id,z])=>{
   const unlocked=isRegionUnlocked(id),current=g.region===id;
-  return '<button class="region-card '+(current?'current':'')+'" data-region="'+id+'" '+(!unlocked?'disabled':'')+'><span class="region-art region-'+id+'"><span>'+(id==='brumaforte'?'⌂':id==='bosque'?'♧':'≈')+'</span></span><span class="region-copy"><strong>'+escapeHtml(z.name)+(current?' · LOCAL':'')+'</strong><small>'+escapeHtml(z.description)+'</small><em>'+(current?'Você está aqui':unlocked?'Explorar região':'Bloqueado · '+escapeHtml(z.unlock))+'</em></span><span class="region-arrow">'+(unlocked?'→':'🔒')+'</span></button>';
+  const danger=id==='brumaforte'?'Perigo I · Patrulhas leves':id==='bosque'?'Perigo II · Chefe da névoa':'Perigo III · Leviatã'; return '<button class="region-card '+(current?'current':'')+'" data-region="'+id+'" '+(!unlocked?'disabled':'')+'><span class="region-art region-'+id+'"><span>'+(id==='brumaforte'?'⌂':id==='bosque'?'♧':'≈')+'</span></span><span class="region-copy"><strong>'+escapeHtml(z.name)+(current?' · LOCAL':'')+'</strong><small>'+escapeHtml(z.description)+'</small><em>'+danger+' · '+(current?'Você está aqui':unlocked?'Explorar região':'Bloqueado · '+escapeHtml(z.unlock))+'</em></span><span class="region-arrow">'+(unlocked?'→':'🔒')+'</span></button>';
  }).join('');
  showModal('worldMap','Mapa do mundo',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
  $('modalBody').querySelectorAll('[data-region]').forEach(button=>button.addEventListener('click',()=>{if(!button.disabled)enterRegion(button.dataset.region);}));
@@ -2200,10 +2256,10 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
+function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')exitTacticalBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCharacterProgression();return;}if(g.scene==='action'&&(key==='Space'||key==='KeyW'||key==='ArrowUp')){jumpQueued=true;return;}if(key==='KeyJ'){attack();return;}if(key==='KeyQ'){useClassPower();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
 window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{const button=e.target&&e.target.closest?e.target.closest('button'):null;if(gameSettings.soundEnabled&&button&&!(e.relatedTarget&&button.contains(e.relatedTarget)))playSfx('ui');});
-$('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCharacterProgression;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
+$('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCharacterProgression;$('classBtn').onclick=openClassMenu;$('difficultyBtn').onclick=openDifficultyMenu;$('powerBtn').onclick=useClassPower;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('mapBtn').onclick=()=>setScene('map');$('ruinsBtn').onclick=()=>setScene('action');$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=attack;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>setScene(b.dataset.scene)));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
  const record=readActiveSlot();
  g=originalState();g.character=normalizeAppearance(record&&record.character||defaultAppearance());
