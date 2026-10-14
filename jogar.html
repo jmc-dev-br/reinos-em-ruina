@@ -293,6 +293,52 @@ html,body{background:#78a968;color:#2d4a43;font-family:ui-monospace,SFMono-Regul
 .region-art{box-shadow:none!important;border:2px solid #668750!important}.region-art.region-brumaforte{background:linear-gradient(180deg,#91cfe0 0 35%,#7dbb68 35% 100%)!important}.region-art.region-bosque{background:linear-gradient(180deg,#87c1d4 0 35%,#477d4c 35% 100%)!important}.region-art.region-lago{background:linear-gradient(180deg,#a4d9e8 0 35%,#4b98b6 35% 100%)!important}
 .battle-intro{background:#d0e2a9;color:#314f42;border-color:#79975b}.battle-side{background:#e3ecc1;border-color:#77965b}.battle-side.enemy{background:#f0dfad;border-color:#bf8a53}.battle-side .battle-name{color:#2d4a43}.battle-side.enemy .battle-name{color:#88483c}.battle-log{background:#d9e6b6;color:#304a40}.battle-card{box-shadow:2px 2px 0 #a3ba86}.battle-card[data-card="classpower"]{background:#cfe4ad;border-color:#6c9855}
 @media(max-width:760px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat .value{font-size:10px}.canvashead{top:139px}.actionrow .btn{font-size:8px;min-height:29px}}
+
+/* VISUAL POLISH 4.0 — lush handheld RPG palette, evergreen HUD, antique-gold trim */
+:root{--bg:#13251d;--panel:#1a3025;--panel2:#274332;--line:#a1844e;--ink:#f4ecd4;--muted:#c2c8a9;--gold:#efca72;--orange:#c77c4c;--green:#91bd6a;--red:#d36d61}
+html,body{background:#17271f;color:#f4ecd4;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.top{background:linear-gradient(180deg,rgba(13,29,22,.98),rgba(20,37,27,.94));border-bottom:2px solid #a98443;box-shadow:0 4px 18px #07130e80;color:#f2e7c7}
+.brand .mark{background:linear-gradient(145deg,#f3d98b,#bc9148);border:2px solid #f5df9b;color:#284333;box-shadow:0 0 0 2px #4a6040,2px 3px 0 #08160f}
+.brand h1{color:#f5e8c5;text-shadow:0 2px 0 #10241a;letter-spacing:.07em}.brand p{color:#c4c9a5}
+.buildtag{background:linear-gradient(180deg,#2b4432,#1a3025);border:1px solid #9d8049;color:#ead9aa;box-shadow:inset 0 1px #ffffff12}
+.stats .stat{background:linear-gradient(145deg,rgba(20,42,30,.96),rgba(12,28,21,.94));border:1px solid #8d7548;box-shadow:inset 0 1px #e9d5a315,0 3px 8px #08150f55;color:#f0e8cd;backdrop-filter:blur(5px)}
+.stats .stat .label{font-family:ui-monospace,monospace;color:#c4cda8;letter-spacing:.08em}.stats .stat .value{font-family:ui-monospace,monospace;color:#fff0c8;text-shadow:0 1px #0c1c13}
+.stats .stat .value.heart,.stats .heart{color:#f18b75!important}.stats .stat .value.coins,.stats .coins{color:#f2cd73!important}
+.xpbar{background:#304d37;border:1px solid #617d48}.xpfill{background:linear-gradient(90deg,#8bbd62,#d7d882)!important}
+.gamecard{border:0;box-shadow:none;background:transparent}.stagewrap{background:#365b3e}
+.stage{image-rendering:pixelated;image-rendering:crisp-edges;outline:none}
+.canvashead{background:linear-gradient(90deg,rgba(17,40,28,.97),rgba(28,53,35,.94));border:1px solid #b18e50;border-radius:5px;box-shadow:0 5px 16px #06160e88,inset 0 1px #fff3;backdrop-filter:blur(5px)}
+.location{font-family:ui-monospace,monospace;color:#f4df9e;letter-spacing:.06em}.dot{background:#aed477;box-shadow:0 0 0 2px #314d32,0 0 12px #c5e28a99}.subhead{font-family:ui-monospace,monospace;color:#e0e4bd}
+.actionrow{background:linear-gradient(180deg,rgba(25,48,34,.97),rgba(12,29,21,.98));border:1px solid #a6874d;border-radius:8px;box-shadow:0 8px 24px #06150e99,inset 0 1px #ffffff14;backdrop-filter:blur(8px);padding:8px;gap:6px}
+.actionrow .btn{min-height:32px;padding:7px 10px;border:1px solid #6e8752;border-radius:4px;background:linear-gradient(180deg,#35513a,#243e2d);color:#f0ebd0;box-shadow:inset 0 1px #ffffff16,0 2px 0 #0c2015;font-family:ui-monospace,monospace;font-size:10px;font-weight:700;letter-spacing:0;transition:background .14s,border-color .14s,transform .14s}
+.actionrow .btn:hover{background:linear-gradient(180deg,#526b3f,#304b31);border-color:#e2c36d;color:#fff4cf;transform:translateY(-1px)}
+.actionrow .btn:active{transform:translateY(1px);box-shadow:inset 0 2px 3px #06140c99}
+.actionrow .btn.active{background:linear-gradient(180deg,#f0d88b,#c9a754);border-color:#ffecaa;color:#2e432e;box-shadow:inset 0 1px #fff7d0,0 2px 0 #856a32}
+#attackBtn,#interactBtn{background:linear-gradient(180deg,#d9bb66,#ad8338);border-color:#f2d788;color:#2a3c2b;box-shadow:inset 0 1px #fff5d5,0 2px 0 #785a29}
+#attackBtn:hover,#interactBtn:hover{background:linear-gradient(180deg,#f2dc92,#c39a48);color:#213b2a}
+#attackBtn.active,#interactBtn.active{background:linear-gradient(180deg,#f3dd91,#d3af56)}
+.actionrow .kbd{background:#1a3224;border:1px solid #728b56;border-radius:3px;color:#e7d7a2}
+.mobilehelp{background:rgba(18,40,27,.97);border:1px solid #a6874d;border-radius:7px;box-shadow:0 6px 18px #07140d88}
+.mobilehelp .btn{background:#2a4932;border-color:#769456;color:#f2e8ca}
+.toast{background:linear-gradient(135deg,#f6efcf,#e0e7bc);border:2px solid #a78a4b;border-radius:5px;color:#2c4634;box-shadow:0 6px 20px #07130dbb;font:700 11px/1.5 ui-monospace,monospace}
+.modalback{background:rgba(5,16,11,.78);backdrop-filter:blur(5px)}
+.modal{background:linear-gradient(145deg,#f0efce,#dce8ba);border:2px solid #bb9853;border-radius:8px;box-shadow:0 0 0 3px rgba(18,43,27,.87),0 28px 80px #000a;color:#304737}
+.modalhead,.modalfoot{background:linear-gradient(180deg,#294733,#1b3325);border-color:#a1844e}
+.modalhead h2{color:#f2e5bf;letter-spacing:.04em}.modalbody{color:#304737}.modalbody h3{color:#36563b}.modalbody p{color:#425943}
+.modalnote{background:#d2e0ac;color:#354c38;border-left-color:#ba914b}
+.shoprow,.ledgeritem,.econstat,.feature-card,.feature-hero,.menu-section,.region-card,.class-card,.difficulty-card{border-color:#839c62}
+.region-card{background:#e1ebc0!important;color:#304737}.region-card:hover:not(:disabled){background:#f4edc9!important;border-color:#c7a451!important}
+.region-card.current{background:#f4e5a8!important;border-color:#b28b3e!important}.atlas-schematic{box-shadow:0 4px 0 #8aa366}
+.starter-card,.party-card,.classic-action,.battle-card{transition:transform .12s,border-color .12s,background .12s}
+.starter-card:hover,.party-card:hover,.classic-action:hover:not(:disabled),.battle-card:hover:not(:disabled){transform:translateY(-1px)}
+@media(max-width:760px){
+ .top{padding:6px 10px}.brand .mark{width:30px;height:30px;flex-basis:30px}.brand h1{font-size:12px}
+ .stats .stat{padding:5px 6px}.stats .stat .label{font-size:7px}.stats .stat .value{font-size:10px}
+ .actionrow{left:7px;right:7px;bottom:7px;padding:5px;gap:4px;max-height:118px}
+ .actionrow .btn{min-height:29px;padding:5px 7px;font-size:9px}.canvashead{left:7px;right:7px}
+}
+@media(prefers-reduced-motion:reduce){.actionrow .btn,.starter-card,.party-card,.classic-action,.battle-card{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1829,8 +1875,9 @@ function drawHandheldCharacter(x,y,rawAppearance,motion={},targetCtx){
   drawHandheldCharacter.cache.set(key,sprite);
  }
  target.save();target.imageSmoothingEnabled=false;
- target.fillStyle='rgba(35,60,45,.28)';target.beginPath();target.ellipse(Math.round(x),Math.round(y+1),6,2,0,0,Math.PI*2);target.fill();
- target.drawImage(sprite,Math.round(x-8),Math.round(y-24));target.restore();
+ const worldScale=targetCtx?1:1.35;
+ target.fillStyle='rgba(24,43,31,.34)';target.beginPath();target.ellipse(Math.round(x),Math.round(y+1),targetCtx?6:8,targetCtx?2:3,0,0,Math.PI*2);target.fill();
+ target.drawImage(sprite,Math.round(x-8*worldScale),Math.round(y-24*worldScale),Math.round(16*worldScale),Math.round(24*worldScale));target.restore();
 }
 function drawNPCActor(id,x,y,prop='none'){
  const appearance=NPC_APPEARANCES[id];if(!appearance)return;
@@ -2217,12 +2264,12 @@ function drawBrumaforteMap(){
   // Brumaforte in classic handheld-RPG style: tile grass, chalk paths, tiny buildings and trees.
   const tile=16;
   const hash=(x,y)=>{const n=Math.sin(x*127.1+y*311.7)*43758.5453;return n-Math.floor(n);};
-  rect(0,0,W,H,'#81b56d');
+  rect(0,0,W,H,'#72a957');
   for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){
     const n=hash(x/tile,y/tile);
-    rect(x,y,tile,tile,n>.82?'#8abf75':n>.45?'#80b36b':n>.18?'#7bad68':'#76a962');
-    if(n>.9){rect(x+3,y+4,2,3,'#527e4d');rect(x+9,y+10,2,2,'#d0d98d');}
-    else if(n<.07){rect(x+5,y+8,3,2,'#669653');rect(x+8,y+7,2,2,'#9ac77b');}
+    rect(x,y,tile,tile,n>.82?'#82bf63':n>.45?'#75b65b':n>.18?'#6ca951':'#629748');
+    if(n>.9){rect(x+3,y+4,2,3,'#477d3d');rect(x+9,y+10,2,2,'#d0d98d');}
+    else if(n<.07){rect(x+5,y+8,3,2,'#5b8c46');rect(x+8,y+7,2,2,'#a4d77b');}
   }
   if(gameSettings.showGrid){
     ctx.save();ctx.strokeStyle='#355b3d70';ctx.lineWidth=1;
@@ -2347,9 +2394,9 @@ function drawBrumaforteMap(){
     drawNPCName('ELIRA · HERBORISTA',455,445,g.sideQuests.elira);
     drawNPCName('BRANN · PESCADOR',248,441,g.sideQuests.brann);
     drawNPCName('SABELA · ESTALAJADEIRA',565,304,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
-    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-28,'#f4d49a',8);
+    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-38,'#f4d49a',8);
   }
-  const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+  const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-38,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 
 
@@ -2421,10 +2468,10 @@ function drawWorldBoss(x,y,m){
 }
 function drawForestMap(){
  const tile=16;
- rect(0,0,W,H,'#54794a');
+ rect(0,0,W,H,'#456d40');
  for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){
   const n=rand01(Math.floor(x/tile)*41+Math.floor(y/tile)*73);
-  rect(x,y,tile,tile,n>.78?'#5d854f':n>.38?'#557a47':n>.15?'#4e7443':'#4a6d40');
+  rect(x,y,tile,tile,n>.78?'#5e8b4d':n>.38?'#507f42':n>.15?'#47763d':'#3f6c37');
   if(n>.86){rect(x+3,y+4,2,4,'#91a866');rect(x+9,y+10,2,2,'#c1b876');}
  }
  // Forest trail, edged by roots and mossy stones.
@@ -2433,8 +2480,8 @@ function drawForestMap(){
  ctx.strokeStyle='#d0bd8f';ctx.lineWidth=49;ctx.beginPath();ctx.moveTo(-10,463);ctx.quadraticCurveTo(195,447,331,403);ctx.quadraticCurveTo(450,355,536,340);ctx.quadraticCurveTo(701,313,981,282);ctx.stroke();ctx.restore();
  // A glade pool and a ribbon of water.
  ctx.save();ctx.fillStyle='#304f3d';ctx.beginPath();ctx.ellipse(810,112,87,48,-.2,0,Math.PI*2);ctx.fill();
- ctx.fillStyle='#4f9090';ctx.beginPath();ctx.ellipse(810,108,77,39,-.2,0,Math.PI*2);ctx.fill();
- for(let i=0;i<6;i++)line(760+i*15,105+Math.sin(visualFX.worldSeconds+i)*12,773+i*15,104+Math.sin(visualFX.worldSeconds+i)*12,'#91c2ad',1);
+ ctx.fillStyle='#3f9eaa';ctx.beginPath();ctx.ellipse(810,108,77,39,-.2,0,Math.PI*2);ctx.fill();
+ for(let i=0;i<6;i++)line(760+i*15,105+Math.sin(visualFX.worldSeconds+i)*12,773+i*15,104+Math.sin(visualFX.worldSeconds+i)*12,'#b3ddd0',1);
  ctx.restore();
  for(let x=-15;x<W+24;x+=39){drawWorldTree(x,42,.9,(Math.floor(x/39)+20)%2);drawWorldTree(x+14,522,.87,Math.floor(x/39)%2);}
  for(const [x,y,z,v] of [[36,139,.86,0],[92,220,.78,1],[154,178,.82,0],[236,131,.74,1],[302,206,.84,0],[379,126,.78,1],[434,226,.72,0],[500,161,.78,1],[572,213,.84,0],[639,146,.75,1],[709,190,.79,0],[754,253,.78,1],[891,188,.85,0],[926,352,.82,1],[686,440,.8,0],[794,456,.88,1]])drawWorldTree(x,y,z,v);
@@ -2452,16 +2499,16 @@ function drawForestMap(){
   text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-38,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawLakeMap(){
  const tile=16;
- rect(0,0,W,H,'#88a76d');
- for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){const n=rand01(Math.floor(x/tile)*29+Math.floor(y/tile)*57);rect(x,y,tile,tile,n>.65?'#90b777':n>.25?'#83ad70':'#7ca468');}
+ rect(0,0,W,H,'#76ad5a');
+ for(let y=0;y<H;y+=tile)for(let x=0;x<W;x+=tile){const n=rand01(Math.floor(x/tile)*29+Math.floor(y/tile)*57);rect(x,y,tile,tile,n>.65?'#86bd65':n>.25?'#74b05d':'#679f52');}
  // Deep blue lake takes the right half of the map, with a stepped shoreline.
- ctx.save();ctx.fillStyle='#234b50';ctx.beginPath();ctx.moveTo(558,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(523,H);ctx.lineTo(545,449);ctx.lineTo(590,378);ctx.lineTo(580,297);ctx.lineTo(612,228);ctx.lineTo(583,156);ctx.closePath();ctx.fill();
- ctx.fillStyle='#326c70';ctx.beginPath();ctx.moveTo(576,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(544,H);ctx.lineTo(566,442);ctx.lineTo(609,376);ctx.lineTo(600,300);ctx.lineTo(634,224);ctx.lineTo(602,155);ctx.closePath();ctx.fill();
- for(let i=0;i<14;i++){const x=626+((visualFX.worldSeconds*18+i*37)%342),y=24+((i*47+Math.sin(visualFX.worldSeconds+i)*9)%482);line(x,y,x+7,y-1,'#78aa9f',1);line(x+3,y+3,x+12,y+2,'#4c8b86',1);}
+ ctx.save();ctx.fillStyle='#1e4e5a';ctx.beginPath();ctx.moveTo(558,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(523,H);ctx.lineTo(545,449);ctx.lineTo(590,378);ctx.lineTo(580,297);ctx.lineTo(612,228);ctx.lineTo(583,156);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#2e7f89';ctx.beginPath();ctx.moveTo(576,0);ctx.lineTo(W,0);ctx.lineTo(W,H);ctx.lineTo(544,H);ctx.lineTo(566,442);ctx.lineTo(609,376);ctx.lineTo(600,300);ctx.lineTo(634,224);ctx.lineTo(602,155);ctx.closePath();ctx.fill();
+ for(let i=0;i<14;i++){const x=626+((visualFX.worldSeconds*18+i*37)%342),y=24+((i*47+Math.sin(visualFX.worldSeconds+i)*9)%482);line(x,y,x+7,y-1,'#9ed8ca',1);line(x+3,y+3,x+12,y+2,'#4d9d9b',1);}
  ctx.restore();
  // Sandy road and wooden pier.
  ctx.save();ctx.lineCap='round';ctx.strokeStyle='#ac936a';ctx.lineWidth=54;ctx.beginPath();ctx.moveTo(-10,448);ctx.quadraticCurveTo(195,440,355,411);ctx.quadraticCurveTo(457,386,560,359);ctx.stroke();ctx.strokeStyle='#d5c294';ctx.lineWidth=42;ctx.beginPath();ctx.moveTo(-10,448);ctx.quadraticCurveTo(195,440,355,411);ctx.quadraticCurveTo(457,386,560,359);ctx.stroke();ctx.restore();
@@ -2484,7 +2531,7 @@ function drawLakeMap(){
   text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,408,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,377,'none');
   text('ATRACADOURO',622,318,8,'#f8e8b7','center');const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
  }
- const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-28,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x,p.y-38,'#f4d49a',8);drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawMapCompass(){
  const x=914,y=232;ctx.save();ctx.globalAlpha=.96;
@@ -2618,7 +2665,7 @@ function drawAction(){
   drawFieldCreature(x,m.y,m);
  }
  drawHandheldCharacter(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
- drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-28,'#f2d49a',8);
+ drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-38,'#f2d49a',8);
  text('MINA ANTIGA',18,190,10,'#e5e7bb');
  rect(790,186,150,32,'#1c3336');rect(799,199,132,5,'#3b5149');rect(799,199,Math.max(3,(p.x/worldW)*132),5,'#d6be71');text('MAPA DA MINA',799,195,8,'#e3dfad');
 }
