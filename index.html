@@ -724,8 +724,8 @@ function beginCreator(slot,mode){
   const ctx=canvas.getContext('2d');ctx.clearRect(0,0,48,72);ctx.imageSmoothingEnabled=false;
   const c=creatorDraft,o=OUTFITS[c.outfit]||OUTFITS.traveler;
   const outfitColors={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const baseOnly=c.outfit==='none',coat=baseOnly?skin:(outfitColors[c.outfitColor]||o.coat),cape=baseOnly?null:CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
   const skin=Object.assign({},SKIN,SKIN_EXTRA)[c.skin]||SKIN.light;
+  const baseOnly=c.outfit==='none',coat=baseOnly?skin:(outfitColors[c.outfitColor]||o.coat),cape=baseOnly?null:CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
   const female=c.gender==='feminino';
   const outline='#17191d',shade='#262328',trim=o.trim;
   const r=(x,y,w,h,color)=>{ctx.fillStyle=color;ctx.fillRect(x,y,w,h);};
