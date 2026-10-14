@@ -509,19 +509,79 @@ function allMobs(){
  const mobs=regionMobList(g.region);
  return mobs.filter(m=>m.alive&&m.revealed!==false);
 }
+function classProfile(){return CLASS_DEFS[g.classId]||CLASS_DEFS.warrior;}
+function difficultyProfile(){return DIFFICULTY_DEFS[g.difficulty]||DIFFICULTY_DEFS.normal;}
+function playerDamage(kind='basic'){
+ const c=classProfile(),a=g.attributes||{},skills=g.skillRanks||{};
+ let raw=kind==='heavy'?c.heavyDamage:kind==='power'?c.powerDamage:c.basicDamage;
+ if(kind!=='power')raw+=Math.max(0,(a.strength||1)-1)*2+Math.max(0,skills.powerStrike||0)*3;
+ if(g.classId==='ranger')raw+=Math.max(0,skills.eagleEye||0)*4;
+ if(g.classId==='arcanist'&&kind==='power')raw+=Math.max(0,skills.arcaneMastery||0)*5;
+ return Math.max(1,Math.round(raw*difficultyProfile().outgoing));
+}
+function mobBaseHealth(mob){
+ if(typeof mob.maxHp==='number'&&mob.maxHp>0)return mob.maxHp;
+ if(typeof mob.hp==='number'&&mob.hp>0)return mob.hp;
+ const base={slime:28,bat:32,skeleton:54,knight:125,mistwolf:140,leviathan:190}[mob.type]||Math.max(24,Math.round((mob.xp||25)*1.1));
+ return base;
+}
+function ensureMobStats(mob){
+ if(!mob)return;
+ if(typeof mob.maxHp!=='number'||mob.maxHp<=0)mob.maxHp=mobBaseHealth(mob);
+ if(typeof mob.hp!=='number')mob.hp=mob.maxHp;
+ mob.hp=Math.max(0,Math.min(mob.maxHp,mob.hp));
+}
+function awardMobDefeat(mob){
+ if(!mob||mob.alive===false)return;
+ mob.alive=false;mob.hp=0;
+ const xp=Number(mob.xp)||25;g.xp+=xp;g.coins+=3;g.kills++;
+ spawnCombatText('+'+xp+' XP',mob.x,mob.y-38,'#f2d16f');
+ spawnCombatText('+3 cobre',mob.x,mob.y-51,'#9fe28f');playSfx('coin');addXP(0);
+ if(g.questStep===1&&g.kills>=3){g.questStep=g.ledgerFound?3:2;notify(g.ledgerFound?'Você reuniu as pistas. Volte a Mara em Brumaforte!':'Você derrotou três criaturas. Agora encontre o livro-razão no fundo das ruínas.',4);}
+}
+function damageMob(mob,damage,source='ataque'){
+ ensureMobStats(mob);const amount=Math.max(1,Math.round(damage));
+ mob.hp=Math.max(0,mob.hp-amount);
+ spawnCombatText('-'+amount,mob.x,mob.y-22,source==='poder'?'#c7a6ff':'#ff8e75');
+ playSfx(source==='poder'?'magic':'hit');triggerScreenShake(mob.hp<=0?5:2.2,mob.hp<=0?.2:.11);
+ if(mob.hp<=0){
+  awardMobDefeat(mob);notify((mob.name||'Criatura')+' derrotado! +'+(Number(mob.xp)||25)+' XP · +3 cobre fictício.',3.2);
+ }else notify((mob.name||'Criatura')+': '+mob.hp+' / '+mob.maxHp+' de resistência. '+amount+' de dano.',2);
+ updateUI();persistProgress();return mob.hp<=0;
+}
 function attack(){
- if(g.attackCD>0)return;g.attackCD=.3;
+ if(g.attackCD>0)return;g.attackCD=.42;
  const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=90;
  for(const mob of allMobs()){if(!mob.alive)continue;const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));if(d<best){best=d;target=mob;}}
- if(!target){notify('Nenhuma criatura ao alcance. Chegue mais perto e tente novamente.',2);playSfx('ui');return;}
- const damage=35+Math.max(0,(g.attributes?.strength||1)-1)*4+Math.max(0,(g.skillRanks?.powerStrike||0))*3;
- target.hp=(target.hp===undefined?1:target.hp)-damage;
- spawnCombatText('-'+damage,target.x,target.y-22,'#ff8e75');playSfx('hit');triggerScreenShake(target.hp<=0?5:2.2,target.hp<=0?.2:.11);
- if(target.hp>0){notify(`${target.name}: ${target.hp} de resistência restantes. Continue atacando!`,2);return;}
- target.alive=false;g.xp+=target.xp;g.coins+=3;g.kills++;spawnCombatText('+'+target.xp+' XP',target.x,target.y-38,'#f2d16f');spawnCombatText('+3 cobre',target.x,target.y-51,'#9fe28f');playSfx('coin');addXP(0);
- notify(`${target.name} derrotado! +${target.xp} XP · +3 cobre fictício.`,3.2);
- if(g.questStep===1&&g.kills>=3){g.questStep=g.ledgerFound?3:2;notify(g.ledgerFound?'Você reuniu as pistas. Volte a Mara em Brumaforte!':'Você derrotou três criaturas. Agora encontre o livro-razão no fundo das ruínas.',4);}
- updateUI();persistProgress();
+ if(!target){notify('Nenhuma criatura ao alcance. Aproxime-se e tente novamente.',2);playSfx('ui');return;}
+ damageMob(target,playerDamage('basic'),'ataque');
+}
+function useClassPower(){
+ const c=classProfile();
+ if(g.level<2){notify('Seu poder de classe desperta no nível 2.',2.5);return;}
+ if(g.powerCooldown>0){notify(c.powerName+' recarrega em '+g.powerCooldown.toFixed(1)+'s.',2);return;}
+ if(c.powerType==='shield'){
+  const shield=c.powerShield+Math.max(0,g.skillRanks?.bulwark||0)*6+Math.max(0,g.skillRanks?.stoneGuard||0)*4;
+  g.powerShield=Math.max(g.powerShield||0,shield);g.powerCooldown=c.cooldown;
+  spawnCombatText('+'+shield+' ESCUDO',g.scene==='map'?g.mapPlayer.x:g.actionPlayer.x,g.scene==='map'?g.mapPlayer.y-44:g.actionPlayer.y-56,'#9dd5ed');
+  playSfx('magic');notify(c.powerName+': você preparou '+shield+' pontos de escudo para absorver golpes.',3);persistProgress();updateUI();return;
+ }
+ const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;let target=null,best=c.powerRange;
+ for(const mob of allMobs()){
+  if(!mob.alive)continue;
+  const d=g.scene==='map'?Math.hypot(p.x-mob.x,p.y-mob.y):Math.hypot(p.x-mob.x,(p.y-12)-(mob.y-14));
+  if(d<best){best=d;target=mob;}
+ }
+ if(!target){notify('Nenhum alvo ao alcance de '+c.powerName+'.',2.5);return;}
+ g.powerCooldown=c.cooldown;damageMob(target,playerDamage('power'),'poder');
+ if(g.classId==='arcanist'&&target.alive===false){
+  for(const other of allMobs()){
+   if(other===target||!other.alive)continue;
+   const d=g.scene==='map'?Math.hypot(other.x-target.x,other.y-target.y):Math.abs(other.x-target.x);
+   if(d<=105)damageMob(other,Math.max(1,Math.round(12*difficultyProfile().outgoing)),'poder');
+  }
+ }
+ persistProgress();updateUI();
 }
 function talkMara(){
  if(g.questStep===0){
@@ -1042,12 +1102,16 @@ function spendSkill(id){
  const definitions={
   powerStrike:{name:'Golpe treinado',unlock:2,max:3},
   stoneGuard:{name:'Postura de pedra',unlock:3,max:3},
-  fieldMedic:{name:'Mãos cuidadoras',unlock:2,max:3}
+  fieldMedic:{name:'Mãos cuidadoras',unlock:2,max:3},
+  eagleEye:{name:'Olho de falcão',unlock:2,max:3,classId:'ranger'},
+  arcaneMastery:{name:'Maestria arcana',unlock:2,max:3,classId:'arcanist'},
+  bulwark:{name:'Baluarte',unlock:2,max:3,classId:'guardian'}
  };
  const skill=definitions[id];if(!skill)return;
- if(g.level<skill.unlock){notify('Talento disponível a partir do nível '+skill.unlock+'.',2.5);return;}
- if(g.skillPoints<=0){notify('Você precisa de um ponto de talento.',2.5);return;}
- if((g.skillRanks[id]||0)>=skill.max){notify('Este talento já está no nível máximo.',2.5);return;}
+ if(skill.classId&&g.classId!==skill.classId){notify('Esta perícia é exclusiva da classe '+CLASS_DEFS[skill.classId].name+'.',2.5);return;}
+ if(g.level<skill.unlock){notify('Perícia disponível a partir do nível '+skill.unlock+'.',2.5);return;}
+ if(g.skillPoints<=0){notify('Você precisa de um ponto de perícia.',2.5);return;}
+ if((g.skillRanks[id]||0)>=skill.max){notify('Esta perícia já está no nível máximo.',2.5);return;}
  g.skillRanks[id]=(g.skillRanks[id]||0)+1;g.skillPoints--;
  persistProgress();playSfx('magic');openCharacterProgression();notify(skill.name+' subiu para '+g.skillRanks[id]+'.',2.5);
 }
@@ -1062,20 +1126,24 @@ function openCharacterProgression(){
  ];
  const statRows=stats.map(st=>'<div class="hero-stat-row"><div class="hero-stat-icon">'+st.icon+'</div><div class="hero-stat-copy"><strong>'+st.name+' · '+st.value+'</strong><small>'+st.desc+'</small></div><button class="btn" data-attribute="'+st.id+'" '+(g.attributePoints<=0||st.value>=10?'disabled':'')+'>+1</button></div>').join('');
  const skillDefs=[
-  {id:'powerStrike',name:'Golpe treinado',rank:skills.powerStrike||0,unlock:2,desc:'+3 de dano nos golpes e cartas rápidas; +4 na estocada pesada.'},
-  {id:'stoneGuard',name:'Postura de pedra',rank:skills.stoneGuard||0,unlock:3,desc:'+4 pontos de bloqueio por nível quando usa Guarda de Pedra.'},
-  {id:'fieldMedic',name:'Mãos cuidadoras',rank:skills.fieldMedic||0,unlock:2,desc:'+4 de cura por nível em poções e cartas de cura.'}
+  {id:'powerStrike',name:'Golpe treinado',rank:skills.powerStrike||0,unlock:2,desc:'+3 de dano fixo nos golpes por nível.'},
+  {id:'stoneGuard',name:'Postura de pedra',rank:skills.stoneGuard||0,unlock:3,desc:'+4 de bloqueio por nível quando se defende.'},
+  {id:'fieldMedic',name:'Mãos cuidadoras',rank:skills.fieldMedic||0,unlock:2,desc:'+4 de cura por nível nas poções.'},
+  {id:'eagleEye',name:'Olho de falcão',rank:skills.eagleEye||0,unlock:2,classId:'ranger',desc:'Patrulheiro: +4 de dano fixo por nível.'},
+  {id:'arcaneMastery',name:'Maestria arcana',rank:skills.arcaneMastery||0,unlock:2,classId:'arcanist',desc:'Arcanista: +5 de dano fixo no poder por nível.'},
+  {id:'bulwark',name:'Baluarte',rank:skills.bulwark||0,unlock:2,classId:'guardian',desc:'Guardião: +6 de escudo por nível.'}
  ];
  const skillRows=skillDefs.map(sk=>{
-  const can=g.level>=sk.unlock&&g.skillPoints>0&&sk.rank<3;
-  const status=g.level<sk.unlock?'Desbloqueia no nível '+sk.unlock:sk.rank>=3?'NÍVEL MÁXIMO':'Talento '+sk.rank+'/3';
+  const wrongClass=!!sk.classId&&g.classId!==sk.classId;
+  const can=!wrongClass&&g.level>=sk.unlock&&g.skillPoints>0&&sk.rank<3;
+  const status=wrongClass?'Exclusiva: '+CLASS_DEFS[sk.classId].name:g.level<sk.unlock?'Desbloqueia no nível '+sk.unlock:sk.rank>=3?'NÍVEL MÁXIMO':'Perícia '+sk.rank+'/3';
   return '<div class="hero-skill-row"><div class="hero-skill-gem">'+(sk.id==='powerStrike'?'⚔':sk.id==='stoneGuard'?'🛡':'✚')+'</div><div class="hero-skill-copy"><strong>'+sk.name+' · '+sk.rank+'/3</strong><small>'+sk.desc+'</small><em>'+status+'</em></div><button class="btn" data-skill="'+sk.id+'" '+(!can?'disabled':'')+'>Aprender</button></div>';
  }).join('');
  const body='<div class="hero-banner">'+(portrait?'<img src="'+portrait+'" class="hero-portrait" alt="">':'<div class="hero-portrait-fallback">✦</div>')+
  '<div class="hero-banner-copy"><div class="menu-kicker">CRÔNICAS DE BRUMAFORTE · REBOOT</div><h3>'+escapeHtml(g.character.name||'Aventureiro')+'</h3><p>Level '+g.level+' · '+Math.max(0,g.xp)+' / '+xpToNext()+' XP para evoluir</p><div class="hero-xp"><i style="width:'+Math.min(100,g.xp/xpToNext()*100)+'%"></i></div><small>Vida '+g.hp+'/'+g.maxHp+' · '+g.kills+' criaturas derrotadas</small></div></div>'+
  '<div class="hero-points"><div><small>PONTOS DE ATRIBUTO</small><strong>'+g.attributePoints+'</strong></div><div><small>PONTOS DE TALENTO</small><strong>'+g.skillPoints+'</strong></div><div><small>REGIÕES DESCOBERTAS</small><strong>'+(['brumaforte',...(isRegionUnlocked('bosque')?['bosque']:[]),...(isRegionUnlocked('lago')?['lago']:[])].length)+'/3</strong></div></div>'+
  '<div class="hero-section-title">ATRIBUTOS · GASTAR PONTOS DE ATRIBUTO</div>'+statRows+
- '<div class="hero-section-title">TALENTOS · APERFEIÇOAR O ESTILO DE JOGO</div>'+skillRows+
+ '<div class="hero-section-title">PERÍCIAS · MELHORE SEU ESTILO DE JOGO</div>'+skillRows+
  '<div class="menu-note">Cada nível concede 1 ponto de atributo e 1 ponto de talento. Força afeta dano, Defesa reduz dano tático, Vitalidade aumenta vida máxima e Sabedoria melhora cura. Os talentos têm até 3 níveis.</div>';
  showModal('hero','Personagem · Evolução',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
  $('modalBody').querySelectorAll('[data-attribute]').forEach(button=>button.addEventListener('click',()=>spendAttribute(button.dataset.attribute)));
