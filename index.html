@@ -702,7 +702,7 @@ function beginCreator(slot,mode){
     creatorDraft.outfitColor=pick(['default','crimson','emerald','sapphire','violet','charcoal']);
     creatorDraft.faceShape=pick(['oval','angular','round']);
     creatorDraft.eyeColor=pick(['brown','blue','green','gray']);
-    creatorDraft.facialHair=pick(['none','stubble','shortBeard','mustache','goatee']);
+    creatorDraft.facialHair=creatorDraft.gender==='feminino'?'none':pick(['none','stubble','shortBeard','mustache','goatee']);
     renderCreator();
   });
   applyCreatorTab();
