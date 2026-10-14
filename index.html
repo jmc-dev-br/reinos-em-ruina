@@ -507,7 +507,7 @@ const TEXT={
   deleteConfirm:'Excluir este salvamento e o personagem deste espaço? Esta ação não pode ser desfeita.',deleteDone:'Salvamento excluído.',oldSave:'Jornada anterior importada',oldSaveDesc:'Seu salvamento antigo foi colocado no Espaço 1 para preservar seu progresso.',
   creatorEyebrow:'PERSONAGEM',creatorTitle:'Crie seu aventureiro',creatorSubtitle:'Escolha a aparência do herói que vai explorar Brumaforte e atravessar as ruínas.',
   editTitle:'Personalize seu personagem',editSubtitle:'Mude a aparência sem apagar o progresso desta jornada.',name:'Nome do personagem',namePlaceholder:'Digite um nome',nameHelp:'Máximo de 16 caracteres.',gender:'Tipo de corpo',male:'Masculino',female:'Feminino',maleDesc:'Corte curto e silhueta clássica.',femaleDesc:'Cabelo longo e silhueta clássica.',clothes:'Roupas',cloak:'Manto',hair:'Cor do cabelo',skin:'Tom de pele',none:'Sem manto',red:'Vinho',green:'Floresta',blue:'Azul',ivory:'Marfim',brown:'Castanho',black:'Preto',blond:'Loiro',silver:'Prateado',light:'Claro',tan:'Bronzeado',dark:'Escuro',
-  traveler:'Viajante',travelerDesc:'Couro e tecido resistentes',guard:'Guarda',guardDesc:'Couro reforçado e aço',mage:'Místico',mageDesc:'Manto arcano',noble:'Nobre',nobleDesc:'Roupa fina e detalhes dourados',ranger:'Batedor',rangerDesc:'Couro, folhas e viagem',royal:'Real',royalDesc:'Manto nobre e detalhes de ouro',
+  baseBody:'Corpo-base',baseBodyDesc:'Base para personalizar o traje',traveler:'Viajante',travelerDesc:'Couro e tecido resistentes',guard:'Guarda',guardDesc:'Couro reforçado e aço',mage:'Místico',mageDesc:'Manto arcano',noble:'Nobre',nobleDesc:'Roupa fina e detalhes dourados',ranger:'Batedor',rangerDesc:'Couro, folhas e viagem',royal:'Real',royalDesc:'Manto nobre e detalhes de ouro',
   faceShape:'Formato do rosto',ovalFace:'Oval',angularFace:'Angular',roundFace:'Arredondado',eyeColor:'Cor dos olhos',eyeBrown:'Castanhos',eyeBlue:'Azuis',eyeGreen:'Verdes',eyeGray:'Cinzentos',facialHair:'Barba e bigode',noFacialHair:'Sem barba',stubble:'Barba por fazer',shortBeard:'Barba curta',mustache:'Bigode',goatee:'Cavanhaque',
   tabProfile:'Identidade',tabFace:'Rosto',tabHair:'Cabelo',tabOutfit:'Traje',tabGear:'Equipamento',randomize:'Aleatorizar aparência',randomizeHelp:'Gera uma combinação nova sem alterar o nome.',
   preview:'Prévia do personagem',newSave:'Criar jornada',saveAppearance:'Salvar aparência',cancel:'Cancelar',nameRequired:'Escolha um nome para seu personagem.',slotTaken:'Este espaço já tem uma jornada. Exclua-a antes de criar outra.',
@@ -535,6 +535,7 @@ const TEXT={
  }
 };
 const OUTFITS={
+ none:{coat:'#dbb28a',trim:'#dbb28a',pants:'#dbb28a',label:'baseBody',desc:'baseBodyDesc'},
  traveler:{coat:'#344b61',trim:'#c7a66a',pants:'#40372c',label:'traveler',desc:'travelerDesc'},
  guard:{coat:'#586557',trim:'#b5b3a0',pants:'#373d39',label:'guard',desc:'guardDesc'},
  mage:{coat:'#59458a',trim:'#d1ad68',pants:'#302744',label:'mage',desc:'mageDesc'},
@@ -552,7 +553,7 @@ const HAIR={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red
  const OUTFIT_COLORS=['default','crimson','emerald','sapphire','violet','charcoal'];
 const SKIN={light:'#dbb28a',tan:'#b8794f',dark:'#754833'};
 
-function defaultCharacter(){return {name:'Aventureiro',gender:'masculino',outfit:'traveler',cloak:'red',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'sword',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'stubble'};}
+function defaultCharacter(){return {name:'Aventureiro',gender:'masculino',outfit:'none',cloak:'none',hair:'brown',skin:'light',hairstyle:'medium',headwear:'none',accessory:'none',weapon:'none',outfitColor:'default',faceShape:'angular',eyeColor:'brown',facialHair:'none'};}
 function slotKey(slot){return SLOT_PREFIX+slot;}
 function readSlot(slot){try{const raw=localStorage.getItem(slotKey(slot));if(!raw)return null;const record=JSON.parse(raw);return record&&record.version===1?record:null;}catch(e){return null;}}
 function writeSlot(slot,record){try{localStorage.setItem(slotKey(slot),JSON.stringify(record));return true;}catch(e){return false;}}
@@ -723,7 +724,7 @@ function beginCreator(slot,mode){
   const ctx=canvas.getContext('2d');ctx.clearRect(0,0,48,72);ctx.imageSmoothingEnabled=false;
   const c=creatorDraft,o=OUTFITS[c.outfit]||OUTFITS.traveler;
   const outfitColors={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
-  const coat=outfitColors[c.outfitColor]||o.coat,cape=CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
+  const baseOnly=c.outfit==='none',coat=baseOnly?skin:(outfitColors[c.outfitColor]||o.coat),cape=baseOnly?null:CLOAKS[c.cloak],hair=HAIR[c.hair]||HAIR.brown;
   const skin=Object.assign({},SKIN,SKIN_EXTRA)[c.skin]||SKIN.light;
   const female=c.gender==='feminino';
   const outline='#17191d',shade='#262328',trim=o.trim;
@@ -860,7 +861,7 @@ function beginCreator(slot,mode){
   const iris={brown:'#5a3828',blue:'#4a83b1',green:'#52805b',gray:'#9b9b9b'}[c.eyeColor]||'#5a3828';r(19,13,4,2,'#eee0c7');r(24,13,4,2,'#eee0c7');r(20,14,2,1,iris);r(25,14,2,1,iris);r(20,14,1,1,'#171719');r(25,14,1,1,'#171719');
   r(21,15,1,1,'#f2d7b6');r(26,15,1,1,'#f2d7b6');
   r(23,15,2,3,'#9a6246');r(22,18,4,1,'#683d31');
-  if(c.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(c.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(c.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(c.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
+  if(!female&&c.facialHair==='stubble'){r(20,19,6,2,'#755046');r(21,21,4,1,'#493029');}else if(!female&&c.facialHair==='shortBeard'){p([[19,17],[21,19],[25,18],[28,17],[27,21],[24,23],[21,22],[19,20]],'#493029');r(22,21,3,1,'#98634a');}else if(!female&&c.facialHair==='mustache'){p([[20,18],[22,18],[24,19],[27,18],[26,20],[23,20],[21,20]],'#493029');}else if(!female&&c.facialHair==='goatee'){p([[22,19],[25,19],[26,21],[24,23],[22,22]],'#493029');}
   // hair is shaped from chunky locks; each option remains customizable.
   p([[16,13],[16,9],[18,7],[20,6],[20,5],[25,5],[27,7],[29,8],[30,12],[28,13],[27,11],[25,10],[23,12],[21,11],[19,13],[18,17],[16,17]],outline);
   p([[17,12],[18,9],[20,7],[25,7],[28,9],[29,12],[27,11],[25,9],[23,11],[21,10],[19,12],[18,15],[17,15]],hair);
@@ -872,8 +873,7 @@ function beginCreator(slot,mode){
   if(c.hairstyle==='braids'){r(16,17,2,8,hair);r(29,17,2,8,hair);r(15,23,3,2,hair);r(29,24,3,2,hair);}
   if(c.hairstyle==='mohawk'){p([[18,9],[19,5],[21,3],[24,4],[26,9]],outline);r(20,5,4,3,hair);}
   // Scarf wraps the neck; selected cloak colour does not affect its burgundy accent.
-  p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');
-  r(20,20,6,1,'#bd6757');
+  if(!baseOnly){p([[18,19],[21,18],[25,19],[28,18],[29,21],[26,23],[22,21],[19,23],[17,21]],'#79333a');r(20,20,6,1,'#bd6757');}
   // Equipment details, armor wear and shoulder straps.
   if(c.outfit==='guard'){
     r(17,26,2,6,'#777d79');r(28,27,2,5,'#8d928a');r(18,29,2,1,'#c9c0aa');r(27,30,2,1,'#c9c0aa');
