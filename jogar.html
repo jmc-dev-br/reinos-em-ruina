@@ -446,13 +446,13 @@ function drawPlayer(x,y,rawAppearance){
   };
   const o=outfits[a.outfit]||outfits.traveler;
   const colorMap={default:o.coat,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+  const skinMap={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
+  const skin=skinMap[a.skin]||'#dbb28a';
   const baseOnly=a.outfit==='none',coat=baseOnly?skin:(colorMap[a.outfitColor]||o.coat);
   const capeMap={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
   const cape=capeMap[a.cloak];
   const hairMap={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
   const hair=hairMap[a.hair]||'#53372a';
-  const skinMap={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
-  const skin=skinMap[a.skin]||'#dbb28a';
   const outline='#17191d';
   const r=(x0,y0,w,h,col)=>{c.fillStyle=col;c.fillRect(x0,y0,w,h);};
   const p=(pts,col)=>{c.beginPath();c.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)c.lineTo(pts[i][0],pts[i][1]);c.closePath();c.fillStyle=col;c.fill();};
