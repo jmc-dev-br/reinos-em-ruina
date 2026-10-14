@@ -165,6 +165,20 @@ body{position:fixed;inset:0}
 .region-brumaforte{background:linear-gradient(135deg,#69985b,#c4c78b)}.region-bosque{background:linear-gradient(135deg,#1e4738,#6f8a50)}.region-lago{background:linear-gradient(135deg,#274e62,#6ba29a)}
 .region-copy{min-width:0}.region-copy strong{display:block;font-size:12px;color:#e9d69d}.region-copy small{display:block;font-size:10px;line-height:1.4;color:#aebea4;margin:4px 0}.region-copy em{font-style:normal;font-size:9px;color:#9dbe80}.region-arrow{font-size:18px;color:#dfc478}
 
+
+.hero-banner{display:flex;gap:14px;align-items:center;background:linear-gradient(115deg,#223222,#111914);border:1px solid #5e7549;padding:13px;margin-bottom:12px}
+.hero-portrait{width:54px;height:81px;object-fit:contain;object-position:center bottom;image-rendering:pixelated;flex:0 0 54px;filter:drop-shadow(0 3px 0 #08100b)}
+.hero-portrait-fallback{width:54px;height:81px;display:grid;place-items:center;background:#30452f;color:#ebd08c;font-size:25px;flex:0 0 54px}
+.hero-banner-copy{min-width:0;flex:1}.hero-banner-copy h3{margin:4px 0;color:#ecdda9;font-size:18px}.hero-banner-copy p{margin:4px 0;color:#bac9ac;font-size:10px}.hero-banner-copy>small{display:block;color:#99ac8d;font-size:9px;margin-top:5px}
+.hero-xp{height:5px;background:#344236;border:1px solid #566c48}.hero-xp i{display:block;height:100%;background:#a3c679}
+.hero-points{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:11px 0}
+.hero-points>div{background:#121b15;border:1px solid #3e5438;padding:8px}.hero-points small{display:block;color:#9db18b;font-size:8px;line-height:1.35}.hero-points strong{display:block;color:#ecd9a0;font-size:18px;margin-top:3px}
+.hero-section-title{margin:14px 0 6px;color:#a7c887;font-size:9px;font-weight:800;letter-spacing:.16em}
+.hero-stat-row,.hero-skill-row{display:grid;grid-template-columns:32px 1fr auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid #344332}
+.hero-stat-icon,.hero-skill-gem{width:30px;height:30px;display:grid;place-items:center;background:#26392a;border:1px solid #506746;color:#e3cc86}
+.hero-stat-copy strong,.hero-skill-copy strong{display:block;color:#e8e8ce;font-size:11px}.hero-stat-copy small,.hero-skill-copy small{display:block;color:#a8b9a0;font-size:9px;line-height:1.4;margin-top:3px}.hero-skill-copy em{display:block;margin-top:4px;color:#b8ce8e;font-size:8px;font-style:normal}
+@media(max-width:560px){.hero-banner{padding:9px;gap:8px}.hero-portrait,.hero-portrait-fallback{width:42px;height:66px;flex-basis:42px}.hero-banner-copy h3{font-size:15px}.hero-points small{font-size:7px}.hero-stat-row,.hero-skill-row{grid-template-columns:28px 1fr auto;gap:6px}.hero-stat-icon,.hero-skill-gem{width:27px;height:27px}}
+
 </style>
 </head>
 <body>
@@ -966,6 +980,64 @@ function dayOrdinal(key){const parts=String(key||'').split('-').map(Number);if(p
 function readLocalRecord(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch(err){return fallback;}}
 function writeLocalRecord(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true;}catch(err){return false;}}
 function dailyRecord(){return readLocalRecord(slotLocalKey('reinos_ruina_daily'),{day:'',streak:0,claims:0});}
+
+function playerPortraitData(){
+ const a=normalizeAppearance(g.character),key=JSON.stringify(a),sprite=drawPlayer.cache&&drawPlayer.cache.get(key);
+ try{return sprite?sprite.toDataURL():'';}catch(err){return '';}
+}
+function spendAttribute(id){
+ const labels={strength:'Força',defense:'Defesa',vitality:'Vitalidade',wisdom:'Sabedoria'};
+ if(!labels[id]||g.attributePoints<=0){notify('Você não tem pontos de atributo disponíveis.',2.5);return;}
+ if(g.attributes[id]>=10){notify('Este atributo já alcançou o limite atual.',2.5);return;}
+ g.attributes[id]++;g.attributePoints--;
+ if(id==='vitality'){g.maxHp+=8;g.hp=Math.min(g.maxHp,g.hp+8);}
+ updateUI();persistProgress();playSfx('win');openCharacterProgression();
+ notify(labels[id]+' aumentada para '+g.attributes[id]+'.',2);
+}
+function spendSkill(id){
+ const definitions={
+  powerStrike:{name:'Golpe treinado',unlock:2,max:3},
+  stoneGuard:{name:'Postura de pedra',unlock:3,max:3},
+  fieldMedic:{name:'Mãos cuidadoras',unlock:2,max:3}
+ };
+ const skill=definitions[id];if(!skill)return;
+ if(g.level<skill.unlock){notify('Talento disponível a partir do nível '+skill.unlock+'.',2.5);return;}
+ if(g.skillPoints<=0){notify('Você precisa de um ponto de talento.',2.5);return;}
+ if((g.skillRanks[id]||0)>=skill.max){notify('Este talento já está no nível máximo.',2.5);return;}
+ g.skillRanks[id]=(g.skillRanks[id]||0)+1;g.skillPoints--;
+ persistProgress();playSfx('magic');openCharacterProgression();notify(skill.name+' subiu para '+g.skillRanks[id]+'.',2.5);
+}
+function openCharacterProgression(){
+ const a=g.attributes||{strength:1,defense:1,vitality:1,wisdom:1},skills=g.skillRanks||{powerStrike:0,stoneGuard:0,fieldMedic:0};
+ const portrait=playerPortraitData();
+ const stats=[
+  {id:'strength',name:'Força',icon:'⚔',desc:'Aumenta o dano dos golpes e das cartas ofensivas.',value:a.strength||1},
+  {id:'defense',name:'Defesa',icon:'🛡',desc:'Reduz o dano recebido durante combates táticos.',value:a.defense||1},
+  {id:'vitality',name:'Vitalidade',icon:'♥',desc:'Aumenta a vida máxima em 8 por ponto.',value:a.vitality||1},
+  {id:'wisdom',name:'Sabedoria',icon:'✦',desc:'Melhora a cura de poções e recursos médicos.',value:a.wisdom||1}
+ ];
+ const statRows=stats.map(st=>'<div class="hero-stat-row"><div class="hero-stat-icon">'+st.icon+'</div><div class="hero-stat-copy"><strong>'+st.name+' · '+st.value+'</strong><small>'+st.desc+'</small></div><button class="btn" data-attribute="'+st.id+'" '+(g.attributePoints<=0||st.value>=10?'disabled':'')+'>+1</button></div>').join('');
+ const skillDefs=[
+  {id:'powerStrike',name:'Golpe treinado',rank:skills.powerStrike||0,unlock:2,desc:'+3 de dano nos golpes e cartas rápidas; +4 na estocada pesada.'},
+  {id:'stoneGuard',name:'Postura de pedra',rank:skills.stoneGuard||0,unlock:3,desc:'+4 pontos de bloqueio por nível quando usa Guarda de Pedra.'},
+  {id:'fieldMedic',name:'Mãos cuidadoras',rank:skills.fieldMedic||0,unlock:2,desc:'+4 de cura por nível em poções e cartas de cura.'}
+ ];
+ const skillRows=skillDefs.map(sk=>{
+  const can=g.level>=sk.unlock&&g.skillPoints>0&&sk.rank<3;
+  const status=g.level<sk.unlock?'Desbloqueia no nível '+sk.unlock:sk.rank>=3?'NÍVEL MÁXIMO':'Talento '+sk.rank+'/3';
+  return '<div class="hero-skill-row"><div class="hero-skill-gem">'+(sk.id==='powerStrike'?'⚔':sk.id==='stoneGuard'?'🛡':'✚')+'</div><div class="hero-skill-copy"><strong>'+sk.name+' · '+sk.rank+'/3</strong><small>'+sk.desc+'</small><em>'+status+'</em></div><button class="btn" data-skill="'+sk.id+'" '+(!can?'disabled':'')+'>Aprender</button></div>';
+ }).join('');
+ const body='<div class="hero-banner">'+(portrait?'<img src="'+portrait+'" class="hero-portrait" alt="">':'<div class="hero-portrait-fallback">✦</div>')+
+ '<div class="hero-banner-copy"><div class="menu-kicker">CRÔNICAS DE BRUMAFORTE · REBOOT</div><h3>'+escapeHtml(g.character.name||'Aventureiro')+'</h3><p>Level '+g.level+' · '+Math.max(0,g.xp)+' / '+xpToNext()+' XP para evoluir</p><div class="hero-xp"><i style="width:'+Math.min(100,g.xp/xpToNext()*100)+'%"></i></div><small>Vida '+g.hp+'/'+g.maxHp+' · '+g.kills+' criaturas derrotadas</small></div></div>'+
+ '<div class="hero-points"><div><small>PONTOS DE ATRIBUTO</small><strong>'+g.attributePoints+'</strong></div><div><small>PONTOS DE TALENTO</small><strong>'+g.skillPoints+'</strong></div><div><small>REGIÕES DESCOBERTAS</small><strong>'+(['brumaforte',...(isRegionUnlocked('bosque')?['bosque']:[]),...(isRegionUnlocked('lago')?['lago']:[])].length)+'/3</strong></div></div>'+
+ '<div class="hero-section-title">ATRIBUTOS · GASTAR PONTOS DE ATRIBUTO</div>'+statRows+
+ '<div class="hero-section-title">TALENTOS · APERFEIÇOAR O ESTILO DE JOGO</div>'+skillRows+
+ '<div class="menu-note">Cada nível concede 1 ponto de atributo e 1 ponto de talento. Força afeta dano, Defesa reduz dano tático, Vitalidade aumenta vida máxima e Sabedoria melhora cura. Os talentos têm até 3 níveis.</div>';
+ showModal('hero','Personagem · Evolução',body,[{label:'Voltar à aventura',action:()=>closeModal(),primary:true}]);
+ $('modalBody').querySelectorAll('[data-attribute]').forEach(button=>button.addEventListener('click',()=>spendAttribute(button.dataset.attribute)));
+ $('modalBody').querySelectorAll('[data-skill]').forEach(button=>button.addEventListener('click',()=>spendSkill(button.dataset.skill)));
+}
+
 function openDailyReward(){
  const record=dailyRecord(),today=localDayKey(),available=record.day!==today;
  const nextStreak=dayOrdinal(record.day)===dayOrdinal(today)-1?(record.streak||0)+1:1;
