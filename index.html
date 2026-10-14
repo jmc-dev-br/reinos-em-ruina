@@ -708,7 +708,7 @@ function beginCreator(slot,mode){
   applyCreatorTab();
   const name=$('characterName');
   name.addEventListener('input',()=>{creatorDraft.name=name.value.slice(0,16)||t('empty');drawPreview();});
-  controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;if(creatorDraft.gender==='feminino')creatorDraft.facialHair='none';renderCreator();}));
+  controls.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.gender=b.dataset.gender;if(creatorDraft.gender==='feminino'){creatorDraft.facialHair='none';if(creatorDraft.faceShape==='angular')creatorDraft.faceShape='oval';}renderCreator();}));
   controls.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfit=b.dataset.outfit;renderCreator();}));
   controls.querySelectorAll('[data-cloak]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.cloak=b.dataset.cloak;renderCreator();}));
   controls.querySelectorAll('[data-outfit-color]').forEach(b=>b.addEventListener('click',()=>{creatorDraft.outfitColor=b.dataset.outfitColor;renderCreator();}));
