@@ -1660,10 +1660,64 @@ const NPC_PROFILES={
  yara:{display:'Yara · Cartógrafa das marés',personality:'Curiosa, ousada e fascinada por coisas que não deveriam existir.',history:'Encontrou no lago uma bússola que aponta para o que foi perdido, não para o norte. Desde então, ela tenta descobrir o que acordou sob a água.'},
  neris:{display:'Neris · Arquivista dos naufrágios',personality:'Reservado, metódico e gentil com quem faz boas perguntas.',history:'Catalogou nomes de barcos que jamais voltaram. Esconde um mapa que muda com as marés e teme que alguém o use para chamar algo do fundo.'}
 };
+function drawHandheldCharacter(x,y,rawAppearance,motion={}){
+ const a=normalizeAppearance(rawAppearance||g.character),dir=motion.dir||'down',moving=!!motion.moving;
+ const skins={pale:'#f0d1ad',light:'#dbb28a',tan:'#b8794f',warm:'#c68b62',olive:'#a77955',dark:'#754833',deep:'#563329'};
+ const hairs={brown:'#53372a',black:'#242027',blond:'#c6a15b',silver:'#b1b4b5',red:'#9a4235',blue:'#456ba4',purple:'#8253a5',pink:'#c56f91'};
+ const outfits={traveler:'#344b61',guard:'#586557',mage:'#59458a',noble:'#783c3c',ranger:'#35513b',royal:'#353f70',none:'#dbb28a'};
+ const colors={default:outfits[a.outfit]||outfits.traveler,crimson:'#87333a',emerald:'#315c43',sapphire:'#354e91',violet:'#644488',charcoal:'#41434a'};
+ const cloaks={red:'#7f3031',green:'#294e3b',blue:'#294b68',ivory:'#b9a57d'};
+ const skin=skins[a.skin]||skins.light,hair=hairs[a.hair]||hairs.brown,coat=a.outfit==='none'?skin:(colors[a.outfitColor]||outfits[a.outfit]||outfits.traveler);
+ const pants=({traveler:'#40372c',guard:'#373d39',mage:'#302744',noble:'#4a2d2d',ranger:'#292f29',royal:'#292d47',none:skin})[a.outfit]||'#40372c';
+ const outline='#1b2b2c',cape=cloaks[a.cloak],phase=Math.floor((motion.phase||0)/2)%2,leg=moving?(phase?1:-1):0;
+ ctx.save();ctx.imageSmoothingEnabled=false;
+ ctx.fillStyle='rgba(17,35,34,.35)';ctx.beginPath();ctx.ellipse(x,y+1,7,2.5,0,0,Math.PI*2);ctx.fill();
+ if(cape){poly([[x-4,y-20],[x+4,y-20],[x+6,y-13],[x+5,y-7],[x+1,y-9],[x-2,y-7],[x-6,y-10],[x-5,y-16]],outline);poly([[x-3,y-19],[x+3,y-19],[x+5,y-13],[x+4,y-9],[x+1,y-11],[x-2,y-9],[x-4,y-11],[x-4,y-16]],cape);}
+ rect(x-4+leg,y-7,3,5,outline);rect(x+2-leg,y-7,3,5,outline);
+ rect(x-4+leg,y-5,3,3,pants);rect(x+2-leg,y-5,3,3,pants);
+ rect(x-5+leg,y-2,4,2,outline);rect(x+2-leg,y-2,4,2,outline);
+ rect(x-5,y-17,10,9,outline);rect(x-4,y-16,8,7,coat);
+ rect(x-7,y-16,3,6,outline);rect(x+4,y-16,3,6,outline);
+ rect(x-6,y-15,2,5,coat);rect(x+4,y-15,2,5,coat);
+ rect(x-2,y-18,4,2,skin);rect(x-4,y-9,8,2,'#362e25');
+ rect(x-1,y-9,2,2,'#d8ba6b');rect(x-3,y-15,2,3,'#ffffff18');
+ rect(x-5,y-28,10,10,outline);rect(x-4,y-27,8,8,skin);
+ if(dir==='up'){
+  rect(x-5,y-29,10,6,hair);rect(x-4,y-27,8,4,hair);
+  if(a.hairstyle==='long'||a.hairstyle==='ponytail'){rect(x-5,y-24,2,7,hair);rect(x+3,y-24,2,7,hair);}
+  if(a.hairstyle==='braids'){rect(x-6,y-23,2,7,hair);rect(x+4,y-23,2,7,hair);}
+ }else{
+  rect(x-5,y-29,10,4,hair);rect(x-5,y-26,2,3,hair);rect(x+3,y-26,2,3,hair);
+  if(a.hairstyle==='long'){rect(x-5,y-24,2,5,hair);rect(x+3,y-24,2,5,hair);}
+  if(a.hairstyle==='ponytail'){rect(x+4,y-25,3,4,hair);rect(x+5,y-22,2,3,hair);}
+  if(a.hairstyle==='braids'){rect(x-6,y-24,2,5,hair);rect(x+4,y-24,2,5,hair);rect(x-6,y-19,2,2,hair);rect(x+4,y-19,2,2,hair);}
+  if(dir==='down'){rect(x-3,y-23,2,2,'#f6edc9');rect(x+2,y-23,2,2,'#f6edc9');rect(x-2,y-22,1,2,'#283638');rect(x+3,y-22,1,2,'#283638');}
+  else if(dir==='left'){rect(x-3,y-23,2,2,'#f6edc9');rect(x-2,y-22,1,2,'#283638');}
+  else if(dir==='right'){rect(x+2,y-23,2,2,'#f6edc9');rect(x+3,y-22,1,2,'#283638');}
+  if(a.facialHair&&a.facialHair!=='none'&&a.gender!=='feminino'){rect(x-2,y-19,5,2,hair);if(a.facialHair==='mustache')rect(x-2,y-21,4,1,hair);}
+ }
+ if(a.headwear==='hood'){
+  poly([[x-5,y-25],[x-4,y-29],[x+2,y-30],[x+5,y-26],[x+5,y-21],[x+3,y-22],[x+3,y-26],[x-3,y-26],[x-3,y-22],[x-5,y-21]],outline);
+  poly([[x-4,y-25],[x-3,y-28],[x+2,y-29],[x+4,y-25],[x+4,y-22],[x+2,y-23],[x+2,y-26],[x-2,y-26],[x-2,y-23],[x-4,y-22]],cape||coat);
+ }else if(a.headwear==='helmet'){
+  rect(x-5,y-29,10,4,'#465657');rect(x-5,y-26,2,4,'#465657');rect(x+3,y-26,2,4,'#465657');rect(x-3,y-25,6,2,'#a9b9b2');rect(x-1,y-28,2,2,'#dbbc6a');
+ }else if(a.headwear==='circlet'){
+  rect(x-4,y-27,8,1,'#e0be69');rect(x-1,y-29,2,2,'#f2d98a');
+ }else if(a.headwear==='hat'){
+  rect(x-6,y-29,12,2,hair);rect(x-4,y-31,8,3,hair);
+ }
+ if(a.accessory==='glasses'){rect(x-4,y-23,3,2,'#d5e3db');rect(x+1,y-23,3,2,'#d5e3db');rect(x-1,y-22,2,1,'#d5e3db');}
+ else if(a.accessory==='earrings'){rect(x-5,y-22,1,2,'#e7c86f');rect(x+4,y-22,1,2,'#e7c86f');}
+ else if(a.accessory==='necklace'){rect(x-1,y-10,2,2,'#edcd7f');}
+ if(a.weapon==='sword'){line(x+5,y-11,x+8,y-22,'#c1d0cc',2);rect(x+5,y-13,3,1,'#e1c779');}
+ else if(a.weapon==='staff'){line(x+7,y-7,x+8,y-25,'#855a35',2);circle(x+8,y-27,2,'#8ccac6');}
+ else if(a.weapon==='bow'){ctx.strokeStyle='#98663c';ctx.lineWidth=1;ctx.beginPath();ctx.arc(x+6,y-16,5,-Math.PI*.6,Math.PI*.6);ctx.stroke();}
+ ctx.restore();
+}
 function drawNPCActor(id,x,y,prop='none'){
  const appearance=NPC_APPEARANCES[id];if(!appearance)return;
  const time=performance.now()/1000,phase={mara:.2,ivo:1.1,toren:2.3,elira:3.2,brann:4.1,sabela:5,liora:2.8,arven:1.7,yara:4.7,neris:.8}[id]||0;
- drawPlayer(x,y+Math.sin(time*1.35+phase)*.3,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
+ drawHandheldCharacter(x,y+Math.sin(time*1.35+phase)*.3,appearance,{dir:'down',moving:false,phase:0,idleTime:time+phase});
  ctx.save();
  if(id==='mara'){line(x-5,y-31,x+5,y-26,'#e5c66e',2);circle(x+1,y-29,2,'#f1d88a');}
  else if(id==='ivo'){rect(x-8,y-35,16,3,'#8b6a42');rect(x-6,y-37,12,3,'#b89a63');}
@@ -2185,9 +2239,9 @@ function drawBrumaforteMap(){
     drawNPCName('ELIRA · HERBORISTA',455,393,g.sideQuests.elira);
     drawNPCName('BRANN · PESCADOR',248,389,g.sideQuests.brann);
     drawNPCName('SABELA · ESTALAJADEIRA',565,252,'none');text('CABANA DE BRANN',337,397,6,'#f5f4cc','center');text('JARDIM DE ELIRA',557,397,7,'#f5f4cc','center');
-    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-42,'#f4d49a',8);
+    drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),g.mapPlayer.x,g.mapPlayer.y-37,'#f4d49a',8);
   }
-  const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+  const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 
 
@@ -2286,7 +2340,7 @@ function drawForestMap(){
   text('ALTAR DAS RAÍZES',726,117,8,'#f6e9b9','center');
   const wolf=currentRegionBoss('bosque');if(wolf&&wolf.revealed&&wolf.alive)text('LOBO DA NÉVOA',820,288,8,'#f2e2bc','center');
  }
- const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawLakeMap(){
  const tile=16;
@@ -2318,7 +2372,7 @@ function drawLakeMap(){
   text('LAGO SILENCIOSO',18,164,12,'#edf0c8');drawNPCName('YARA · CARTÓGRAFA',270,357,g.sideQuests.yara);drawNPCName('NERIS · ARQUIVISTA',457,326,'none');
   text('ATRACADOURO',622,318,8,'#f8e8b7','center');const leviathan=currentRegionBoss('lago');if(leviathan&&leviathan.revealed&&leviathan.alive)text('LEVIATÃ DE VIDRO',792,291,8,'#f0e4c2','center');
  }
- const p=g.mapPlayer;drawPlayer(p.x,p.y,g.character,playerMotion);
+ const p=g.mapPlayer;drawHandheldCharacter(p.x,p.y,g.character,playerMotion);
 }
 function drawMapCompass(){
  const x=914,y=232;ctx.save();ctx.globalAlpha=.92;
@@ -2426,8 +2480,8 @@ function drawAction(){
   const x=m.x-camera;if(x<-40||x>W+40)continue;
   drawFieldCreature(x,m.y,m);
  }
- drawPlayer(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
- drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-42,'#f2d49a',8);
+ drawHandheldCharacter(p.x-camera,p.y,g.character,{...playerMotion,dir:playerMotion.dir||'down',moving:playerMotion.moving});
+ drawNameplate((g.character.name||'AVENTUREIRO').slice(0,18),p.x-camera,p.y-37,'#f2d49a',8);
  text('MINA ANTIGA',18,190,10,'#e5e7bb');
  rect(790,186,150,32,'#1c3336');rect(799,199,132,5,'#3b5149');rect(799,199,Math.max(3,(p.x/worldW)*132),5,'#d6be71');text('MAPA DA MINA',799,195,8,'#e3dfad');
 }
