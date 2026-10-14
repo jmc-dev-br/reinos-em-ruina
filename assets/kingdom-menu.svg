@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 920" role="img" aria-label="Paisagem medieval ilustrada ao pôr do sol">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#25294a"/><stop offset=".48" stop-color="#a35a60"/><stop offset=".73" stop-color="#ec9866"/><stop offset="1" stop-color="#e9b47c"/></linearGradient>
+ <linearGradient id="river" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#40546c"/><stop offset="1" stop-color="#151f37"/></linearGradient>
+ <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#394653"/><stop offset="1" stop-color="#192636"/></linearGradient>
+ <linearGradient id="overlay" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#11182b" stop-opacity=".18"/><stop offset=".46" stop-color="#11182b" stop-opacity=".24"/><stop offset="1" stop-color="#11182b" stop-opacity=".02"/></linearGradient>
+</defs>
+<rect width="1640" height="920" fill="url(#sky)"/>
+<g fill="#f8c18a" opacity=".32"><path d="M0 180L255 150 380 176 540 140 720 168 930 124 1100 161 1270 132 1450 148 1640 112V190L0 235Z"/><path d="M0 246L210 220 390 244 575 205 770 239 980 206 1190 227 1400 195 1640 214V253L0 294Z"/></g>
+<circle cx="1280" cy="286" r="94" fill="#ffd78d" opacity=".92"/>
+<circle cx="1280" cy="286" r="123" fill="#ffca83" opacity=".13"/>
+<path d="M0 465L155 340 248 392 400 270 515 392 642 318 758 425 896 300 1015 394 1174 312 1315 404 1450 292 1640 420V610H0Z" fill="#55516e"/>
+<path d="M0 500L205 382 300 444 425 350 545 464 710 366 850 468 1005 365 1123 460 1280 352 1430 452 1550 376 1640 430V655H0Z" fill="#45465f"/>
+<path d="M0 530L150 430 248 485 390 408 515 500 640 420 795 510 930 432 1070 503 1220 415 1365 493 1515 430 1640 478V690H0Z" fill="#343d55"/>
+<path d="M0 570Q180 500 365 566T735 548T1110 572T1460 536L1640 555V920H0Z" fill="url(#hill)"/>
+<path d="M0 658Q200 563 410 642T795 635T1185 660T1640 612V920H0Z" fill="#263847"/>
+<!-- quiet valley village -->
+<g fill="#202b3a" stroke="#171f2c" stroke-width="5">
+ <path d="M170 624V545H221V624Z"/><path d="M158 545L195 510 232 545Z"/>
+ <path d="M254 645V575H305V645Z"/><path d="M244 575L279 541 315 575Z"/>
+ <path d="M365 640V558H424V640Z"/><path d="M353 558L395 521 436 558Z"/>
+ <path d="M468 662V597H510V662Z"/><path d="M458 597L489 569 521 597Z"/>
+ <path d="M1065 620V535H1127V620Z"/><path d="M1054 535L1096 491 1138 535Z"/>
+ <path d="M1150 607V562H1197V607Z"/><path d="M1139 562L1174 529 1208 562Z"/>
+ <path d="M1390 600V535H1435V600Z"/><path d="M1380 535L1412 506 1445 535Z"/>
+</g>
+<g fill="#ffce82" opacity=".9">
+ <path d="M188 564h9v13h-9z M208 564h8v13h-8z M271 591h8v12h-8z M290 591h8v12h-8z M383 576h10v15h-10z M404 576h9v15h-9z M1084 550h9v15h-9z M1104 550h9v15h-9z M1165 572h8v12h-8z M1404 551h8v12h-8z"/>
+</g>
+<!-- castle on far right -->
+<g fill="#212c3c" stroke="#131b2b" stroke-width="7" stroke-linejoin="round">
+ <path d="M1240 508V356H1283V508Z"/><path d="M1230 356L1261 319 1292 356Z"/>
+ <path d="M1302 498V282H1360V498Z"/><path d="M1290 282L1331 228 1372 282Z"/>
+ <path d="M1381 512V338H1423V512Z"/><path d="M1370 338L1402 300 1434 338Z"/>
+ <path d="M1215 525V427H1460V525Z"/><path d="M1204 427L1238 398 1272 427Z"/><path d="M1418 427L1452 398 1486 427Z"/>
+ <path d="M1307 282V215H1355V282Z"/><path d="M1327 215V175H1336V215Z"/>
+ <path d="M1261 358H1269V383H1261Z M1325 289H1335V314H1325Z M1400 348H1408V373H1400Z" fill="#f4bd76" stroke="none"/>
+</g>
+<g fill="#b44744"><path d="M1260 222l33 8-33 8Z M1331 178l35 8-35 8Z M1400 303l33 7-33 8Z"/></g>
+<!-- river and soft light -->
+<path d="M0 683Q280 658 478 705T830 721Q1100 720 1320 682T1640 682V920H0Z" fill="url(#river)"/>
+<path d="M1140 715Q1287 680 1402 714T1640 719" fill="none" stroke="#f4bd7d" stroke-width="9" opacity=".45"/>
+<g stroke="#efa86f" stroke-width="5" opacity=".65"><path d="M1110 755l176 -2 M1198 780l230 -3 M1325 813l215 0 M1235 850l315 -1 M1380 884l186 0"/></g>
+<!-- bridge -->
+<path d="M990 673L1640 673V703L990 701Z" fill="#30394b" stroke="#171f2f" stroke-width="6"/>
+<path d="M1005 673L1005 706 M1088 673L1088 706 M1173 673L1173 706 M1258 673L1258 706 M1343 673L1343 706 M1428 673L1428 706 M1513 673L1513 706 M1598 673L1598 706" stroke="#8d7780" stroke-width="8"/>
+<path d="M1085 700V759Q1129 814 1172 759V700 M1254 700V771Q1299 826 1344 771V700 M1428 700V761Q1470 810 1513 761V700" fill="none" stroke="#252c3d" stroke-width="18"/>
+<!-- foreground land -->
+<path d="M0 790Q180 735 390 787T800 803T1180 785T1640 774V920H0Z" fill="#172332"/>
+<g fill="#121d2b"><path d="M20 850l34-84 34 84Z M72 877l42-105 42 105Z M148 878l31-78 31 78Z M930 875l34-89 34 89Z M1020 900l46-121 46 121Z M1530 899l42-104 42 104Z"/></g>
+<g fill="#4b6754" opacity=".7"><path d="M0 842l58-50 57 48 53-33 65 42v71H0Z"/><path d="M1260 866l55-60 60 62 60-45 66 49v48h-241Z"/></g>
+<!-- frame stones and grass, simple not realistic -->
+<g fill="#394250" stroke="#171f2b" stroke-width="5"><path d="M0 682L135 660 190 715 177 777 0 798Z"/><path d="M48 797L180 768 252 822 239 872 0 894Z"/><path d="M132 887L275 850 328 901 326 920H85Z"/></g>
+<g stroke="#7c815d" stroke-width="6" stroke-linecap="round"><path d="M52 712l-10-20 M82 706l7-21 M118 738l-4-18 M203 829l10-23 M285 887l-1-23 M1490 815l10-26 M1560 847l8-23"/></g>
+<rect width="1640" height="920" fill="url(#overlay)"/>
+</svg>
