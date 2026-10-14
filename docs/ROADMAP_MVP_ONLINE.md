@@ -68,3 +68,26 @@ users, characters, items, character_inventory, quests, combat_sessions, combat_a
 ## Próxima entrega recomendada
 
 Concluir e testar o combate tático e o movimento no cliente; em seguida, escolher provedor de backend e implementar autenticação, persistência no PostgreSQL e autoridade de combate no servidor. Só então desenvolver guildas e objetivo global.
+
+
+## Atualização do protótipo local — efeitos e progressão
+
+O cliente atual inclui clima pixelado (chuva, folhas e alternância automática), tonalidade dia/noite baseada na hora local do computador, brilho animado na água, texto flutuante de dano/cura, tremor de impacto, efeitos sonoros sintetizados e trilha procedural opcional. Esses recursos têm opções independentes no menu.
+
+Também foram adicionados:
+- **Recompensa diária:** sequência de dias por espaço de salvamento, cobre fictício crescente limitado a 26 por reivindicação e uma poção bônus a cada sétimo dia consecutivo.
+- **Conquistas locais:** primeira criatura, 10 derrotas, nível 3, 100 cobres, capítulo I concluído, primeira poção fabricada e sequência de sete recompensas.
+- **Profissões:** mineração, herbologia e pesca têm níveis/XP e fornecem materiais locais. Três ervas e um minério fabricam uma poção; três minérios podem ser refinados em seis cobres fictícios.
+- **Efeitos e áudio são opcionais:** o jogador controla clima, luz, efeitos visuais, sons e trilha ambiente.
+
+## Próxima fase online: eventos, leilões e masmorras cooperativas
+
+A versão atual continua sendo um jogo estático para um jogador. Clima é apenas ambientação local, e recompensas, materiais e conquistas não sincronizam entre navegadores.
+
+1. **Eventos globais de três em três horas:** agendamento e ID do evento no servidor, tempo de expiração, registro da contribuição de cada jogador e distribuição idempotente das recompensas.
+2. **Casa de leilões:** anúncios, depósito temporário dos itens, transferência atômica de itens e cobre, taxa configurável de 5%, histórico de preços, proteção contra duplicação e moderação.
+3. **Masmorras cooperativas de 3 a 5 jogadores:** grupos, funções de tanque/cura/dano, turnos autoritativos no servidor, reconexão e recompensa por contribuição.
+4. **Conquistas públicas e perfis:** registrar desbloqueios no servidor após validar as ações; o localStorage deve ser somente um cache.
+5. **Áudio final:** manter o áudio procedural como fallback e acrescentar trilhas e efeitos originais/licenciados quando houver um pipeline de assets.
+
+Esses sistemas só devem ser chamados de globais/multiplayer depois de implementar autenticação, APIs confiáveis, persistência PostgreSQL, transações, logs de auditoria e proteção contra abuso.
