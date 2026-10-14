@@ -795,8 +795,9 @@ function drawMap(){
   // Main roads and short paths to the building entrances.
   for(let tx=0;tx<60;tx++)for(let ty=18;ty<=21;ty++)pathCell(tx,ty);
   for(let ty=8;ty<34;ty++)for(let tx=22;tx<=25;tx++)pathCell(tx,ty);
-  for(let tx=25;tx<=43;tx++)for(let ty=22;ty<=24;ty++)pathCell(tx,ty);
-  for(let ty=24;ty<=32;ty++)for(let tx=40;tx<=43;tx++)pathCell(tx,ty);
+  for(let tx=25;tx<=39;tx++)for(let ty=22;ty<=24;ty++)pathCell(tx,ty);
+  for(let ty=24;ty<=32;ty++)pathCell(39,ty);
+  for(let tx=39;tx<=46;tx++)pathCell(tx,29);
   for(let tx=8;tx<=10;tx++)for(let ty=16;ty<=18;ty++)pathCell(tx,ty);
   for(let tx=43;tx<=47;tx++)for(let ty=15;ty<=18;ty++)pathCell(tx,ty);
 
@@ -813,7 +814,7 @@ function drawMap(){
   }
   function flower(x,y,color='#e8e8ab'){rect(x,y,2,4,'#4d843f');rect(x-2,y-2,3,3,color);rect(x+1,y-3,3,3,'#f3f0c1');}
   function rock(x,y){rect(x-4,y-1,8,5,'#63785a');rect(x-2,y-3,5,3,'#87916a');rect(x-3,y+2,6,1,'#475e49');}
-  for(let x=-5;x<W+20;x+=34){topTree(x+8,151,.76);topTree(x+18,526,.78);}
+  for(let x=-5;x<W+20;x+=34)topTree(x+18,526,.78);
   for(const [x,y,z] of [[26,203,.86],[67,245,.78],[245,163,.7],[521,163,.83],[570,202,.78],[622,164,.78],[821,177,.82],[920,207,.86],[941,277,.72],[52,458,.83],[240,449,.77],[455,469,.8],[535,469,.72],[818,475,.9],[920,438,.8]])topTree(x,y,z);
 
   // A little pond on the western edge, with highlights and stepping-stone banks.
@@ -849,20 +850,20 @@ function drawMap(){
   house(688,166,139,105,{roof:'#7d998d',wall:'#a8c78a',trim:'#3b6144'},'forge');
 
   // Fenced vegetable beds and a cottage off the path to the east.
-  rect(552,369,171,80,'#4c7649');rect(558,374,159,70,'#315c42');rect(565,381,145,56,'#a7c986');
-  rect(565,381,145,5,'#6b984e');rect(565,432,145,5,'#6b984e');
-  for(let row=0;row<3;row++)for(let col=0;col<9;col++){const x=573+col*15,y=392+row*13;rect(x,y,8,5,(row+col)%2?'#86ae68':'#90b66e');rect(x+2,y-3,2,4,'#3d7a45');rect(x+4,y-4,3,3,'#558d4c');}
-  rect(712,397,9,32,'#5d714d');rect(709,394,15,4,'#b2cc92');
+  rect(494,405,127,77,'#4c7649');rect(500,411,115,64,'#315c42');rect(506,417,103,52,'#a7c986');
+  rect(500,411,115,5,'#6b984e');rect(500,469,115,5,'#6b984e');
+  for(let row=0;row<3;row++)for(let col=0;col<7;col++){const x=512+col*14,y=428+row*12;rect(x,y,8,5,(row+col)%2?'#86ae68':'#90b66e');rect(x+2,y-3,2,4,'#3d7a45');rect(x+4,y-4,3,3,'#558d4c');}
+  for(let x=496;x<623;x+=12){rect(x,405,3,12,'#597847');rect(x,470,3,11,'#597847');}rect(494,405,127,3,'#b1b88a');rect(494,478,127,3,'#b1b88a');
   house(658,405,151,104,{roof:'#779e73',wall:'#b5ca8f',trim:'#3e6846'},'house');
 
   // Market awning, colorful crates and fence details.
-  rect(111,373,76,42,'#557447');rect(118,378,64,30,'#9e7548');
-  poly([[106,379],[150,352],[193,379]],'#386043');poly([[111,375],[150,357],[188,375]],'#d9b26a');
-  rect(112,379,77,5,'#4d4e37');
-  for(let x=121;x<187;x+=16){rect(x,384,7,22,'#c49a5c');rect(x+7,384,7,22,'#805738');}
-  rect(105,407,90,5,'#536b43');rect(122,411,17,10,'#926843');rect(148,411,17,10,'#b98d55');rect(172,411,17,10,'#755238');
-  for(let x=583;x<727;x+=12){rect(x,360,3,16,'#597847');rect(x+1,360,1,16,'#b1b88a');}
-  rect(580,359,148,3,'#527446');rect(580,372,148,3,'#527446');
+  rect(176,373,76,42,'#557447');rect(183,378,64,30,'#9e7548');
+  poly([[171,379],[215,352],[258,379]],'#386043');poly([[176,375],[215,357],[253,375]],'#d9b26a');
+  rect(177,379,77,5,'#4d4e37');
+  for(let x=186;x<251;x+=16){rect(x,384,7,22,'#c49a5c');rect(x+7,384,7,22,'#805738');}
+  rect(170,407,90,5,'#536b43');rect(187,411,17,10,'#926843');rect(213,411,17,10,'#b98d55');rect(237,411,17,10,'#755238');
+  for(let x=500;x<621;x+=12){rect(x,392,3,12,'#597847');rect(x+1,392,1,12,'#b1b88a');}
+  rect(498,391,124,3,'#527446');rect(498,403,124,3,'#527446');
 
   for(const [x,y] of [[260,278],[280,280],[479,279],[486,284],[638,282],[730,272],[755,284],[821,361],[500,430],[758,458],[204,452],[35,366],[315,390]])rock(x,y);
   for(const [x,y] of [[42,364],[68,356],[292,373],[310,390],[473,375],[496,402],[525,424],[735,344],[747,366],[791,378],[831,387],[240,455],[287,441],[478,464],[535,454],[790,500]])flower(x,y);
