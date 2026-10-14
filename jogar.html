@@ -807,7 +807,7 @@ function talkLiora(){
   g.sideQuests.liora='complete';g.coins+=50;addXP(130);updateUI();persistProgress();checkAchievements();playSfx('win');
   openDialogue('Liora, rastreadora do Bosque Velado','A névoa está se desfazendo. Encontrei o pingente da minha irmã entre as pedras do altar. Não consigo trazer tudo de volta, mas hoje o bosque deixou de mentir. Obrigada por não ter seguido a voz.','História concluída: +50 cobres fictícios, +130 XP.');return;
  }
- openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Ele muda de comportamento quando perde metade da resistência.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e use cartas de defesa quando ele entrar em fúria.'));
+ openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Aproxime-se e pressione J para iniciar um duelo; a criatura fica mais perigosa quando está enfraquecida.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e pressione J para iniciar o duelo.'));
 }
 function talkArven(){
  const state=g.sideQuests.arven,data=professionsData();
@@ -831,7 +831,7 @@ function talkYara(){
   g.sideQuests.yara='complete';g.coins+=75;addXP(190);g.potions++;updateUI();persistProgress();checkAchievements();playSfx('win');
   openDialogue('Yara, cartógrafa das marés','A água voltou a refletir o céu, não os anos que ainda não chegaram. A bússola parou de girar — e agora aponta para uma costa que não aparece em nenhum mapa. Você abriu uma nova pergunta para o reino.','História concluída: +75 cobres fictícios, +190 XP e +1 poção.');return;
  }
- openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Sua carapaça de vidro devolve golpes; use uma carta defensiva e espere a abertura.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'derrote o Leviatã de Vidro.'));
+ openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Aproxime-se e pressione J para iniciar um duelo; sua carapaça é resistente, então escolha bem os movimentos.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'encontre o Leviatã de Vidro e pressione J para iniciar o duelo.'));
 }
 function talkNeris(){
  openDialogue('Neris, arquivista dos naufrágios',g.storyFlags.lakeLore?'Yara voltou a confiar na bússola. Entre os nomes que cataloguei há um navio que nunca saiu do porto, mas consta como naufragado três vezes.':'Guardo os nomes de todos os barcos que não voltaram. Não porque a lista seja útil, mas porque ninguém deveria desaparecer duas vezes: primeiro da água, depois da memória.','História local: registros incompletos podem apagar pessoas — ou encobrir uma fraude.');
@@ -1608,7 +1608,7 @@ function updateUI(){
  $('questDesc').textContent=descriptions[Math.min(g.questStep,5)];
  $('questMark').textContent=g.questStep===5?'✓':g.questStep===0?'○':'◌';
  $('questObjective').innerHTML=q[1]+'<small>'+escapeHtml(q[2])+'</small>';
- $('discovery').textContent=g.kills+' criaturas derrotadas · '+(g.ledgerFound?'livro-razão encontrado':'procure pistas nas ruínas')+' · '+(g.level>1?'Nível evoluído':'Ganhe XP ao derrotar criaturas')+'.';
+ $('discovery').textContent=g.kills+' criaturas derrotadas · '+(g.ledgerFound?'livro-razão encontrado':'procure pistas nas ruínas')+' · '+((activeCreature()&&activeCreature().level>1?'Parceiro evoluído':'Ganhe XP ao vencer encontros'))+'.';
  updateEconomyUI();
 }
 // Pixel-art drawing helpers.
@@ -1987,7 +1987,7 @@ function drawPlayer(x,y,rawAppearance,motion){
     }
   }
   // Draw base arms after the full sprite to keep them visible above stray equipment pixels.
-  // Weapon choices are visible in the overworld and in the side-view ruins.
+  // Character equipment is rendered in the overhead adventure sprite.
   if(a.weapon==='sword'){ln(34,34,42,56,'#14161a',4);ln(35,34,42,55,'#b9c4c6',2);ln(36,35,41,51,'#f4ead0',1);r(32,33,7,2,'#d4b16a');r(35,35,2,5,'#69462c');r(34,39,4,2,'#c69d59');}
   else if(a.weapon==='staff'){ln(36,22,38,61,'#271e19',4);ln(36,22,38,61,'#a37b49',2);r(34,20,5,3,'#8eb2bf');r(35,21,3,1,'#e3e0cb');}
   else if(a.weapon==='bow'){ln(37,27,39,57,'#6a4329',2);ln(36,27,38,57,'#d3c3a0',1);r(35,29,3,2,'#6a4329');r(38,53,3,2,'#6a4329');}
@@ -2352,7 +2352,7 @@ function talkLiora(){
   g.sideQuests.liora='complete';g.coins+=50;addXP(130);updateUI();persistProgress();checkAchievements();playSfx('win');
   openDialogue('Liora, rastreadora do Bosque Velado','A névoa está se desfazendo. Encontrei o pingente da minha irmã entre as pedras do altar. Não consigo trazer tudo de volta, mas hoje o bosque deixou de mentir. Obrigada por não ter seguido a voz.','História concluída: +50 cobres fictícios, +130 XP. O acesso ao lago fica mais próximo.');return;
  }
- openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Ele muda de comportamento quando perde metade da resistência.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e use cartas de defesa quando ele entrar em fúria.'));
+ openDialogue('Liora, rastreadora do Bosque Velado',q==='complete'?'Guardei o pingente ao lado do mapa dela. Quando a névoa volta, lembro que nem toda voz que conhecemos pertence a alguém vivo.':'O Lobo da Névoa está no leste, perto do altar rachado. Aproxime-se e pressione J para iniciar um duelo; a criatura fica mais perigosa quando está enfraquecida.','Objetivo: '+(q==='complete'?'continue sua jornada.':'encontre o Lobo da Névoa e pressione J para iniciar o duelo.'));
 }
 function talkArven(){
  const state=g.sideQuests.arven,data=professionsData();
@@ -2376,7 +2376,7 @@ function talkYara(){
   g.sideQuests.yara='complete';g.coins+=75;addXP(190);g.potions++;updateUI();persistProgress();checkAchievements();playSfx('win');
   openDialogue('Yara, cartógrafa das marés','A água voltou a refletir o céu, não os anos que ainda não chegaram. A bússola parou de girar — e agora aponta para uma costa que não aparece em nenhum mapa. Você abriu uma nova pergunta para o reino.','História concluída: +75 cobres fictícios, +190 XP e +1 poção.');return;
  }
- openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Sua carapaça de vidro devolve golpes; use uma carta defensiva e espere a abertura.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'derrote o Leviatã de Vidro.'));
+ openDialogue('Yara, cartógrafa das marés',q==='complete'?'A bússola agora aponta para além do horizonte. Vou desenhar a costa nova, mesmo que ninguém acredite em mim.':'O Leviatã nada ao leste, junto ao lago profundo. Aproxime-se e pressione J para iniciar um duelo; sua carapaça é resistente, então escolha bem os movimentos.','Objetivo: '+(q==='complete'?'uma nova expedição será revelada no futuro.':'encontre o Leviatã de Vidro e pressione J para iniciar o duelo.'));
 }
 function talkNeris(){
  openDialogue('Neris, arquivista dos naufrágios',g.storyFlags.lakeLore?'Yara voltou a confiar na bússola. Entre os nomes que cataloguei há um navio que nunca saiu do porto, mas consta como naufragado três vezes.':'Guardo os nomes de todos os barcos que não voltaram. Não porque a lista seja útil, mas porque ninguém deveria desaparecer duas vezes: primeiro da água, depois da memória.','História local: registros incompletos podem apagar pessoas — ou encobrir uma fraude.');
