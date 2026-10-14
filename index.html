@@ -113,6 +113,98 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 @media(max-height:720px){#homeView h1{font-size:clamp(34px,5.5vh,52px);margin-bottom:15px}#homeView .primary-actions{gap:6px;padding:8px}#homeView .action{min-height:39px;padding:5px 10px}#homeView #homeNote{margin-top:18px;padding:7px 10px;font-size:9px}.stage{padding-top:48px;padding-bottom:42px}}
 @media(max-width:540px){.topbar{padding:10px 12px;min-height:48px}.topright{gap:4px}#headerLanguage{font-size:9px;padding:7px 9px}.stage{padding:52px 12px 48px}#homeView .hero-copy{width:min(420px,98vw)}#homeView h1{font-size:clamp(37px,11vw,52px);margin-bottom:21px}#homeView .primary-actions{width:min(330px,94vw);padding:9px;gap:7px}#homeView .action{min-height:44px}#homeView #homeNote{font-size:9px;margin-top:23px;padding:10px 8px}.footer{padding:8px 12px;font-size:8px}}
 
+/* --- Final art-directed menu: match the supplied reference --- */
+.backdrop{background:#0d1421 url("assets/kingdom-menu.webp") center center/cover no-repeat}
+.backdrop:after{background:linear-gradient(0deg,#05080f30 0%,transparent 38%);opacity:1}
+.backdrop .stars,.backdrop .fog,.backdrop svg{display:none!important}
+.topbar{position:absolute;top:0;left:0;right:0;height:78px;min-height:0;padding:14px 18px;background:linear-gradient(180deg,#090b13a6,transparent);border:0;box-shadow:none;z-index:5}
+.topbar .brand,.topbar .network{display:none!important}
+.topright{margin-left:auto;display:flex;align-items:center;gap:0}
+.lang-toggle{display:flex;align-items:center;gap:9px;padding:8px 13px;background:linear-gradient(180deg,#11121af5,#080a11ed);border:3px ridge #775731;outline:1px solid #100e0d;box-shadow:3px 4px 0 #030408;color:#f1e6cf;font-family:Georgia,"Times New Roman",serif;font-size:14px;letter-spacing:.03em}
+.lang-mini{display:flex;align-items:center;justify-content:center;gap:6px;min-width:59px;min-height:25px;padding:2px 4px;border:1px solid transparent;background:transparent;color:#bfb6a6;font:700 13px Georgia,"Times New Roman",serif;transition:background .12s,color .12s}
+.lang-mini .flag{font-family:Arial,sans-serif;font-size:19px;line-height:1}
+.lang-mini.active{color:#fff3d4;text-shadow:0 0 8px #f0c67850}
+.lang-mini:hover{background:#a57e4124;color:#fff0c5}
+.lang-separator{color:#a28b69;font-size:18px}
+#headerLanguage{display:none!important}
+.stage{min-height:100vh;height:auto;padding:36px 16px 55px;align-items:center;justify-content:center}
+#homeView{width:100%;display:none;align-items:center;justify-content:center}
+#homeView.active{display:flex}
+#homeView .hero{width:100%;height:100%;display:flex;justify-content:center;align-items:center}
+#homeView .hero-copy{width:min(500px,96vw);max-width:500px;padding:0 0 1px;text-align:center;background:transparent;border:0;outline:0;box-shadow:none;position:relative;transform:translateY(-18px)}
+#homeView .hero-copy:before,#homeView .hero-copy:after{display:none}
+#homeView .hero-copy>.eyebrow,#homeView .lede,#homeView .description{display:none}
+#homeView h1{position:relative;isolation:isolate;font-family:Georgia,"Times New Roman",serif;font-size:clamp(64px,6.15vw,103px);font-weight:900;line-height:.84;letter-spacing:-.055em;margin:0 auto 11px;text-transform:uppercase;color:#e5dfd0;text-shadow:2px 2px 0 #17131a,4px 4px 0 #71604e,6px 6px 0 #16121a,0 9px 22px #000e;-webkit-text-stroke:.65px #261c15}
+#homeView h1:before{content:"♛";display:block;position:relative;z-index:2;color:#eac36e;font-family:Georgia,"Times New Roman",serif;font-size:clamp(39px,3.35vw,55px);font-weight:900;line-height:.82;margin:0 auto 5px;text-shadow:2px 2px 0 #6a3e1a,4px 4px 0 #100d0b;-webkit-text-stroke:.35px #100e0c}
+#homeView h1:after{content:"";position:absolute;left:50%;top:27%;transform:translateX(-50%);z-index:-1;width:94%;height:74%;clip-path:polygon(7% 15%,22% 7%,31% 16%,43% 5%,54% 14%,70% 4%,83% 14%,96% 7%,91% 29%,100% 45%,90% 61%,94% 79%,79% 88%,66% 81%,55% 98%,42% 84%,28% 94%,16% 82%,4% 88%,9% 64%,0 48%,8% 32%);background:linear-gradient(145deg,#8f292c 0%,#681e25 52%,#371820 100%);border:0;filter:drop-shadow(3px 6px 0 #0a0809)}
+#homeView .title-line{display:block;position:relative;z-index:1}
+#homeView .title-line.gold{margin-top:4px;color:#e8ad55;text-shadow:2px 2px 0 #27160e,4px 4px 0 #86501f,6px 7px 0 #161016,0 10px 18px #000d}
+#homeView .hero-copy .ornament{display:block!important;position:relative;width:min(465px,93%);height:4px;margin:17px auto 23px;background:linear-gradient(90deg,transparent 0%,#8b5d2e 9%,#e7bc70 24%,#a6753e 43%,#efcb82 50%,#a6753e 57%,#e7bc70 76%,#8b5d2e 91%,transparent 100%);box-shadow:0 2px 0 #09090c}
+#homeView .hero-copy .ornament:before{content:"✥";position:absolute;left:50%;top:50%;transform:translate(-50%,-55%);font-size:25px;line-height:1;color:#d5a85a;text-shadow:2px 2px 0 #15100b;background:transparent}
+#homeView .primary-actions{display:flex;flex-direction:column;align-items:stretch;gap:11px;width:min(350px,91vw);max-width:350px;margin:0 auto;padding:0;background:transparent;border:0;outline:0;box-shadow:none;position:relative}
+#homeView .primary-actions:before,#homeView .primary-actions:after{display:none}
+#homeView .action{position:relative;display:flex;align-items:center;justify-content:center;min-height:59px;padding:0 54px;border:3px ridge #78603c;outline:1px solid #16100c;border-radius:0;box-shadow:inset 0 0 0 2px #191512,inset 0 0 0 4px #37302a,0 4px 0 #07080c;background:linear-gradient(180deg,#25232a 0%,#17171b 48%,#111217 100%);color:#f1e5cf;transition:transform .12s,filter .12s,border-color .12s}
+#homeView .action:before,#homeView .action:after{position:absolute;top:3px;z-index:2;color:#d8b267;font:13px/1 Georgia,serif;text-shadow:1px 1px #271a12;pointer-events:none}
+#homeView .action:before{content:"✦";left:4px}
+#homeView .action:after{content:"✦";right:4px}
+#homeView .action.primary{min-height:75px;margin-bottom:2px;border:4px ridge #d0a453;outline:2px solid #1b120c;box-shadow:inset 0 0 0 2px #3d1515,inset 0 0 0 5px #8f4b31,0 5px 0 #060609;background:linear-gradient(180deg,#7e2529 0%,#651b20 56%,#45191e 100%);color:#fff1d8}
+#homeView .action.primary:before,#homeView .action.primary:after{top:4px;color:#ecca7d;font-size:19px}
+#homeView .action:hover,#homeView .action:focus-visible{transform:translateY(-1px);filter:brightness(1.2);border-color:#e5c27d}
+#homeView .action:active{transform:translateY(1px);box-shadow:inset 0 0 0 2px #191512,0 1px 0 #050609}
+#homeView .action-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:0 47px}
+#homeView .action-label strong{display:block;color:inherit;font:700 22px/1.1 Georgia,"Times New Roman",serif;letter-spacing:.06em;text-transform:uppercase;text-shadow:1px 1px 0 #0007}
+#homeView .action-label small{display:none!important}
+#homeView .action-icon{position:absolute;left:26px;top:50%;transform:translateY(-50%);color:#e8c278;font:700 25px/1 Georgia,"Times New Roman",serif;z-index:3;text-shadow:2px 2px #1a100c}
+#homeView .action .arrow{position:absolute;right:19px;top:50%;transform:translateY(-50%);display:block;color:#e8d0a6;font:24px/1 Georgia,"Times New Roman",serif;z-index:3}
+#homeView #playButton .arrow{display:none}
+#homeView #languageButton .action-label:after{content:"🇧🇷";position:absolute;right:40px;top:50%;transform:translateY(-50%);font:16px Arial,sans-serif}
+#homeView #languageButton .action-icon{font-size:0}
+#homeView #languageButton .action-icon:after{content:"⚙";font-size:25px}
+#homeView #historyButton .action-icon{font-size:0}
+#homeView #historyButton .action-icon:after{content:"▤";font-size:25px}
+#homeView #aboutButton .action-icon{font-size:0}
+#homeView #aboutButton .action-icon:after{content:"▣";font-size:23px}
+#homeView #exitButton .action-icon{font-size:0}
+#homeView #exitButton .action-icon:after{content:"⇥";font-size:24px}
+#homeView #homeNote{display:block;box-sizing:border-box;width:min(575px,94vw);margin:33px auto 0;padding:17px 20px;background:linear-gradient(180deg,#0c0d11f5,#121114f2);border:4px ridge #876139;outline:2px solid #18100b;box-shadow:inset 0 0 0 2px #241b13,0 5px 0 #050609;color:#f5e8ca;text-align:center;white-space:pre-line;font:17px/1.45 Georgia,"Times New Roman",serif;letter-spacing:.01em}
+#homeView .hero-art{display:none!important}
+.footer{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:flex-start;background:linear-gradient(0deg,#05070db3,transparent);border:0;box-shadow:none;z-index:4;padding:10px 17px;color:#c0b59f;font:10px Georgia,"Times New Roman",serif;letter-spacing:.04em}
+.footer b{display:none}#footerRight{display:none}
+@media(max-height:790px){
+ #homeView .hero-copy{transform:translateY(0);padding-top:28px}
+ #homeView h1{font-size:clamp(57px,6.5vh,82px);margin-bottom:9px}
+ #homeView h1:before{font-size:42px}
+ #homeView .hero-copy .ornament{margin:12px auto 16px}
+ #homeView .primary-actions{gap:7px}
+ #homeView .action{min-height:48px}
+ #homeView .action.primary{min-height:61px}
+ #homeView .action-label strong{font-size:18px}
+ #homeView #homeNote{margin-top:19px;padding:11px 14px;font-size:13px}
+}
+@media(max-width:540px){
+ .topbar{height:56px;min-height:0;padding:9px 10px}
+ .lang-toggle{gap:4px;padding:5px 7px;border-width:2px;font-size:11px}
+ .lang-mini{min-width:45px;font-size:11px;gap:4px}
+ .lang-mini .flag{font-size:15px}
+ .lang-separator{font-size:14px}
+ .stage{padding:52px 11px 46px}
+ #homeView .hero-copy{width:min(410px,98vw);transform:translateY(0)}
+ #homeView h1{font-size:clamp(51px,12vw,75px);line-height:.88;margin-bottom:9px}
+ #homeView h1:before{font-size:35px;margin-bottom:4px}
+ #homeView h1:after{width:99%;top:26%;height:73%}
+ #homeView .hero-copy .ornament{margin:12px auto 17px}
+ #homeView .primary-actions{width:min(330px,94vw);gap:7px}
+ #homeView .action{min-height:49px;padding:0 44px}
+ #homeView .action.primary{min-height:63px}
+ #homeView .action-label{padding:0 37px}
+ #homeView .action-label strong{font-size:17px}
+ #homeView .action-icon{left:17px;font-size:21px}
+ #homeView .action .arrow{right:12px;font-size:19px}
+ #homeView #languageButton .action-label:after{right:28px;font-size:12px}
+ #homeView #homeNote{width:min(490px,96vw);margin-top:19px;padding:10px 9px;font-size:12px}
+ .footer{padding:8px 10px;font-size:8px}
+}
+
 </style>
 </head>
 <body>
@@ -128,7 +220,11 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
 </div>
 <header class="topbar">
  <a class="brand" href="#" id="brandHome"><span class="crest">R</span><span><span class="brandname">Reinos em Ruína</span><span class="brandsub" id="brandSubtitle">RPG medieval · escolhas e consequências</span></span></a>
- <div class="topright"><div class="network"><span class="dot"></span><span id="headerStatus">Projeto independente</span></div><button class="subtle-btn" id="headerLanguage">PT · Idioma</button></div>
+ <div class="topright"><div class="lang-toggle" role="group" aria-label="Idioma">
+  <button class="lang-mini active" id="headerPt" type="button" aria-label="Português" aria-pressed="true"><span class="flag">🇧🇷</span> PT</button>
+  <span class="lang-separator" aria-hidden="true">│</span>
+  <button class="lang-mini" id="headerEn" type="button" aria-label="English" aria-pressed="false"><span class="flag">🇬🇧</span> EN</button>
+ </div></div>
 </header>
 <main class="stage">
  <section class="view active" id="homeView">
@@ -198,7 +294,7 @@ h1{font-family:"Courier New",Consolas,monospace;font-size:clamp(35px,5vw,58px);l
   <div class="exit-card"><div class="eyebrow" id="exitEyebrow">ATÉ A PRÓXIMA JORNADA</div><h2 class="page-title" id="exitPageTitle">O reino continuará aqui.</h2><p id="exitMessage">Obrigado por visitar Reinos em Ruína. Você pode fechar esta aba ou voltar ao menu principal.</p><button type="button" class="slot-button primary" id="exitReturn">Voltar ao menu</button></div>
  </section>
 </main>
-<footer class="footer"><span><b>Reinos em Ruína</b> · <span id="footerLeft">Projeto independente</span></span><span id="footerRight">Protótipo de navegador · salvamentos locais</span></footer>
+<footer class="footer"><span id="footerLeft">v0.1.0</span><span id="footerRight"></span></footer>
 <script>
 (function(){
 'use strict';
@@ -218,7 +314,7 @@ const TEXT={
  'pt-BR':{
   subtitle:'RPG medieval · escolhas e consequências',status:'Projeto independente',eyebrow:'UMA AVENTURA EM UM REINO ESQUECIDO',
   lede:'O dinheiro constrói reinos. As escolhas decidem o que resta deles.',description:'Explore terras esquecidas, enfrente criaturas e descubra os segredos por trás da ruína de Brumaforte.',
-  play:'Jogar',playSub:'Escolha um espaço de salvamento',language:'Idioma',languageSub:'Português (Brasil)',homeNote:'Explore. Lute. Decida. Conhecimento financeiro para um mundo melhor.',
+  play:'Jogar',playSub:'Escolha um espaço de salvamento',language:'Idioma',languageSub:'Português (Brasil)',homeNote:'Explore. Lute. Decida.\\nConhecimento financeiro para um mundo melhor.',
   art:'Reinos quebrados<br>guardam histórias<br>e dívidas esquecidas.',slotsEyebrow:'SUA JORNADA',slotsTitle:'Escolha um salvamento',slotsSubtitle:'Continue uma aventura existente ou crie um personagem para começar uma nova. Cada espaço guarda sua própria jornada.',
   back:'Voltar',slotsNote:'Os salvamentos ficam neste navegador. Excluir um espaço remove apenas aquela jornada.',
   slot:'ESPAÇO',empty:'Slot vazio',emptyDesc:'Nenhum personagem ainda. Crie um herói e comece uma nova aventura.',create:'Criar personagem',continue:'Continuar',start:'Começar jornada',customize:'Personalizar',delete:'Excluir',level:'Nível',chapter:'Capítulo',noProgress:'A jornada ainda não foi iniciada.',
@@ -234,7 +330,7 @@ const TEXT={
  'en-US':{
   subtitle:'Medieval RPG · choices and consequences',status:'Independent project',eyebrow:'AN ADVENTURE IN A FORGOTTEN KINGDOM',
   lede:'Money builds kingdoms. Choices decide what remains.',description:'Explore forgotten lands, face creatures, and uncover the secrets behind Brumaforte’s ruin.',
-  play:'Play',playSub:'Choose a save slot',language:'Language',languageSub:'English',homeNote:'Explore. Fight. Decide. Financial literacy for a better world.',
+  play:'Play',playSub:'Choose a save slot',language:'Language',languageSub:'English',homeNote:'Explore. Fight. Decide.\\nFinancial literacy for a better world.',
   art:'Broken kingdoms<br>hold stories<br>and forgotten debts.',slotsEyebrow:'YOUR JOURNEY',slotsTitle:'Choose a save slot',slotsSubtitle:'Continue an existing adventure or create a character to begin a new one. Each slot keeps its own journey.',
   back:'Back',slotsNote:'Saves are stored in this browser. Deleting a slot removes only that journey.',
   slot:'SLOT',empty:'Empty slot',emptyDesc:'No character yet. Create a hero and begin a new adventure.',create:'Create character',continue:'Continue',start:'Start journey',customize:'Customize',delete:'Delete',level:'Level',chapter:'Chapter',noProgress:'The journey has not started yet.',
@@ -274,7 +370,9 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&
 function t(key){return (TEXT[language]&&TEXT[language][key])||TEXT['pt-BR'][key]||key;}
 function translatePage(){
  document.documentElement.lang=language;
- $('brandSubtitle').textContent=t('subtitle');$('headerStatus').textContent=t('status');$('headerLanguage').textContent='🇧🇷 PT  ·  🇬🇧 EN';
+ $('brandSubtitle').textContent=t('subtitle');
+  $('headerPt').classList.toggle('active',language==='pt-BR');$('headerPt').setAttribute('aria-pressed',String(language==='pt-BR'));
+  $('headerEn').classList.toggle('active',language==='en-US');$('headerEn').setAttribute('aria-pressed',String(language==='en-US'));
  $('homeEyebrow').textContent=t('eyebrow');$('homeLede').textContent=t('lede');$('homeDescription').textContent=t('description');
  $('playLabel').textContent=t('play');$('playSub').textContent=t('playSub');$('languageLabel').textContent=t('language');$('languageSub').textContent=t('languageSub');$('aboutLabel').textContent=language==='pt-BR'?'Sobre':'About';$('aboutSub').textContent=language==='pt-BR'?'A intenção do projeto':'The purpose of the project';$('historyLabel').textContent=language==='pt-BR'?'História':'Story';$('historySub').textContent=language==='pt-BR'?'Conheça o reino e a aventura':'Meet the kingdom and its story';$('exitLabel').textContent=language==='pt-BR'?'Sair':'Exit';$('exitSub').textContent=language==='pt-BR'?'Encerrar por agora':'Leave for now';$('historyEyebrow').textContent=language==='pt-BR'?'AS CRÔNICAS DO REINO':'CHRONICLES OF THE KINGDOM';$('historyTitle').textContent=language==='pt-BR'?'A história do reino':'The kingdom’s story';$('historySubtitle').textContent=language==='pt-BR'?'Os acontecimentos que dão início à sua aventura.':'The events that set your adventure in motion.';$('historyBack').textContent='← '+t('back');$('exitEyebrow').textContent=language==='pt-BR'?'ATÉ A PRÓXIMA JORNADA':'UNTIL THE NEXT JOURNEY';$('exitPageTitle').textContent=language==='pt-BR'?'O reino continuará aqui.':'The kingdom will be here.';$('exitMessage').textContent=language==='pt-BR'?'Obrigado por visitar Reinos em Ruína. Você pode fechar esta aba ou voltar ao menu principal.':'Thank you for visiting Realms in Ruin. You can close this tab or return to the main menu.';$('exitReturn').textContent=language==='pt-BR'?'Voltar ao menu':'Return to menu';$('homeNote').textContent=t('homeNote');$('artNote').innerHTML=t('art');
  $('slotsEyebrow').textContent=t('slotsEyebrow');$('slotsTitle').textContent=t('slotsTitle');$('slotsSubtitle').textContent=t('slotsSubtitle');$('slotsBack').textContent='← '+t('back');$('slotsNote').textContent=t('slotsNote');
@@ -505,7 +603,8 @@ $('languageButton').addEventListener('click',()=>showView('language'));
 $('aboutButton').addEventListener('click',()=>{renderAbout();showView('about')});
 $('historyButton').addEventListener('click',()=>{renderHistory();showView('history')});
 $('exitButton').addEventListener('click',()=>showView('exit'));
-$('headerLanguage').addEventListener('click',()=>showView('language'));
+$('headerPt').addEventListener('click',()=>setLanguage('pt-BR'));
+$('headerEn').addEventListener('click',()=>setLanguage('en-US'));
 $('slotsBack').addEventListener('click',()=>showView('home'));
 $('creatorBack').addEventListener('click',()=>{renderSlots();showView('slots');});
 $('langBack').addEventListener('click',()=>showView('home'));
