@@ -407,6 +407,13 @@ button:focus-visible,.btn:focus-visible{outline:2px solid #f1d789!important;outl
 /* Creature portraits use antialiased vector forms, never nearest-neighbour scaling. */
 .creature-portrait,.starter-portrait,.party-sprite{image-rendering:auto!important;image-rendering:smooth!important;shape-rendering:geometricPrecision}
 
+
+/* Mouse controls and hit feedback */
+#game{cursor:crosshair;touch-action:pan-y}
+#game:focus-visible{outline:2px solid #e8c779;outline-offset:2px}
+.duel-creature{will-change:transform,filter}
+@media(prefers-reduced-motion:reduce){.duel-creature{will-change:auto}}
+
 </style>
 </head>
 <body>
@@ -525,6 +532,7 @@ function saveGameSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify
 function speedFactor(){return gameSettings.walkSpeed==='slow'?.8:gameSettings.walkSpeed==='fast'?1.35:1;}
 
 const visualFX={particles:[],floating:[],shakeTime:0,shakePower:0,weather:'clear',weatherUntil:Date.now()+45000,worldSeconds:0,saveTick:0};
+const inputFX={pointer:{x:0,y:0,worldX:0,worldY:0,inside:false,scene:'map',target:null},effects:[],dodgeTime:0,dodgeCooldown:0,dodgeVX:0,dodgeVY:0,dodgeDir:'down'};
 function rand01(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
 function initializeParticles(){
  if(visualFX.particles.length)return;
@@ -541,6 +549,10 @@ function updateAmbient(dt){
  if(visualFX.shakeTime===0)visualFX.shakePower=0;
  for(const item of visualFX.floating){item.life-=dt;item.y-=20*dt;}
  visualFX.floating=visualFX.floating.filter(item=>item.life>0);
+ for(const fx of inputFX.effects)fx.life-=dt;
+ inputFX.effects=inputFX.effects.filter(fx=>fx.life>0);
+ inputFX.dodgeCooldown=Math.max(0,inputFX.dodgeCooldown-dt);
+ inputFX.dodgeTime=Math.max(0,inputFX.dodgeTime-dt);
  initializeParticles();
  // Four real seconds equal one minute in the world. The clock belongs to the save, not the PC clock.
  if(!g.worldClock)g.worldClock={minuteOfDay:480,totalMinutes:0};
@@ -648,6 +660,7 @@ function renderWithEffects(){
   }
   if(g.scene==='map')drawMap();else drawAction();
   drawEnvironmentOverlay();
+  drawInputEffects();
  }catch(err){
   console.error('Erro recuperável na renderização:',err);
   ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;
@@ -1371,7 +1384,7 @@ function nearestWildCreature(maxDistance=125){
  }
  return target;
 }
-function openTacticalBattle(){
+function openTacticalBattle(targetOverride){
  if(modalType)return;
  if(!g.team||!g.team.length){openStarterSelection();return;}
  const active=activeCreature();
@@ -1380,11 +1393,12 @@ function openTacticalBattle(){
   if(next<0){notify('Sua equipe precisa descansar. Abra Equipe.',2.5);return;}
   g.activeCreature=next;
  }
- const target=nearestWildCreature(135);
- if(!target){notify('Aproxime-se de uma criatura selvagem e pressione J para iniciar o duelo.',3);playSfx('ui');return;}
+ const target=targetOverride||nearestWildCreature(135);
+ const explorer=g.scene==='map'?g.mapPlayer:g.actionPlayer;
+ if(!target||!target.alive||Math.hypot(explorer.x-target.x,explorer.y-target.y)>135){notify('Aproxime-se de uma criatura selvagem para iniciar o duelo.',3);playSfx('ui');return;}
  ensureMobStats(target);
  const speciesId=speciesForMob(target),partnerLevel=activeCreature()?.level||g.level,wildLevel=Math.max(2,Math.min(20,partnerLevel+(target.boss?3:0)));
- tacticalBattle={mob:target,speciesId,wildLevel,enemyHp:target.hp,enemyMax:target.maxHp,turn:1,log:target.boss?'Uma criatura rara bloqueia a passagem!':'Uma criatura selvagem apareceu!',finished:false};
+ tacticalBattle={mob:target,speciesId,wildLevel,enemyHp:target.hp,enemyMax:target.maxHp,turn:1,log:target.boss?'Uma criatura rara bloqueia a passagem!':'Uma criatura selvagem apareceu!',finished:false,impactTargets:['intro']};
  renderTacticalBattle();
 }
 function creatureDamage(creature,move){
@@ -1423,6 +1437,16 @@ function renderTacticalBattle(){
  paintCreaturePortraits($('modalBody'));
  $('modalBody').querySelectorAll('[data-creature-move]').forEach(el=>el.addEventListener('click',()=>playCreatureMove(el.dataset.creatureMove)));
  $('modalBody').querySelectorAll('[data-creature-action]').forEach(el=>el.addEventListener('click',()=>playCreatureAction(el.dataset.creatureAction)));
+ const impactTargets=Array.isArray(b.impactTargets)?b.impactTargets.splice(0):[];
+ for(const side of impactTargets){
+  const selector=side==='intro'?'.duel-creature.wild':side==='wild'?'.duel-creature.wild':'.duel-creature.partner';
+  const portrait=$('modalBody').querySelector(selector);
+  if(!portrait||typeof portrait.animate!=='function')continue;
+  const frames=side==='intro'
+   ?[{transform:'translateY(-8px) scale(.78)',filter:'brightness(1.8) drop-shadow(0 0 12px #f0cf78)'},{transform:'translateY(0) scale(1)',filter:'brightness(1) drop-shadow(0 0 0 transparent)'}]
+   :[{transform:'translateX(-7px) scale(1.04)',filter:'brightness(2) drop-shadow(0 0 10px #f2c56b)'},{transform:'translateX(6px) scale(.98)',filter:'brightness(1.4)'},{transform:'translateX(0) scale(1)',filter:'brightness(1)'}];
+  portrait.animate(frames,{duration:side==='intro'?460:300,easing:'cubic-bezier(.2,.8,.2,1)'});
+ }
 }
 function playCreatureMove(id){
  const b=tacticalBattle;if(!b||b.finished)return;
@@ -1433,7 +1457,7 @@ function playCreatureMove(id){
   const restored=Math.min(move.heal+(c.level||1),c.maxHp-c.hp);
   c.hp+=restored;b.log=restored?' '+(c.nickname||p.name)+' descansou e recuperou '+restored+' PV.':'A energia já está cheia.';playSfx('heal');
  }else{
-  const damage=creatureDamage(c,id);b.enemyHp=Math.max(0,b.enemyHp-damage);b.mob.hp=b.enemyHp;
+  const damage=creatureDamage(c,id);b.enemyHp=Math.max(0,b.enemyHp-damage);b.mob.hp=b.enemyHp; if(!b.impactTargets)b.impactTargets=[];b.impactTargets.push('wild');
   b.log=(c.nickname||p.name)+' usou '+move.name+' e causou '+damage+' de dano fixo.';
   spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#e6cb76');playSfx('hit');triggerScreenShake(b.enemyHp<=0?4:2,.12);
  }
@@ -1444,7 +1468,7 @@ function playCreatureMove(id){
 function performWildTurn(){
  const b=tacticalBattle;if(!b||b.finished||b.enemyHp<=0)return;
  const c=activeCreature();if(!c)return;
- const damage=wildDamage(b.mob,b.wildLevel);
+ const damage=wildDamage(b.mob,b.wildLevel); if(!b.impactTargets)b.impactTargets=[];b.impactTargets.push('partner');
  c.hp=Math.max(0,c.hp-damage);b.turn++;
  b.log=(b.mob.name||'A criatura')+' usou um ataque e causou '+damage+' de dano fixo a '+(c.nickname||CREATURE_SPECIES[c.species].name)+'.';
  spawnCombatText('-'+damage,b.mob.x,b.mob.y-24,'#d96b62');playSfx('hit');
@@ -1515,7 +1539,10 @@ function openGameMenu(){
           <div class="control-row"><kbd>W A S D</kbd><span><strong>Explorar</strong><small>Move-se para cima, baixo, esquerda e direita em todos os mapas.</small></span></div>
           <div class="control-row"><kbd>← ↑ → ↓</kbd><span><strong>Movimento alternativo</strong><small>Use as setas para explorar a vila, a floresta, o lago e a mina.</small></span></div>
           <div class="control-row"><kbd>E / Enter</kbd><span><strong>Interagir</strong><small>Conversa com os moradores, abre lojas e serviços, aceita missões e atravessa o portão.</small></span></div>
-          <div class="control-row"><kbd>J</kbd><span><strong>Iniciar duelo</strong><small>Aproxime-se de uma criatura selvagem e pressione J para começar um encontro por turnos.</small></span></div>\n          <div class="control-row"><kbd>Atividade</kbd><span><strong>Treino / trabalho</strong><small>Defina uma atividade para o tempo longe do jogo; recompensas locais têm limite de 8 horas.</small></span></div>
+          <div class="control-row"><kbd>J</kbd><span><strong>Iniciar duelo</strong><small>Aproxime-se de uma criatura selvagem e pressione J para começar um encontro por turnos.</small></span></div>
+          <div class="control-row"><kbd>Mouse 1</kbd><span><strong>Selecionar / atacar</strong><small>Clique em criaturas próximas para iniciar um duelo; clique em moradores próximos para conversar ou abrir serviços.</small></span></div>
+          <div class="control-row"><kbd>Mouse 2</kbd><span><strong>Esquiva</strong><small>Faça uma esquiva curta na direção do cursor. A ação tem recarga e uma breve janela de proteção.</small></span></div>
+          <div class="control-row"><kbd>1–4</kbd><span><strong>Atalhos rápidos</strong><small>Fora do duelo: iniciar duelo, poder de classe, poção e esquiva. No duelo: selecionar um dos quatro movimentos.</small></span></div>\n          <div class="control-row"><kbd>Atividade</kbd><span><strong>Treino / trabalho</strong><small>Defina uma atividade para o tempo longe do jogo; recompensas locais têm limite de 8 horas.</small></span></div>
           <div class="control-row"><kbd>H</kbd><span><strong>Erva curativa</strong><small>Recupera até 30 pontos de vida da criatura parceira ativa.</small></span></div>
           <div class="control-row"><kbd>M / N</kbd><span><strong>Caderno financeiro</strong><small>M abre a lição; N avança para a próxima lição.</small></span></div>
           <div class="control-row"><kbd>T</kbd><span><strong>Mercador</strong><small>Abre a loja quando você está perto do comerciante na vila.</small></span></div>
@@ -2652,7 +2679,15 @@ function update(dt){
  g.toastTimer=Math.max(0,g.toastTimer-dt);playerMotion.idleTime+=dt;
  if(g.toastTimer===0)$('toast').classList.remove('show');
  if(modalType){playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;if(g.actionPlayer)g.actionPlayer.vx=0;render();return;}
- const isMap=g.scene==='map',p=isMap?g.mapPlayer:g.actionPlayer;let dx=0,dy=0;
+ const isMap=g.scene==='map',p=isMap?g.mapPlayer:g.actionPlayer;
+ if(inputFX.dodgeTime>0){
+  const minX=isMap?18:25,maxX=isMap?942:1855,minY=isMap?137:178,maxY=isMap?522:500;
+  const nx=Math.max(minX,Math.min(maxX,p.x+inputFX.dodgeVX*dt));if(!mapBlocked(nx,p.y))p.x=nx;
+  const ny=Math.max(minY,Math.min(maxY,p.y+inputFX.dodgeVY*dt));if(!mapBlocked(p.x,ny))p.y=ny;
+  playerMotion.vx=inputFX.dodgeVX;playerMotion.vy=inputFX.dodgeVY;playerMotion.dir=inputFX.dodgeDir;playerMotion.moving=true;playerMotion.phase+=dt*9;
+  updateEnemyCombat(dt);render();return;
+ }
+ let dx=0,dy=0;
  if(keys.has('KeyA')||keys.has('ArrowLeft'))dx--;
  if(keys.has('KeyD')||keys.has('ArrowRight'))dx++;
  if(keys.has('KeyW')||keys.has('ArrowUp'))dy--;
@@ -2675,8 +2710,162 @@ function update(dt){
  render();
 }
 function loop(t){if(!g.lastTime)g.lastTime=t;let dt=Math.min(.035,(t-g.lastTime)/1000);g.lastTime=t;update(dt);requestAnimationFrame(loop);}
-function handleAction(key){if(modalType){if(key==='Escape'){if(modalType==='tactical')runFromCreatureBattle();else closeModal();return;}if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}return;}if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}if(key==='KeyG'){openWorldMap();return;}if(key==='KeyC'){openCreatureTeam();return;}if(g.scene==='action'&&key==='Space'){return;}if(key==='KeyJ'){openTacticalBattle();return;}if(key==='KeyE'||key==='Enter'){interact();return;}if(key==='KeyM'){openFinance();return;}if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}if(key==='KeyH'){usePotion();return;}if(key==='Escape'){openGameMenu();}}
-window.addEventListener('keydown',e=>{const k=e.code;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab'].includes(k))e.preventDefault();if(!keys.has(k))handleAction(k);keys.add(k);});window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
+
+function actionCameraX(){return g.scene==='action'?Math.max(0,Math.min(1880-W,g.actionPlayer.x-W/2)):0;}
+function pointerToCanvas(event){
+ const rect=canvas.getBoundingClientRect();if(!rect.width||!rect.height)return null;
+ return {x:Math.max(0,Math.min(W,(event.clientX-rect.left)*W/rect.width)),y:Math.max(0,Math.min(H,(event.clientY-rect.top)*H/rect.height))};
+}
+function mouseWorldPoint(point){return {x:point.x+actionCameraX(),y:point.y};}
+function pointerActors(){
+ if(g.scene!=='map')return [{type:'object',id:'ledger',name:'Livro-razão',x:1778,y:362,radius:34,reach:88}];
+ if(g.region==='bosque')return [
+  {type:'npc',id:'liora',name:'Liora · Rastreadora',x:180,y:366,radius:25,reach:66},
+  {type:'npc',id:'arven',name:'Arven · Vigia',x:315,y:455,radius:25,reach:66},
+  {type:'object',id:'shrine',name:'Altar das Raízes',x:722,y:178,radius:35,reach:78}
+ ];
+ if(g.region==='lago')return [
+  {type:'npc',id:'yara',name:'Yara · Cartógrafa',x:270,y:419,radius:25,reach:68},
+  {type:'npc',id:'neris',name:'Neris · Arquivista',x:457,y:388,radius:25,reach:68},
+  {type:'object',id:'wreck',name:'Atracadouro',x:620,y:345,radius:35,reach:72}
+ ];
+ return [
+  {type:'npc',id:'mara',name:'Mara · Guardiã',x:230,y:333,radius:25,reach:65},
+  {type:'npc',id:'ivo',name:'Ivo · Mercador',x:350,y:333,radius:25,reach:68},
+  {type:'npc',id:'toren',name:'Toren · Ferreiro',x:747,y:315,radius:25,reach:63},
+  {type:'npc',id:'elira',name:'Elira · Herborista',x:455,y:456,radius:25,reach:63},
+  {type:'npc',id:'brann',name:'Brann · Pescador',x:248,y:452,radius:25,reach:63},
+  {type:'npc',id:'sabela',name:'Sabela · Estalajadeira',x:565,y:315,radius:25,reach:63},
+  {type:'object',id:'gate',name:'Portão das Ruínas',x:850,y:325,radius:34,reach:78}
+ ];
+}
+function customCursor(svg,hotX=5,hotY=5,fallback='crosshair'){
+ return 'url("data:image/svg+xml,'+encodeURIComponent(svg)+'") '+hotX+' '+hotY+', '+fallback;
+}
+const cursorSword=customCursor('<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><path d="M5 22L8 16 19 5 23 4 22 9 11 20Z" fill="#f0d18a" stroke="#30261b" stroke-width="1.5"/><path d="M8 16L12 20M6 18L10 22M17 8L20 11" fill="none" stroke="#74462c" stroke-width="2.3" stroke-linecap="round"/><path d="M19 5L22 9" stroke="#fff0be" stroke-width="1.2"/></svg>',5,22,'crosshair');
+const cursorEnemy=customCursor('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="8" fill="#b53d37" fill-opacity=".15" stroke="#ff7462" stroke-width="2"/><circle cx="13" cy="13" r="2" fill="#ffcf86"/><path d="M13 1V7M13 19V25M1 13H7M19 13H25" stroke="#ffcf86" stroke-width="1.6" stroke-linecap="round"/></svg>',13,13,'crosshair');
+const cursorInteract=customCursor('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="28" viewBox="0 0 26 28"><path d="M6 13V5Q6 2 8 3Q10 3 10 6V12V4Q10 1 12 2Q14 2 14 5V11V6Q14 3 16 4Q18 4 18 7V13L20 10Q22 8 23 10Q24 12 21 17L18 23Q17 26 13 26H10Q6 25 5 21L3 16Q2 13 4 12Q5 11 6 13Z" fill="#f0d18a" stroke="#342b21" stroke-width="1.5" stroke-linejoin="round"/></svg>',8,13,'pointer');
+function updatePointerFromEvent(event){
+ const point=pointerToCanvas(event);if(!point)return;
+ const world=mouseWorldPoint(point);
+ Object.assign(inputFX.pointer,{x:point.x,y:point.y,worldX:world.x,worldY:world.y,inside:true,scene:g.scene});
+ inputFX.pointer.target=findPointerTarget(world.x,world.y);
+ canvas.style.cursor=!inputFX.pointer.target?cursorSword:inputFX.pointer.target.type==='creature'?cursorEnemy:cursorInteract;
+}
+function findPointerTarget(x,y){
+ let best=null,bestDistance=Infinity;
+ try{
+  for(const mob of allMobs()){
+   if(!mob||!mob.alive||mob.revealed===false)continue;
+   const distance=Math.hypot(x-mob.x,y-mob.y),radius=mob.boss?38:27;
+   if(distance<=radius&&distance<bestDistance)bestDistance=distance,best={type:'creature',id:mob.name||mob.type||'criatura',name:mob.name||'Criatura',x:mob.x,y:mob.y,radius,mob};
+  }
+ }catch(err){console.warn('Não foi possível selecionar criatura:',err);}
+ for(const actor of pointerActors()){
+  const distance=Math.hypot(x-actor.x,y-actor.y);
+  if(distance<=actor.radius&&distance<bestDistance)bestDistance=distance,best=actor;
+ }
+ return best;
+}
+function addInputEffect(type,x,y,options={}){
+ const life=options.life||.48;
+ inputFX.effects.push({type,x,y,scene:options.scene||g.scene,life,maxLife:life,dx:options.dx||0,dy:options.dy||0,seed:Math.random()*6.28});
+ if(inputFX.effects.length>36)inputFX.effects.shift();
+}
+function drawInputEffects(){
+ const camera=actionCameraX(),time=visualFX.worldSeconds||0;ctx.save();
+ for(const fx of inputFX.effects){
+  if(fx.scene!==g.scene)continue;
+  const progress=1-Math.max(0,fx.life/fx.maxLife),alpha=Math.max(0,Math.min(1,fx.life/fx.maxLife));
+  const x=fx.x-(g.scene==='action'?camera:0),y=fx.y;ctx.globalAlpha=alpha;ctx.lineCap='round';ctx.lineJoin='round';
+  if(fx.type==='ping'||fx.type==='focus'){
+   const r=(fx.type==='focus'?15:5)+progress*(fx.type==='focus'?5:23);
+   ctx.strokeStyle=fx.type==='focus'?'#f3d58b':'#fff0b2';ctx.lineWidth=fx.type==='focus'?2:1.8;
+   ctx.beginPath();ctx.ellipse(x,y+2,r,r*.42,0,0,Math.PI*2);ctx.stroke();
+   if(fx.type==='ping'){ctx.beginPath();ctx.arc(x,y,r*.45,-Math.PI*.8,-Math.PI*.25);ctx.stroke();}
+  }else if(fx.type==='dodge'){
+   ctx.shadowColor='#a7d8dc';ctx.shadowBlur=7;ctx.lineWidth=3;
+   for(let k=0;k<3;k++){const back=(k+1)*7,side=Math.sin(time*18+k)*3;ctx.strokeStyle=k===0?'#f7d995':k===1?'#a5d8d4':'#f2f0d7';ctx.beginPath();ctx.moveTo(x-fx.dx*back-side*fx.dy,y-fx.dy*back+side*fx.dx);ctx.quadraticCurveTo(x-fx.dx*(back+6)-4*fx.dy,y-fx.dy*(back+6)+4*fx.dx,x-fx.dx*(back+10),y-fx.dy*(back+10));ctx.stroke();}
+   ctx.shadowBlur=0;
+  }else if(fx.type==='slash'){
+   ctx.translate(x,y);ctx.rotate(fx.seed);ctx.strokeStyle='#fff0bb';ctx.shadowColor='#f0be72';ctx.shadowBlur=8;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,17,-1.1,.65);ctx.stroke();ctx.strokeStyle='#d8ecda';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,22,-.95,.25);ctx.stroke();ctx.shadowBlur=0;ctx.translate(-x,-y);
+  }
+ }
+ ctx.globalAlpha=1;
+ const pointer=inputFX.pointer,target=pointer.target;
+ if(pointer.inside&&pointer.scene===g.scene&&target){
+  const x=target.x-(g.scene==='action'?camera:0),y=target.y,pulse=1+Math.sin(time*6)*.06;
+  ctx.translate(x,y+2);ctx.scale(pulse,pulse);ctx.strokeStyle=target.type==='creature'?'rgba(255,112,87,.92)':'rgba(250,221,145,.9)';ctx.fillStyle=target.type==='creature'?'rgba(206,67,52,.09)':'rgba(245,214,128,.08)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,target.type==='creature'?target.radius*.78:target.radius*.72,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.setTransform(1,0,0,1,0,0);
+ }
+ ctx.restore();
+}
+function targetDistance(target){const p=g.scene==='map'?g.mapPlayer:g.actionPlayer;return Math.hypot(p.x-target.x,p.y-target.y);}
+function activatePointerTarget(target){
+ if(!target)return;const p=g.scene==='map'?g.mapPlayer:g.actionPlayer,distance=targetDistance(target);
+ if(target.type==='creature'){
+  if(distance>135){addInputEffect('focus',target.x,target.y,{life:.7});notify('Alvo selecionado: '+target.name+'. Aproxime-se para iniciar o duelo.',2.6);return;}
+  addInputEffect('slash',target.x,target.y,{life:.3,dx:target.x-p.x,dy:target.y-p.y});playSfx('hit');triggerScreenShake(1.4,.08);openTacticalBattle(target.mob);return;
+ }
+ if(distance>(target.reach||66)){addInputEffect('focus',target.x,target.y,{life:.7});notify(target.name+': aproxime-se para interagir.',2.4);return;}
+ const actions={
+  mara:()=>talkMara(),ivo:()=>openShop(),toren:()=>talkTorenShop(),elira:()=>talkElira(),brann:()=>talkBrann(),sabela:()=>openTavern(),liora:()=>talkLiora(),arven:()=>talkArven(),yara:()=>talkYara(),neris:()=>talkNeris(),shrine:()=>talkForestShrine(),wreck:()=>talkLakeWreck(),
+  gate:()=>{setScene('action');g.actionPlayer.x=70;g.actionPlayer.y=430;},ledger:()=>interact()
+ };
+ const action=actions[target.id];if(action){playSfx('ui');action();}
+}
+function startPlayerDodge(){
+ if(modalType)return;if(inputFX.dodgeCooldown>0){notify('Esquiva recarregando: '+inputFX.dodgeCooldown.toFixed(1)+' s.',1.4);return;}
+ const p=g.scene==='map'?g.mapPlayer:g.actionPlayer,point=inputFX.pointer;let dx=0,dy=0;
+ if(point.inside&&point.scene===g.scene){const wx=point.worldX-p.x,wy=point.worldY-p.y;if(Math.abs(wx)>Math.abs(wy))dx=Math.sign(wx);else dy=Math.sign(wy);}
+ if(!dx&&!dy){const dir=playerMotion.dir||'down';if(dir==='left')dx=-1;else if(dir==='right')dx=1;else if(dir==='up')dy=-1;else dy=1;}
+ inputFX.dodgeVX=dx*325;inputFX.dodgeVY=dy*325;inputFX.dodgeDir=dx<0?'left':dx>0?'right':dy<0?'up':'down';inputFX.dodgeTime=.18;inputFX.dodgeCooldown=.78;playerMotion.dir=inputFX.dodgeDir;playerMotion.moving=true;g.invuln=Math.max(g.invuln||0,.26);addInputEffect('dodge',p.x,p.y,{life:.35,dx,dy});triggerScreenShake(.8,.07);playSfx('magic');
+}
+function onCanvasPointerDown(event){
+ if(event.pointerType&&event.pointerType!=='mouse')return;if(event.button!==0&&event.button!==2)return;event.preventDefault();if(modalType)return;
+ updatePointerFromEvent(event);const pointer=inputFX.pointer,world={x:pointer.worldX,y:pointer.worldY};canvas.focus({preventScroll:true});
+ if(event.button===2){startPlayerDodge();return;}
+ if(pointer.target){activatePointerTarget(pointer.target);return;}
+ addInputEffect('ping',world.x,world.y,{life:.48});
+}
+function handleNumberShortcut(key){
+ if(!/^Digit[1-4]$/.test(key))return false;const index=Number(key.slice(5))-1;
+ if(modalType==='tactical'){const moves=$('modalBody').querySelectorAll('[data-creature-move]');if(moves[index]&&!moves[index].disabled)moves[index].click();return true;}
+ if(modalType)return true;
+ if(index===0){openTacticalBattle();return true;}if(index===1){useClassPower();return true;}if(index===2){usePotion();return true;}if(index===3){startPlayerDodge();return true;}
+ return true;
+}
+
+function handleAction(key){
+ if(modalType){
+  if(handleNumberShortcut(key))return;
+  if(key==='Escape'){if(modalType==='tactical')runFromCreatureBattle();else closeModal();return;}
+  if((key==='KeyE'||key==='Space'||key==='Enter')&&modalType==='dialogue'){closeModal();return;}
+  return;
+ }
+ if(handleNumberShortcut(key))return;
+ if(key==='Tab'){setScene(g.scene==='map'?'action':'map');return;}
+ if(key==='KeyG'){openWorldMap();return;}
+ if(key==='KeyC'){openCreatureTeam();return;}
+ if(g.scene==='action'&&key==='Space')return;
+ if(key==='KeyJ'){openTacticalBattle();return;}
+ if(key==='KeyE'||key==='Enter'){interact();return;}
+ if(key==='KeyM'){openFinance();return;}
+ if(key==='KeyN'){g.financeIndex=(g.financeIndex+1)%lessons.length;openFinance();return;}
+ if(key==='KeyT'){if(g.scene==='map'&&Math.hypot(g.mapPlayer.x-350,g.mapPlayer.y-333)<100)openShop();else notify('Chegue perto do mercador na vila para negociar.',2.5);return;}
+ if(key==='KeyH'){usePotion();return;}
+ if(key==='Escape'){openGameMenu();}
+}
+canvas.addEventListener('pointermove',event=>{if(event.pointerType&&event.pointerType!=='mouse')return;updatePointerFromEvent(event);});
+canvas.addEventListener('pointerdown',onCanvasPointerDown);
+canvas.addEventListener('pointerleave',()=>{inputFX.pointer.inside=false;inputFX.pointer.target=null;canvas.style.cursor='default';});
+canvas.addEventListener('contextmenu',event=>event.preventDefault());
+window.addEventListener('keydown',e=>{
+ const k=e.code,editing=e.target&&e.target.closest&&e.target.closest('input,textarea,select,[contenteditable="true"]');
+ if(editing&&k!=='Escape')return;
+ if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space','Tab','Digit1','Digit2','Digit3','Digit4'].includes(k))e.preventDefault();
+ if(!keys.has(k))handleAction(k);keys.add(k);
+});
+window.addEventListener('keyup',e=>keys.delete(e.code));window.addEventListener('blur',()=>keys.clear());
 document.addEventListener('pointerover',e=>{const button=e.target&&e.target.closest?e.target.closest('button'):null;if(gameSettings.soundEnabled&&button&&!(e.relatedTarget&&button.contains(e.relatedTarget)))playSfx('ui');});
 $('menuBtn').onclick=openGameMenu;$('worldMapBtn').onclick=openWorldMap;$('characterBtn').onclick=openCreatureTeam;$('dailyBtn').onclick=openDailyReward;$('professionsBtn').onclick=openProfessionsMenu;$('achievementsBtn').onclick=openAchievements;$('activityBtn').onclick=openActivityMenu;$('financeBtn').onclick=openFinance;$('councilBtn').onclick=openCouncil;$('economyPanelBtn').onclick=openCouncil;$('connectArcBtn').onclick=connectArcWallet;$('recordArcBtn').onclick=recordArcChapter;$('shopBtn').onclick=()=>{if(g.scene==='map')openShop();else notify('O mercador está na vila. Volte ao mapa e aproxime-se da praça.',2.4);};$('attackBtn').onclick=openTacticalBattle;$('tacticalBtn').onclick=openTacticalBattle;$('interactBtn').onclick=interact;$('potionBtn').onclick=usePotion;$('saveBtn').onclick=saveGame;$('loadBtn').onclick=()=>$('loadFile').click();$('loadFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>loadSaveFile(String(reader.result||''));reader.onerror=()=>notify('Falha ao ler o arquivo de progresso.',3);reader.readAsText(file);e.target.value='';});$('resetBtn').onclick=resetGame;$('mobileAttack').onclick=attack;$('mobileInteract').onclick=interact;$('modalClose').onclick=closeModal;$('modalback').addEventListener('click',e=>{if(e.target===$('modalback'))closeModal();});document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.scene==='action'){g.actionPlayer.x=70;g.actionPlayer.y=430;}setScene(b.dataset.scene);}));document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;const start=e=>{e.preventDefault();keys.add(k);};const end=e=>{e.preventDefault();keys.delete(k);};b.addEventListener('pointerdown',start);b.addEventListener('pointerup',end);b.addEventListener('pointerleave',end);b.addEventListener('pointercancel',end);});
 if(gameParams.get('new')==='1'){
