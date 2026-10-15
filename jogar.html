@@ -552,7 +552,6 @@ function updateAmbient(dt){
  for(const fx of inputFX.effects)fx.life-=dt;
  inputFX.effects=inputFX.effects.filter(fx=>fx.life>0);
  inputFX.dodgeCooldown=Math.max(0,inputFX.dodgeCooldown-dt);
- inputFX.dodgeTime=Math.max(0,inputFX.dodgeTime-dt);
  initializeParticles();
  // Four real seconds equal one minute in the world. The clock belongs to the save, not the PC clock.
  if(!g.worldClock)g.worldClock={minuteOfDay:480,totalMinutes:0};
@@ -2678,13 +2677,17 @@ function update(dt){
  g.attackCD=Math.max(0,g.attackCD-dt);g.invuln=Math.max(0,g.invuln-dt);g.powerCooldown=Math.max(0,(g.powerCooldown||0)-dt);
  g.toastTimer=Math.max(0,g.toastTimer-dt);playerMotion.idleTime+=dt;
  if(g.toastTimer===0)$('toast').classList.remove('show');
- if(modalType){playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;if(g.actionPlayer)g.actionPlayer.vx=0;render();return;}
+ if(modalType){inputFX.dodgeTime=0;inputFX.dodgeVX=0;inputFX.dodgeVY=0;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;if(g.actionPlayer)g.actionPlayer.vx=0;render();return;}
  const isMap=g.scene==='map',p=isMap?g.mapPlayer:g.actionPlayer;
  if(inputFX.dodgeTime>0){
+  inputFX.dodgeTime=Math.max(0,inputFX.dodgeTime-dt);
+  if(inputFX.dodgeTime<=0){inputFX.dodgeVX=0;inputFX.dodgeVY=0;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;updateEnemyCombat(dt);render();return;}
   const minX=isMap?18:25,maxX=isMap?942:1855,minY=isMap?137:178,maxY=isMap?522:500;
-  const nx=Math.max(minX,Math.min(maxX,p.x+inputFX.dodgeVX*dt));if(!mapBlocked(nx,p.y))p.x=nx;
-  const ny=Math.max(minY,Math.min(maxY,p.y+inputFX.dodgeVY*dt));if(!mapBlocked(p.x,ny))p.y=ny;
-  playerMotion.vx=inputFX.dodgeVX;playerMotion.vy=inputFX.dodgeVY;playerMotion.dir=inputFX.dodgeDir;playerMotion.moving=true;playerMotion.phase+=dt*9;
+  const nx=Math.max(minX,Math.min(maxX,p.x+inputFX.dodgeVX*dt));
+  if(!mapBlocked(nx,p.y))p.x=nx;else{inputFX.dodgeTime=0;inputFX.dodgeVX=0;inputFX.dodgeVY=0;}
+  const ny=Math.max(minY,Math.min(maxY,p.y+inputFX.dodgeVY*dt));
+  if(!mapBlocked(p.x,ny))p.y=ny;else{inputFX.dodgeTime=0;inputFX.dodgeVX=0;inputFX.dodgeVY=0;}
+  playerMotion.vx=inputFX.dodgeVX;playerMotion.vy=inputFX.dodgeVY;playerMotion.dir=inputFX.dodgeDir;playerMotion.moving=inputFX.dodgeTime>0;playerMotion.phase+=dt*9;
   updateEnemyCombat(dt);render();return;
  }
  let dx=0,dy=0;
