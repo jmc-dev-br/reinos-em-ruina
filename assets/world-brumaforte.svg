@@ -14,13 +14,11 @@
 </defs>
 <rect width="960" height="540" fill="url(#grass)"/><rect width="960" height="540" fill="url(#grassTexture)"/>
 <!-- winding village paths -->
-<path d="M-20 303C105 287 198 307 315 297S518 303 631 300S820 280 990 293" fill="none" stroke="#806b4c" stroke-width="91" opacity=".65"/>
-<path d="M-20 294C106 280 195 299 315 289S518 294 631 291S820 272 990 284" fill="none" stroke="url(#road)" stroke-width="82"/>
-<!-- South footpath connects the square to the gardens without cutting through the houses. -->
-<path d="M386 304C381 358 397 426 386 540" fill="none" stroke="#8b7654" stroke-width="49" opacity=".5"/>
-<path d="M386 304C381 358 397 426 386 540" fill="none" stroke="#d3be91" stroke-width="41"/>
-<path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#bba179" stroke-width="41"/>
-<path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#dfc99a" stroke-width="34"/>
+<path d="M-20 303C105 287 198 307 315 297S518 303 631 300S820 280 990 293" fill="none" stroke="#806b4c" stroke-width="72" opacity=".65"/>
+<path d="M-20 294C106 280 195 299 315 289S518 294 631 291S820 272 990 284" fill="none" stroke="url(#road)" stroke-width="62"/>
+<!-- The main square opens south into the meadow; no road crosses the central houses. -->
+<path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#bba179" stroke-width="30"/>
+<path d="M380 288C448 300 487 328 536 353S642 395 727 391" fill="none" stroke="#dfc99a" stroke-width="23"/>
 <path d="M452 294C500 282 557 286 604 301" fill="none" stroke="#b9a177" stroke-width="27"/><path d="M452 294C500 282 557 286 604 301" fill="none" stroke="#dfc99a" stroke-width="21"/>
 <!-- cobblestone glints -->
 <g fill="none" stroke-linecap="round" opacity=".38"><path d="M20 280l18 -2m14 13l14 -1m40 -18l22 2m18 17l14 1m40 -10l17 1m32 8l13 -1m-238 35l20 -2m32 -2l17 1m80 7l12 1m54 -4l15 1m90 -13l17 1m48 10l20 -1" stroke="#f4e5bd" stroke-width="3"/><path d="M30 310l12 -1m47 1l21 -2m48 5l16 1m80 -3l17 1m60 -9l20 -2m44 1l15 1m-2 37l17 1m-5 44l13 -2m19 45l15 2" stroke="#947d56" stroke-width="2"/></g>
