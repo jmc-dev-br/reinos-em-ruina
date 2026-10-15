@@ -779,6 +779,47 @@ const lessons=[
 ];
 let modalType=null;
 function notify(text,duration=3.2){const t=$('toast');t.textContent=text;t.classList.add('show');g.toastTimer=duration;}
+
+/* WORLD DATA HELPERS — these are required by map rendering, travel and creature encounters. */
+const REGION_META={
+ brumaforte:{
+  name:'Brumaforte',title:'BRUMAFORTE · VILA INICIAL',
+  subtitle:'Explore a vila, converse com os moradores e descubra o caminho para as ruínas.',
+  description:'Vila inicial · mercado, estalagem e moradores com missões.',
+  unlock:'Região inicial, sempre disponível',level:1
+ },
+ bosque:{
+  name:'Bosque Velado',title:'BOSQUE VELADO · TRILHA DAS RAÍZES',
+  subtitle:'Siga as trilhas, procure Liora e investigue o altar antigo.',
+  description:'Floresta ancestral · rastros, criaturas e o Lobo da Névoa.',
+  unlock:'Alcance o nível 2',level:2
+ },
+ lago:{
+  name:'Lago Silencioso',title:'LAGO SILENCIOSO · MARGEM PRATEADA',
+  subtitle:'Explore o atracadouro e descubra o segredo das águas.',
+  description:'Margem encantada · pesca, ruínas submersas e o Leviatã de Vidro.',
+  unlock:'Alcance o nível 4',level:4
+ }
+};
+function isRegionUnlocked(id){
+ const meta=REGION_META[id];
+ if(!meta)return false;
+ if(id==='brumaforte'||g.region===id)return true;
+ return (Number(g.level)||1)>=meta.level;
+}
+function regionMobList(id){
+ if(id==='bosque'||id==='lago'){
+  if(!g.regionMobs||typeof g.regionMobs!=='object')g.regionMobs={};
+  if(!Array.isArray(g.regionMobs[id]))g.regionMobs[id]=originalState().regionMobs[id];
+  return g.regionMobs[id];
+ }
+ if(!Array.isArray(g.slimes))g.slimes=originalState().slimes;
+ return g.slimes;
+}
+function currentRegionBoss(id){
+ return regionMobList(id).find(mob=>mob&&mob.boss)||null;
+}
+
 function setScene(scene){g.scene=scene;playerMotion.vx=0;playerMotion.vy=0;playerMotion.moving=false;jumpQueued=false;if(g.actionPlayer)g.actionPlayer.vx=0;if(scene==='map'){g.mapPlayer.x=Math.max(18,Math.min(942,g.mapPlayer.x));const zone=REGION_META[g.region]||REGION_META.brumaforte;$('sceneTitle').textContent=zone.title;$('sceneSub').textContent=zone.subtitle;$('mapBtn').classList.add('active');$('ruinsBtn').classList.remove('active');}else{$('sceneTitle').textContent='MINA ANTIGA · CAMINHO DO LIVRO-RAZÃO';$('sceneSub').textContent='Exploração em visão superior · procure o livro-razão e encontre criaturas.';$('ruinsBtn').classList.add('active');$('mapBtn').classList.remove('active');}notify(scene==='map'?'Você voltou à exploração da vila.':'Você entrou na mina antiga. Explore em visão superior.',2.4);updateUI();}
 function xpToNext(){return g.level*100;}
 function addXP(n){
@@ -788,9 +829,9 @@ function addXP(n){
  if(levels){playSfx('win');notify('Jornada no nível '+g.level+'! Continue explorando e treinando sua equipe.',3.5);persistProgress();}
 }
 function allMobs(){
- if(g.scene!=='map')return g.ruinMobs;
+ if(g.scene!=='map')return Array.isArray(g.ruinMobs)?g.ruinMobs:[];
  const mobs=regionMobList(g.region);
- return mobs.filter(m=>m.alive&&m.revealed!==false);
+ return mobs.filter(m=>m&&m.alive!==false&&m.revealed!==false);
 }
 function classProfile(){return CLASS_DEFS[g.classId]||CLASS_DEFS.warrior;}
 function difficultyProfile(){return DIFFICULTY_DEFS[g.difficulty]||DIFFICULTY_DEFS.normal;}
